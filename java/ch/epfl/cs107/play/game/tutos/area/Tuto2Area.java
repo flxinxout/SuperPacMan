@@ -19,11 +19,11 @@ abstract public class Tuto2Area extends Area {
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
         this.window = window;
+
         if (super.begin(window, fileSystem)) {
             // Set the behavior map
             setBehavior(new Tuto2Behavior(window , getTitle()));
             createArea();
-
             return true;
         }
         return false;

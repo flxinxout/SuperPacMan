@@ -4,50 +4,48 @@ import ch.epfl.cs107.play.game.actor.Entity;
 import ch.epfl.cs107.play.game.actor.TextGraphics;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.math.Vector;
-import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
-import ch.epfl.cs107.play.window.Keyboard;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class SimpleGhost extends Entity {
-
     private Sprite sprite;
-    private String spriteName;
-    private float levelEnergie;
+    private float hp;
     private TextGraphics hpText;
 
-    public SimpleGhost(Vector position, String spriteName) {
-        super(position);
-        this.spriteName = spriteName;
-        this.levelEnergie = 5;
-        this.sprite = new Sprite(spriteName, 1, 1.f, this);
-        this.hpText = new TextGraphics(Integer.toString((int)levelEnergie), 0.4f, Color.BLUE);
-        this.hpText.setParent(this);
-        this.hpText.setAnchor(new Vector(-0.3f, 0.1f));
-
-    }
-
     public boolean isWeak() {
-        return levelEnergie <= 0;
+        return hp <= 0;
     }
 
     public void strengthen() {
-        this.levelEnergie = 5;
+        this.hp = 10;
+    }
+
+    public SimpleGhost(Vector position , String spriteName) {
+        super(position);
+
+        sprite = new Sprite(spriteName,1 , 1.f, this);
+
+        hpText = new TextGraphics(Integer.toString((int)hp), 0.4f, Color.BLUE);
+        hpText.setParent(this);
+        this.hpText.setAnchor(new Vector(-0.3f, 0.1f));
+
+        this.hp = 10;
     }
 
     @Override
     public void draw(Canvas canvas) {
-        hpText.draw(canvas);
         sprite.draw(canvas);
+        hpText.draw(canvas);
     }
 
     @Override
     public void update(float deltaTime) {
-        if(levelEnergie > 0) {
-            this.levelEnergie -= deltaTime;
+        if (hp > 0) {
+            hp -= deltaTime;
         }
-        hpText.setText(Integer.toString((int)levelEnergie));
+
+        hpText.setText(Integer.toString((int)hp));
     }
 
     public void moveUp(float delta) {
@@ -58,11 +56,11 @@ public class SimpleGhost extends Entity {
         setCurrentPosition(getPosition().add(0.f, -delta));
     }
 
-    public void moveLeft(float delta) {
-        setCurrentPosition(getPosition().add(-delta, 0.f));
-    }
-
     public void moveRight(float delta) {
         setCurrentPosition(getPosition().add(delta, 0.f));
+    }
+
+    public void moveLeft(float delta) {
+        setCurrentPosition(getPosition().add(-delta, 0.f));
     }
 }

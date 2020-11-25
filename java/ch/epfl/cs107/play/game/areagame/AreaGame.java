@@ -38,7 +38,6 @@ abstract public class AreaGame implements Game {
 	 */
 	protected final Area setCurrentArea(String key, boolean forceBegin){
 		Area newArea = areas.get(key);
-		//System.out.println(newArea.getTitle());
 
 		if(newArea == null) {
 			System.out.println("New Area not found, keep previous one");
