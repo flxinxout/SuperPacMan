@@ -16,7 +16,6 @@ import ch.epfl.cs107.play.window.Canvas;
 public class Wall extends AreaEntity{
 
 	Sprite sprite;
-
 	/**
 	 * Build a Wall from its position and its neighborhood.
 	 * The neighborhood allows to select the sprite, it is a 3x3 matrix
@@ -184,7 +183,8 @@ public class Wall extends AreaEntity{
 
 	@Override
 	public void draw(Canvas canvas) {
-		if(sprite != null)
+		if(sprite != null) {
 			sprite.draw(canvas);
+		}
 	}
 }
