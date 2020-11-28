@@ -16,6 +16,7 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
     // Je suis sur de rien du tout mdr ils disent je pense de faire ça x)
     @Override
     public void draw(Canvas canvas) {
+        //Set the referential
         float width = canvas.getScaledWidth();
         float height = canvas.getScaledHeight();
         Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(width/2, height/2));
@@ -24,14 +25,17 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
     }
 
     private void drawLife(Vector anchor, float width, float height, Canvas canvas) {
-
+        //Décalage
+        float n = 1;
+        //à modifier en conséquence
+        int m = 0;
+        
         // Le premier 0 du constructeur de RegionOfInterest était une variable 'm' au début
-        // Le premier 1.4f du constructeur de Vector était une variable 'n' au début, mais ils disent pas quoi mettre...
         // Le witdh était de base un DEPTH mais jsais pas ce que c'était lol
 
         ImageGraphics life = new ImageGraphics(ResourcePath.getSprite("superpacman/lifeDisplay"),
-                1.f, 1.f, new RegionOfInterest(0, 0, 64, 64),
-                anchor.add(new Vector(1.4f, height - 1.375f)), 1, width);
+                1.f, 1.f, new RegionOfInterest(m, 0, 64, 64),
+                anchor.add(new Vector(n, height - 1.375f)), 1, width);
         life.draw(canvas);
 
     }

@@ -1,12 +1,14 @@
 package ch.epfl.cs107.play.game.superpacman.actor;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Animation;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
+import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.rpg.actor.Sign;
 import ch.epfl.cs107.play.game.superpacman.guis.SuperPacmanPlayerStatusGUI;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
@@ -20,13 +22,20 @@ import java.util.List;
 public class SuperPacmanPlayer extends Player {
     private SuperPacmanPlayerHandler handler = new SuperPacmanPlayerHandler();
     private SuperPacmanPlayerStatusGUI status = new SuperPacmanPlayerStatusGUI();
+
     private final static int SPEED = 6;
-    private Sprite sprite;
-    private final int lifeMax = 5;
-    private int life;
+    private final static int MAXHP = 5;
+
+    private int hp;
     private int score;
 
     private Orientation desiredOrientation;
+
+    /// Animation duration in frame number
+    private final static int ANIMATION_DURATION = 8;
+    private Animation[] animations;
+    private Animation currentAnimation;
+
     /**
      * Default SuperPacmanPlayer Constructor
      * @param owner (Area): owner area of the player
@@ -34,9 +43,17 @@ public class SuperPacmanPlayer extends Player {
      */
     public SuperPacmanPlayer(Area owner, DiscreteCoordinates coordinates) {
         super(owner, Orientation.RIGHT, coordinates);
-        sprite = new Sprite("superpacman/bonus", 1.f, 1.f,this);
+
+        //Setup the animations for Pacman
+        Sprite [][] sprites = RPGSprite.extractSprites ("superpacman/pacman", 4, 1, 1,
+                this , 64, 64, new Orientation [] { Orientation.UP ,
+                        Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
+        // Create an array of 4 animations
+        animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
+
+        currentAnimation = animations[2];
         desiredOrientation = Orientation.RIGHT;
-        this.life = 3;
+        this.hp = 3;
         this.score = 0;
     }
 
@@ -67,12 +84,36 @@ public class SuperPacmanPlayer extends Player {
             move(SPEED);
         }
 
+        //Set player animation
+        if (isDisplacementOccurs()) {
+            switch (getOrientation()) {
+                case DOWN:
+                    currentAnimation = animations[0];
+                    break;
+
+                case LEFT:
+                    currentAnimation = animations[1];
+                    break;
+
+                case UP:
+                    currentAnimation = animations[2];
+                    break;
+
+                case RIGHT:
+                    currentAnimation = animations[3];
+                    break;
+            }
+            currentAnimation.update(deltaTime);
+        }
+        else {
+            currentAnimation.reset();
+        }
         super.update(deltaTime);
     }
 
     @Override
     public void draw(Canvas canvas) {
-        sprite.draw(canvas);
+        currentAnimation.draw(canvas);
         getTransform();
         status.draw(canvas);
     }
