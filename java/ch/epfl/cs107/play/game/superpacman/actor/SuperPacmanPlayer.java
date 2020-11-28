@@ -8,6 +8,7 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.Sign;
+import ch.epfl.cs107.play.game.superpacman.guis.SuperPacmanPlayerStatusGUI;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
@@ -18,8 +19,12 @@ import java.util.List;
 
 public class SuperPacmanPlayer extends Player {
     private SuperPacmanPlayerHandler handler = new SuperPacmanPlayerHandler();
+    private SuperPacmanPlayerStatusGUI status = new SuperPacmanPlayerStatusGUI();
     private final static int SPEED = 6;
     private Sprite sprite;
+    private final int lifeMax = 5;
+    private int life;
+    private int score;
 
     private Orientation desiredOrientation;
     /**
@@ -31,7 +36,11 @@ public class SuperPacmanPlayer extends Player {
         super(owner, Orientation.RIGHT, coordinates);
         sprite = new Sprite("superpacman/bonus", 1.f, 1.f,this);
         desiredOrientation = Orientation.RIGHT;
+        this.life = 3;
+        this.score = 0;
     }
+
+
 
     @Override
     public void update(float deltaTime) {
@@ -64,6 +73,8 @@ public class SuperPacmanPlayer extends Player {
     @Override
     public void draw(Canvas canvas) {
         sprite.draw(canvas);
+        getTransform();
+        status.draw(canvas);
     }
 
     @Override
