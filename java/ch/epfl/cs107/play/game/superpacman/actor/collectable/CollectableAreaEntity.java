@@ -1,4 +1,4 @@
-package ch.epfl.cs107.play.game.superpacman.actor.collactable;
+package ch.epfl.cs107.play.game.superpacman.actor.collectable;
 
 public interface CollectableAreaEntity {
 

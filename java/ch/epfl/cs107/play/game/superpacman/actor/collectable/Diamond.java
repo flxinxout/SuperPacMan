@@ -1,32 +1,31 @@
-package ch.epfl.cs107.play.game.superpacman.actor.collactable;
+package ch.epfl.cs107.play.game.superpacman.actor.collectable;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.superpacman.actor.collactable.CollectableAreaEntity;
+import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Collections;
 import java.util.List;
 
-public class Cherry extends AreaEntity implements CollectableAreaEntity {
+public class Diamond extends AreaEntity implements CollectableAreaEntity {
 
-    private final int reward = 200;
+    private final int reward = 10;
     private Sprite sprite;
 
-    public Cherry(Area area, DiscreteCoordinates position) {
-        super(area, Orientation.DOWN, position);
-        this.sprite = new Sprite("superpacman/cherry", 1, 1, this);
+    public Diamond(Area area, DiscreteCoordinates discreteCoordinates) {
+        super(area, Orientation.DOWN, discreteCoordinates);
+        this.sprite = new RPGSprite("superpacman/diamond", 1, 1, this);
     }
 
     @Override
     public void collected() {
-
+        
     }
-
 
     @Override
     public void draw(Canvas canvas) {
