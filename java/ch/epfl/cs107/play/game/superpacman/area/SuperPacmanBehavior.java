@@ -4,11 +4,18 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaBehavior;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.superpacman.actor.collactable.Bonus;
+import ch.epfl.cs107.play.game.superpacman.actor.collactable.Cherry;
+import ch.epfl.cs107.play.game.superpacman.actor.collactable.Diamond;
 import ch.epfl.cs107.play.game.superpacman.actor.Wall;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
 
 public class SuperPacmanBehavior extends AreaBehavior {
+
+    /**
+     * Enum that represent all possible types of each cell in the game
+     */
     public enum SuperPacmanCellType {
         NONE (0) , // never used as real content
         WALL ( -16777216) , // black
@@ -26,6 +33,11 @@ public class SuperPacmanBehavior extends AreaBehavior {
             this.type = type;
         }
 
+        /**
+         * A method that returns the type of cell based on a number assigned to it in the enum
+         * @param type number assigned on a cell in the enum
+         * @return the type of the cell
+         */
         public static SuperPacmanCellType toType(int type){
             for(SuperPacmanCellType ict : SuperPacmanCellType.values()){
                 if(ict.type == type)
@@ -54,6 +66,10 @@ public class SuperPacmanBehavior extends AreaBehavior {
         }
     }
 
+    /**
+     * Method that registers actors in an area
+     * @param area the area where actors will be registered
+     */
     protected void registerActors(Area area) {
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
@@ -62,6 +78,21 @@ public class SuperPacmanBehavior extends AreaBehavior {
                 if (cell.type == SuperPacmanCellType.WALL) {
                     Wall wall = new Wall(area, new DiscreteCoordinates(x, y), neighborhood(cell));
                     area.registerActor(wall);
+                }
+
+                if(cell.type == SuperPacmanCellType.FREE_WITH_DIAMOND) {
+                    Diamond diamond = new Diamond(area, new DiscreteCoordinates(x, y));
+                    area.registerActor(diamond);
+                }
+
+                if(cell.type == SuperPacmanCellType.FREE_WITH_CHERRY) {
+                    Cherry cherry = new Cherry(area, new DiscreteCoordinates(x, y));
+                    area.registerActor(cherry);
+                }
+
+                if(cell.type == SuperPacmanCellType.FREE_WITH_BONUS) {
+                    Bonus bonus = new Bonus(area, new DiscreteCoordinates(x, y));
+                    area.registerActor(bonus);
                 }
             }
         }

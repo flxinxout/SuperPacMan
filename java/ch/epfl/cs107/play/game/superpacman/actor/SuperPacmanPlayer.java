@@ -21,10 +21,11 @@ import java.util.List;
 
 public class SuperPacmanPlayer extends Player {
     private SuperPacmanPlayerHandler handler = new SuperPacmanPlayerHandler();
-    private SuperPacmanPlayerStatusGUI status = new SuperPacmanPlayerStatusGUI();
+    private SuperPacmanPlayerStatusGUI status;
 
     private final static int SPEED = 6;
-    private final static int MAXHP = 5;
+    // Mis en public je saurais pas comment le get avec une bonne encapsulation
+    public final static int MAXHP = 5;
 
     private int hp;
     private int score;
@@ -53,8 +54,12 @@ public class SuperPacmanPlayer extends Player {
 
         currentAnimation = animations[2];
         desiredOrientation = Orientation.RIGHT;
+
         this.hp = 3;
         this.score = 0;
+
+        // Create the status in turns of the current SuperPacmanPlayer
+        status = new SuperPacmanPlayerStatusGUI(this);
     }
 
 
@@ -113,8 +118,10 @@ public class SuperPacmanPlayer extends Player {
 
     @Override
     public void draw(Canvas canvas) {
+        // Draw animations
         currentAnimation.draw(canvas);
-        getTransform();
+
+        // Draw the status
         status.draw(canvas);
     }
 
@@ -165,6 +172,16 @@ public class SuperPacmanPlayer extends Player {
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
         return null;
+    }
+
+    // Getters
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     /**
