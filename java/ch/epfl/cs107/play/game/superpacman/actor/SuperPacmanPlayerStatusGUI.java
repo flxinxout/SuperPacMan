@@ -58,7 +58,7 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
     }
 
     private void drawScore(Canvas canvas, Vector anchor, float height) {
-        Vector scoreAnchor = anchor.add(new Vector(player.MAXHP + 1, height - 1.375f));
+        Vector scoreAnchor = anchor.add(new Vector(player.MAXHP + 1, height - 1.2f));
 
         TextGraphics score = new TextGraphics("Score: " + player.getScore(), 1f, Color.YELLOW, Color.BLUE, .06f, true, false,
                 scoreAnchor);
