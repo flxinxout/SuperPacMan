@@ -14,20 +14,14 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-public class Cherry extends CollectableAreaEntity {
-    private static final int REWARD = 200;
+public class Cherry extends CollectableReward {
     private Sprite sprite;
 
     public Cherry(Area area, DiscreteCoordinates position) {
-        super(area, Orientation.DOWN, position);
+        //TODO: the reward isn't explicit in this class, think of the arrangement with "CollectableReward"
+        super(area, Orientation.DOWN, position, 200);
         //TODO: check eventually the depth to spawn it behind the player
         this.sprite = new Sprite("superpacman/cherry", 1, 1, this);
-    }
-
-    @Override
-    public void onCollect() {
-        super.onCollect();
-        SuperPacman.player.addScore(REWARD);
     }
 
     @Override

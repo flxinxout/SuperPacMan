@@ -14,6 +14,8 @@ import ch.epfl.cs107.play.window.Window;
 import java.util.logging.Level;
 
 public class SuperPacman extends RPG {
+    //TODO: THINK OF CREATING AN INTERFACE "ANIMABLE" ??
+
     public final static float CAMERA_SCALE_FACTOR = 15.f;
     //TODO: Let it static? Make a singleton from it?
     public static SuperPacmanPlayer player;

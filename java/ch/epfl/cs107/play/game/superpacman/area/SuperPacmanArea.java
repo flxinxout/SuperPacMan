@@ -3,10 +3,14 @@ package ch.epfl.cs107.play.game.superpacman.area;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.io.FileSystem;
+import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Window;
 
 public abstract class SuperPacmanArea extends Area {
     private SuperPacmanBehavior behavior;
+
+    //This signal is activated when every collectable in the area has been collected
+    private Logic completed;
 
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
@@ -29,5 +33,10 @@ public abstract class SuperPacmanArea extends Area {
     @Override
     public float getCameraScaleFactor() {
         return SuperPacman.CAMERA_SCALE_FACTOR;
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
     }
 }

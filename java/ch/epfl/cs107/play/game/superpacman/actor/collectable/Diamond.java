@@ -15,19 +15,12 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-public class Diamond extends CollectableAreaEntity {
-    private final int REWARD = 10;
+public class Diamond extends CollectableReward {
     private Sprite sprite;
 
     public Diamond(Area area, DiscreteCoordinates position) {
-        super(area, Orientation.DOWN, position);
+        super(area, Orientation.DOWN, position, 10);
         this.sprite = new Sprite("superpacman/diamond", 1, 1, this);
-    }
-
-    @Override
-    public void onCollect() {
-        super.onCollect();
-        SuperPacman.player.addScore(REWARD);
     }
 
     @Override
