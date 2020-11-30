@@ -15,7 +15,8 @@ import java.util.logging.Level;
 
 public class SuperPacman extends RPG {
     public final static float CAMERA_SCALE_FACTOR = 15.f;
-
+    //TODO: Let it static? Make a singleton from it?
+    public static SuperPacmanPlayer player;
     //TODO: maybe a map between areas and spawn coordinates
     private final String[] areas = {"superpacman/Level0", "superpacman/Level1", "superpacman/Level2"};
     private final DiscreteCoordinates[] startingPositions = {new DiscreteCoordinates(10,1),
@@ -33,7 +34,7 @@ public class SuperPacman extends RPG {
 
             createAreas();
             Area area = setCurrentArea(areas[0], true);
-            SuperPacmanPlayer player = new SuperPacmanPlayer(area, startingPositions[0]);
+            player = new SuperPacmanPlayer(area, startingPositions[0]);
             initPlayer(player);
             return true;
         }

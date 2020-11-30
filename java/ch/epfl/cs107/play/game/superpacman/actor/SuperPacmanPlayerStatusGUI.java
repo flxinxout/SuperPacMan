@@ -26,7 +26,7 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
         Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(width/2, height/2));
 
         // Draw the life
-        drawLife(1, anchor, height, canvas);
+        drawLife(anchor, height, canvas);
 
         // Draw the score
         drawScore(canvas, anchor, height);
@@ -47,7 +47,7 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
             //TODO: check what value depth should be (last parameter)
             life = new ImageGraphics(ResourcePath.getSprite("superpacman/lifeDisplay"),
                     1.f, 1.f, new RegionOfInterest(m, 0, 64, 64),
-                    anchor.add(new Vector(spaceBetweenImages * (i-1), height - 1.375f)), 1, 10);
+                    anchor.add(new Vector(spaceBetweenImages * (i-1), height - 1.375f)), 1, 1);
             life.draw(canvas);
         }
         return life;

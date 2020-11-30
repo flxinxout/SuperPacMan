@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaBehavior;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Cherry;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
@@ -12,7 +13,6 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
 
 public class SuperPacmanBehavior extends AreaBehavior {
-
     /**
      * Enum that represent all possible types of each cell in the game
      */
@@ -75,24 +75,25 @@ public class SuperPacmanBehavior extends AreaBehavior {
             for (int x = 0; x < getWidth(); x++) {
                 SuperPacmanCell cell = (SuperPacmanCell) getCell(x,y);
 
-                if (cell.type == SuperPacmanCellType.WALL) {
-                    Wall wall = new Wall(area, new DiscreteCoordinates(x, y), neighborhood(cell));
-                    area.registerActor(wall);
-                }
+                switch (cell.type) {
+                    case WALL:
+                        Wall wall = new Wall(area, new DiscreteCoordinates(x, y), neighborhood(cell));
+                        area.registerActor(wall);
+                        break;
 
-                if(cell.type == SuperPacmanCellType.FREE_WITH_DIAMOND) {
-                    Diamond diamond = new Diamond(area, new DiscreteCoordinates(x, y));
-                    area.registerActor(diamond);
-                }
+                    case FREE_WITH_DIAMOND:
+                        Diamond diamond = new Diamond(area, new DiscreteCoordinates(x, y));
+                        area.registerActor(diamond);
+                        break;
 
-                if(cell.type == SuperPacmanCellType.FREE_WITH_CHERRY) {
-                    Cherry cherry = new Cherry(area, new DiscreteCoordinates(x, y));
-                    area.registerActor(cherry);
-                }
-
-                if(cell.type == SuperPacmanCellType.FREE_WITH_BONUS) {
-                    Bonus bonus = new Bonus(area, new DiscreteCoordinates(x, y));
-                    area.registerActor(bonus);
+                    case FREE_WITH_BONUS:
+                        Bonus bonus = new Bonus(area, new DiscreteCoordinates(x, y));
+                        area.registerActor(bonus);
+                        break;
+                    case FREE_WITH_CHERRY:
+                        Cherry cherry = new Cherry(area, new DiscreteCoordinates(x, y));
+                        area.registerActor(cherry);
+                        break;
                 }
             }
         }

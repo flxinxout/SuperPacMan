@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.rpg.handler;
 
+import ch.epfl.cs107.play.game.areagame.actor.CollectableAreaEntity;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Sign;
@@ -25,4 +26,11 @@ public interface RPGInteractionVisitor extends AreaInteractionVisitor {
         // by default the interaction is empty
     }
 
+    /**
+     * Simulate and interaction between RPG Interactor and a CollectableAreaEntity
+     * @param collectable (CollectableAreaEntity), not null
+     */
+    default void interactWith(CollectableAreaEntity collectable){
+        // by default the interaction is empty
+    }
 }

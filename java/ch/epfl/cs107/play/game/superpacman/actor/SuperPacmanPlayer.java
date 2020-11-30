@@ -1,10 +1,7 @@
 package ch.epfl.cs107.play.game.superpacman.actor;
 
 import ch.epfl.cs107.play.game.areagame.Area;
-import ch.epfl.cs107.play.game.areagame.actor.Animation;
-import ch.epfl.cs107.play.game.areagame.actor.Interactable;
-import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.areagame.actor.Sprite;
+import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
@@ -50,13 +47,12 @@ public class SuperPacmanPlayer extends Player {
                         Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
         // Create an array of 4 animations
         animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
-
         currentAnimation = animations[2];
+
         desiredOrientation = Orientation.RIGHT;
 
         this.hp = 3;
         this.score = 0;
-
         // Create the status in turns of the current SuperPacmanPlayer
         status = new SuperPacmanPlayerStatusGUI(this);
     }
@@ -88,7 +84,12 @@ public class SuperPacmanPlayer extends Player {
             move(SPEED);
         }
 
-        //Set player animation
+        setAnimations(deltaTime);
+
+        super.update(deltaTime);
+    }
+
+    public void setAnimations(float deltaTime) {
         if (isDisplacementOccurs()) {
             switch (getOrientation()) {
                 case DOWN:
@@ -112,15 +113,11 @@ public class SuperPacmanPlayer extends Player {
         else {
             currentAnimation.reset();
         }
-        super.update(deltaTime);
     }
 
     @Override
     public void draw(Canvas canvas) {
-        // Draw animations
         currentAnimation.draw(canvas);
-
-        // Draw the status
         status.draw(canvas);
     }
 
@@ -183,14 +180,19 @@ public class SuperPacmanPlayer extends Player {
         return score;
     }
 
+    public void addScore(int amount) {
+        score += amount;
+        if (score < 0) {
+            score = 0;
+        }
+    }
+
     /**
      * Interaction handler for a SuperPacmanPlayer
      */
     private class SuperPacmanPlayerHandler implements SuperPacmanInteractionVisitor {
         @Override
-        public void interactWith(Door door) {
-            setIsPassingADoor(door);
-        }
+        public void interactWith(Door door) { setIsPassingADoor(door); }
 
         @Override
         public void interactWith(Interactable other) { }
@@ -200,5 +202,10 @@ public class SuperPacmanPlayer extends Player {
 
         @Override
         public void interactWith(SuperPacmanPlayer otherPlayer) { }
+
+        public void interactWith(CollectableAreaEntity collectable) {
+            //TODO: deal this interaction inside the player or like now in the collectables?
+            collectable.onCollect();
+        }
     }
 }
