@@ -4,7 +4,6 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaBehavior;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Cherry;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
@@ -70,7 +69,8 @@ public class SuperPacmanBehavior extends AreaBehavior {
      * Method that registers actors in an area
      * @param area the area where actors will be registered
      */
-    protected void registerActors(Area area) {
+    //TODO: CHANGE SUPERPACMANAREA TO AREA? --> FIND A BETTER WAY FOR THE DIAMONDS COUNT
+    protected void registerActors(SuperPacmanArea area) {
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
                 SuperPacmanCell cell = (SuperPacmanCell) getCell(x,y);
@@ -84,6 +84,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
                     case FREE_WITH_DIAMOND:
                         Diamond diamond = new Diamond(area, new DiscreteCoordinates(x, y));
                         area.registerActor(diamond);
+                        area.addDiamond();
                         break;
 
                     case FREE_WITH_BONUS:

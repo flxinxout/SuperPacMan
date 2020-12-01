@@ -74,7 +74,6 @@ public abstract class Area implements Playable {
 	 * @param safeMode (Boolean): if True, the veto of the Area or the grid are not taken into account
 	 */
 	private void addActor(Actor a, boolean safeMode) {
-
 		boolean errorHappen = false;
 
 		if(a instanceof Interactor)
