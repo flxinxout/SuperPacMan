@@ -10,7 +10,7 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-public class CollectableAreaEntity extends AreaEntity implements Collectable{
+public abstract class CollectableAreaEntity extends AreaEntity implements Collectable{
     public CollectableAreaEntity(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
     }
@@ -20,8 +20,8 @@ public class CollectableAreaEntity extends AreaEntity implements Collectable{
         getOwnerArea().unregisterActor(this);
     }
 
-    @Override
-    public void draw(Canvas canvas) { }
+    /*@Override
+    public void draw(Canvas canvas) { }*/
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {

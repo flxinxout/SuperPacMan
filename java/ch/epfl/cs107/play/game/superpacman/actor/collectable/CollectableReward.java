@@ -7,7 +7,7 @@ import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 //TODO: DO WE DELETE THIS CLASS?
-public class CollectableReward extends CollectableAreaEntity {
+public abstract class CollectableReward extends CollectableAreaEntity {
     private final int REWARD;
 
     public CollectableReward(Area area, Orientation orientation, DiscreteCoordinates position, int reward) {
