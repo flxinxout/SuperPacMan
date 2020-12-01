@@ -9,20 +9,30 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Collections;
 import java.util.List;
 
 public class Cherry extends CollectableReward {
+
+    /// Cherry's Sprite
     private Sprite sprite;
 
+    /**
+     * Default Cherry constructor
+     * @param area the area where is the bonus
+     * @param position the position of the bonus in the specific area
+     */
     public Cherry(Area area, DiscreteCoordinates position) {
-        //TODO: the reward isn't explicit in this class, think of the arrangement with "CollectableReward"
         super(area, Orientation.DOWN, position, 200);
+
         //TODO: check eventually the depth to spawn it behind the player
         this.sprite = new Sprite("superpacman/cherry", 1, 1, this);
     }
+
+    /* -------------- Implement Actor ---------------- */
 
     @Override
     public void draw(Canvas canvas) {

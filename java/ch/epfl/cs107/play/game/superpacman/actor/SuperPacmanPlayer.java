@@ -16,13 +16,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class SuperPacmanPlayer extends Player {
-    private SuperPacmanPlayerHandler handler = new SuperPacmanPlayerHandler();
+
+    /// Handler of the SuperPacman
+    private SuperPacmanPlayerHandler handler;
+
+    /// StatusGUI of the SuperPacman
     private SuperPacmanPlayerStatusGUI status;
 
+    /// Speed and MAXHP of the SuperPacman
     private final static int SPEED = 6;
-    // Mis en public je saurais pas comment le get avec une bonne encapsulation
     public final static int MAXHP = 5;
 
+    /// HP AND SCORE
     private int hp;
     private int score;
 
@@ -50,14 +55,17 @@ public class SuperPacmanPlayer extends Player {
         currentAnimation = animations[2];
 
         desiredOrientation = Orientation.RIGHT;
-
         this.hp = 3;
         this.score = 0;
-        // Create the status in turns of the current SuperPacmanPlayer
+
+        /// Creation of the handler
+        handler = new SuperPacmanPlayerHandler();
+
+        /// Create the status in turns of the current SuperPacmanPlayer
         status = new SuperPacmanPlayerStatusGUI(this);
     }
 
-
+    /* -------------- Implement Actor --------------- */
 
     @Override
     public void update(float deltaTime) {
@@ -89,6 +97,10 @@ public class SuperPacmanPlayer extends Player {
         super.update(deltaTime);
     }
 
+    /**
+     * Method that set the current animation of the Pacman
+     * @param deltaTime the delta time of the update
+     */
     public void setAnimations(float deltaTime) {
         if (isDisplacementOccurs()) {
             switch (getOrientation()) {
@@ -121,12 +133,12 @@ public class SuperPacmanPlayer extends Player {
         status.draw(canvas);
     }
 
+    /* --------------- Implement Interactable --------------- */
+
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates());
     }
-
-    //Player implements Interactable
 
     @Override
     public boolean isCellInteractable() {
@@ -148,7 +160,7 @@ public class SuperPacmanPlayer extends Player {
         ((SuperPacmanInteractionVisitor)v).interactWith (this );
     }
 
-    //Player implements Interactor
+    /* --------------- Implement Interactor --------------- */
 
     @Override
     public boolean wantsCellInteraction() {
@@ -170,7 +182,7 @@ public class SuperPacmanPlayer extends Player {
         return null;
     }
 
-    // Getters
+    /* --------------- Getters --------------- */
 
     public int getHp() {
         return hp;
@@ -179,6 +191,8 @@ public class SuperPacmanPlayer extends Player {
     public int getScore() {
         return score;
     }
+
+    /* --------------- External Methods --------------- */
 
     public void addScore(int amount) {
         score += amount;
@@ -204,7 +218,6 @@ public class SuperPacmanPlayer extends Player {
         public void interactWith(SuperPacmanPlayer otherPlayer) { }
 
         public void interactWith(CollectableAreaEntity collectable) {
-            //TODO: deal this interaction inside the player or like now in the collectables?
             collectable.onCollect();
         }
     }

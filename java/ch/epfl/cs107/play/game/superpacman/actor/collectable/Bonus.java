@@ -11,17 +11,27 @@ import java.util.Collections;
 import java.util.List;
 
 public class Bonus extends CollectableAreaEntity {
+
     /// Animation duration in frame number
     private final static int ANIMATION_DURATION = 8;
+
+    /// Current bonus' animation
     private Animation currentAnimation;
 
+    /**
+     * Default Bonus Constructor
+     * @param area the area where is the bonus
+     * @param position the position of the bonus in the specific area
+     */
     public Bonus(Area area, DiscreteCoordinates position) {
         super(area, Orientation.DOWN, position);
 
-        //Setup the animations
+        /// Setup the animations
         Sprite[] sprites = Sprite.extractSprites("superpacman/coin", 4, 1, 1, this, 16, 16);
         this.currentAnimation = new Animation(ANIMATION_DURATION, sprites);
     }
+
+    /* -------------- Implement Actor ---------------- */
 
     @Override
     public void update(float deltaTime) {

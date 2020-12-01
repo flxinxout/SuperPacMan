@@ -17,17 +17,29 @@ import java.util.Collections;
 import java.util.List;
 
 public class Diamond extends CollectableReward {
+
+    /// Diamond's Sprite
     private Sprite sprite;
 
+    /**
+     * Default Diamond Constructor
+     * @param area the area where is the bonus
+     * @param position the position of the bonus in the specific area
+     */
     public Diamond(Area area, DiscreteCoordinates position) {
         super(area, Orientation.DOWN, position, 10);
         this.sprite = new Sprite("superpacman/diamond", 1, 1, this);
     }
 
+    /* -------------- Implement Actor ---------------- */
+
     @Override
     public void draw(Canvas canvas) {
         sprite.draw(canvas);
     }
+
+
+    /* -------------- Implement Collectable ---------------- */
 
     @Override
     public void onCollect() {

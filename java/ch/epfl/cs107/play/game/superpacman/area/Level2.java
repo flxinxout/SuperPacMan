@@ -70,8 +70,15 @@ public class Level2 extends SuperPacmanArea{
         registerActor(gate14);
     }
 
+    /* --------------- Implement Playable --------------- */
+
     @Override
     public String getTitle() {
         return "superpacman/Level2";
+    }
+
+    @Override
+    public DiscreteCoordinates getSpawnLocation() {
+        return PLAYER_SPAWN_POSITION;
     }
 }

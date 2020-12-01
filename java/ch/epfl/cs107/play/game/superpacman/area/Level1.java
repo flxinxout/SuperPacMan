@@ -10,6 +10,8 @@ public class Level1 extends SuperPacmanArea{
     //TODO: TRY TO PUT IT IN THE SUPER CLASS
     private final DiscreteCoordinates PLAYER_SPAWN_POSITION = new DiscreteCoordinates(15, 6);
 
+    /* --------------- Implement Playable --------------- */
+
     @Override
     public String getTitle() {
         return "superpacman/Level1";
@@ -28,5 +30,10 @@ public class Level1 extends SuperPacmanArea{
 
         Gate gate2 = new Gate(this, Orientation.RIGHT, new DiscreteCoordinates(15,3), this);
         registerActor(gate2);
+    }
+
+    @Override
+    public DiscreteCoordinates getSpawnLocation() {
+        return PLAYER_SPAWN_POSITION;
     }
 }

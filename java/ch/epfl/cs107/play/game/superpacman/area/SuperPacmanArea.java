@@ -4,12 +4,13 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
 import ch.epfl.cs107.play.io.FileSystem;
+import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Window;
 
 public abstract class SuperPacmanArea extends Area implements Logic {
+
     private SuperPacmanBehavior behavior;
-    //TODO: IS THERE A BETTER WAY TO DO IT THAN A LIST?
     private int diamondsNumber = 0;
 
     //This signal is activated when every collectable in the area has been collected
@@ -32,6 +33,7 @@ public abstract class SuperPacmanArea extends Area implements Logic {
     protected void createArea() {
         behavior.registerActors(this);
     }
+    abstract public DiscreteCoordinates getSpawnLocation();
 
     public void addDiamond() {
         diamondsNumber++;
@@ -40,6 +42,9 @@ public abstract class SuperPacmanArea extends Area implements Logic {
     public void removeDiamond() {
         diamondsNumber--;
         if (diamondsNumber < 0) { diamondsNumber = 0; }
+        if (diamondsNumber == 0) {
+            isCompleted = true;
+        }
     }
 
     @Override
@@ -47,13 +52,7 @@ public abstract class SuperPacmanArea extends Area implements Logic {
         return SuperPacman.CAMERA_SCALE_FACTOR;
     }
 
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-        if (diamondsNumber == 0) {
-            isCompleted = true;
-        }
-    }
+    /* ---------------- Implement Logic ---------------- */
 
     @Override
     public boolean isOn() {
@@ -67,8 +66,6 @@ public abstract class SuperPacmanArea extends Area implements Logic {
 
     @Override
     public float getIntensity() {
-        //TODO: TERNARY OPERATOR?
-        if (isCompleted) { return 1; }
-        return 0;
+        return (isCompleted) ? 1 : 0;
     }
 }

@@ -14,11 +14,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class Gate extends AreaEntity {
+
     /// Signals conditioning the gate
     private Logic signal;
     private Sprite sprite;
 
-    //TODO: IS THE ELLIPSE A GOOD WAY TO DO IT?
     public Gate(Area area, Orientation orientation, DiscreteCoordinates position, Logic signal) {
         super(area, orientation, position);
         this.signal = signal;
@@ -35,7 +35,7 @@ public class Gate extends AreaEntity {
         return signal.isOn();
     }
 
-    public void setSignal(Logic signal) {
+    private void setSignal(Logic signal) {
         this.signal = signal;
     }
 
@@ -44,7 +44,7 @@ public class Gate extends AreaEntity {
         super.update(deltaTime);
     }
 
-    //Gate implements Interactable
+    /* --------------- Implements Interactable --------------- */
 
     @Override
     public boolean takeCellSpace() {
@@ -66,7 +66,7 @@ public class Gate extends AreaEntity {
 
     }
 
-    //Gate extends AreaEntity
+    /* -------------- Implements Graphics and Interactable -------------- */
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {

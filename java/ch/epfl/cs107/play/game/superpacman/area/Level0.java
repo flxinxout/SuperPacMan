@@ -8,8 +8,10 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 public class Level0 extends SuperPacmanArea {
-    //TODO: TRY TO PUT IT IN THE SUPER CLASS
+
     private final DiscreteCoordinates PLAYER_SPAWN_POSITION = new DiscreteCoordinates(10, 1);
+
+    /* --------------- Implement Playable --------------- */
 
     @Override
     public String getTitle() {
@@ -31,5 +33,10 @@ public class Level0 extends SuperPacmanArea {
 
         Gate gate2 = new Gate(this, Orientation.LEFT, new DiscreteCoordinates(6,8), key);
         registerActor(gate2);
+    }
+
+    @Override
+    public DiscreteCoordinates getSpawnLocation() {
+        return PLAYER_SPAWN_POSITION;
     }
 }

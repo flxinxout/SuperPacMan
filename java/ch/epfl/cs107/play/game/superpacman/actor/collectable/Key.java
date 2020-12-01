@@ -15,14 +15,25 @@ import java.util.Collections;
 import java.util.List;
 
 public class Key extends CollectableAreaEntity implements Logic {
+
+    /// Key's Sprite
     private Sprite sprite;
+
+    /// If the key is collected
     private boolean isCollected;
 
+    /**
+     * Default Key Constructor
+     * @param area the area where is the bonus
+     * @param position the position of the bonus in the specific area
+     */
     public Key(Area area, DiscreteCoordinates position) {
         super(area, Orientation.DOWN, position);
         this.sprite = new Sprite("superpacman/key", 1, 1, this);
         isCollected = false;
     }
+
+    /* -------------- Implement Actor ---------------- */
 
     @Override
     public void draw(Canvas canvas) {
@@ -34,11 +45,15 @@ public class Key extends CollectableAreaEntity implements Logic {
         return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
+    /* -------------- Implement Collectable ---------------- */
+
     @Override
     public void onCollect() {
         super.onCollect();
         isCollected = true;
     }
+
+    /* -------------- Implement Logic ---------------- */
 
     @Override
     public boolean isOn() {
@@ -52,8 +67,6 @@ public class Key extends CollectableAreaEntity implements Logic {
 
     @Override
     public float getIntensity() {
-        //TODO: TERNARY OPERATOR?
-        if (isCollected) { return 1; }
-        return 0;
+        return (isCollected) ? 1 : 0;
     }
 }

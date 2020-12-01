@@ -6,14 +6,24 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-//TODO: DO WE DELETE THIS CLASS?
 public abstract class CollectableReward extends CollectableAreaEntity {
+
+    /// The reward of the collectable
     private final int REWARD;
 
+    /**
+     * Default constructor of a collectable with a reward
+     * @param area the area where the collectable is
+     * @param orientation the orientation
+     * @param position the position in the area
+     * @param reward the reward
+     */
     public CollectableReward(Area area, Orientation orientation, DiscreteCoordinates position, int reward) {
         super(area, orientation, position);
         REWARD = reward;
     }
+
+    /* ------------------- Implement Collectable ------------------ */
 
     @Override
     public void onCollect() {

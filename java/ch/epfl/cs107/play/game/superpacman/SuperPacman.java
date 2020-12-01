@@ -21,8 +21,6 @@ public class SuperPacman extends RPG {
     public static SuperPacmanPlayer player;
     //TODO: maybe a map between areas and spawn coordinates
     private final String[] areas = {"superpacman/Level0", "superpacman/Level1", "superpacman/Level2"};
-    private final DiscreteCoordinates[] startingPositions = {new DiscreteCoordinates(10,1),
-            new DiscreteCoordinates(15,6), new DiscreteCoordinates(15,29)};
 
     private void createAreas(){
         addArea(new Level0());
@@ -35,8 +33,9 @@ public class SuperPacman extends RPG {
         if (super.begin(window, fileSystem)) {
 
             createAreas();
-            Area area = setCurrentArea(areas[0], true);
-            player = new SuperPacmanPlayer(area, startingPositions[0]);
+            //TODO: STRANGE WAY CAST
+            SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas[0], true);
+            player = new SuperPacmanPlayer(area, area.getSpawnLocation());
             initPlayer(player);
             return true;
         }
