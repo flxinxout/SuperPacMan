@@ -4,6 +4,9 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.game.superpacman.SuperPacman;
+import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
+import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
@@ -14,8 +17,6 @@ public class Bonus extends CollectableAreaEntity {
 
     /// Animation duration in frame number
     private final static int ANIMATION_DURATION = 8;
-
-    /// Current bonus' animation
     private Animation currentAnimation;
 
     /**
@@ -31,7 +32,17 @@ public class Bonus extends CollectableAreaEntity {
         this.currentAnimation = new Animation(ANIMATION_DURATION, sprites);
     }
 
-    /* -------------- Implement Actor ---------------- */
+    /* -------------- Implements Collectable ---------------- */
+
+    @Override
+    public void onCollect() {
+        super.onCollect();
+        SuperPacman.player.invincible();
+        //TODO: be careful with the uninstantiated levels
+        Ghost.isAfraid = true;
+    }
+
+    /* -------------- Implements Actor ---------------- */
 
     @Override
     public void update(float deltaTime) {

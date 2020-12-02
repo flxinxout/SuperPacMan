@@ -6,7 +6,8 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
-import ch.epfl.cs107.play.game.rpg.actor.Sign;
+import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
+import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
@@ -15,8 +16,7 @@ import ch.epfl.cs107.play.window.Keyboard;
 import java.util.Collections;
 import java.util.List;
 
-public class SuperPacmanPlayer extends Player {
-
+public class SuperPacmanPlayer extends Player implements Eatable {
     /// Handler of the SuperPacman
     private SuperPacmanPlayerHandler handler;
 
@@ -25,12 +25,15 @@ public class SuperPacmanPlayer extends Player {
 
     /// Speed and MAXHP of the SuperPacman
     private final static int SPEED = 6;
+    private final static float INVINCIBLE_DURATION = 30;
     public final static int MAXHP = 5;
 
     /// HP AND SCORE
     private int hp;
     private int score;
-
+    private boolean invincible;
+    private float timer;
+    private DiscreteCoordinates spawnLocation;
     private Orientation desiredOrientation;
 
     /// Animation duration in frame number
@@ -58,11 +61,34 @@ public class SuperPacmanPlayer extends Player {
         this.hp = 3;
         this.score = 0;
 
+        invincible = false;
+        timer = INVINCIBLE_DURATION;
+
         /// Creation of the handler
         handler = new SuperPacmanPlayerHandler();
 
         /// Create the status in turns of the current SuperPacmanPlayer
         status = new SuperPacmanPlayerStatusGUI(this);
+    }
+
+    public void invincible() {
+        invincible = true;
+    }
+
+    private void refreshInvincibility(float deltaTime) {
+        if (invincible) {
+            if (timer > 0) {
+                timer -= deltaTime;
+            } else {
+                invincible = false;
+                timer = INVINCIBLE_DURATION;
+            }
+        }
+    }
+
+    //TODO: DISGUSTING!!!!!!!!!
+    private SuperPacmanArea toSuperPacmanArea(Area area) {
+        return (SuperPacmanArea) area;
     }
 
     /* -------------- Implement Actor --------------- */
@@ -93,6 +119,8 @@ public class SuperPacmanPlayer extends Player {
         }
 
         setAnimations(deltaTime);
+
+        refreshInvincibility(deltaTime);
 
         super.update(deltaTime);
     }
@@ -182,6 +210,17 @@ public class SuperPacmanPlayer extends Player {
         return null;
     }
 
+    /* --------------- Implements Eatable --------------- */
+
+    @Override
+    public void eaten() {
+        hp--;
+        DiscreteCoordinates spawn = toSuperPacmanArea(getOwnerArea()).getSpawnLocation();
+
+        leaveArea();
+        enterArea(getOwnerArea(), spawn);
+    }
+
     /* --------------- Getters --------------- */
 
     public int getHp() {
@@ -190,6 +229,10 @@ public class SuperPacmanPlayer extends Player {
 
     public int getScore() {
         return score;
+    }
+
+    public boolean isInvincible() {
+        return invincible;
     }
 
     /* --------------- External Methods --------------- */
@@ -209,16 +252,17 @@ public class SuperPacmanPlayer extends Player {
         public void interactWith(Door door) { setIsPassingADoor(door); }
 
         @Override
-        public void interactWith(Interactable other) { }
-
-        @Override
-        public void interactWith(Sign sign) { }
-
-        @Override
-        public void interactWith(SuperPacmanPlayer otherPlayer) { }
-
         public void interactWith(CollectableAreaEntity collectable) {
             collectable.onCollect();
+        }
+
+        @Override
+        public void interactWith(Ghost ghost) {
+            if (invincible) {
+                ghost.eaten();
+            } else {
+                eaten();
+            }
         }
     }
 }

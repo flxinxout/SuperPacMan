@@ -3,15 +3,19 @@ package ch.epfl.cs107.play.game.superpacman.area;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
+import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Window;
 
-public abstract class SuperPacmanArea extends Area implements Logic {
+import java.util.ArrayList;
+import java.util.List;
 
+public abstract class SuperPacmanArea extends Area implements Logic {
+    private List<Ghost> ghosts = new ArrayList<>();
     private SuperPacmanBehavior behavior;
-    private int diamondsNumber = 0;
+    private int diamondsNumber;
 
     //This signal is activated when every collectable in the area has been collected
     private boolean isCompleted;
@@ -33,10 +37,19 @@ public abstract class SuperPacmanArea extends Area implements Logic {
     protected void createArea() {
         behavior.registerActors(this);
     }
+
     abstract public DiscreteCoordinates getSpawnLocation();
 
     public void addDiamond() {
         diamondsNumber++;
+    }
+
+    public void addGhost(Ghost ghost) {
+        ghosts.add(ghost);
+    }
+
+    public List<Ghost> getGhosts() {
+        return ghosts;
     }
 
     public void removeDiamond() {

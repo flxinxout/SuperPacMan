@@ -1,13 +1,16 @@
 package ch.epfl.cs107.play.game.superpacman.area;
 
+import ch.epfl.cs107.play.game.actor.Actor;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaBehavior;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
+import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Cherry;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
 import ch.epfl.cs107.play.game.superpacman.actor.Wall;
+import ch.epfl.cs107.play.game.superpacman.actor.ghost.Blinky;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
 
@@ -94,6 +97,12 @@ public class SuperPacmanBehavior extends AreaBehavior {
                     case FREE_WITH_CHERRY:
                         Cherry cherry = new Cherry(area, new DiscreteCoordinates(x, y));
                         area.registerActor(cherry);
+                        break;
+
+                    case FREE_WITH_BLINKY:
+                        Blinky blinky = new Blinky(area, Orientation.UP, new DiscreteCoordinates(x, y));
+                        area.registerActor(blinky);
+                        area.addGhost(blinky);
                         break;
                 }
             }
