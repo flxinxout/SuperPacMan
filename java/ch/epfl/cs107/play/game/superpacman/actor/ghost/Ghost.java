@@ -39,7 +39,6 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      * @param home        (Coordinate): Initial and home position of the ghost. Not null
      */
-    //TODO: check the parameter animations
     public Ghost(Area area, Orientation orientation, DiscreteCoordinates home, String animationName) {
         super(area, orientation, home);
         this.home = home;
@@ -62,32 +61,13 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
 
     @Override
     public void eaten() {
-        leaveArea();
-        enterArea(getOwnerArea(), home);
+        resetMotion();
+        getOwnerArea().leaveAreaCells(this, getCurrentCells());
+        getOwnerArea().enterAreaCells(this, Collections.singletonList(home));
+        setCurrentPosition(home.toVector());
 
         player = null;
         SuperPacman.player.addScore(GHOST_SCORE);
-        System.out.println("eat: " + SuperPacman.player.getScore());
-    }
-
-    /**
-     *
-     * @param area (Area): initial area, not null
-     * @param position (DiscreteCoordinates): initial position, not null
-     */
-    public void enterArea(Area area, DiscreteCoordinates position){
-        area.registerActor(this);
-
-        setOwnerArea(area);
-        setCurrentPosition(position.toVector());
-        resetMotion();
-    }
-
-    /**
-     * Leave an area by unregister this player
-     */
-    public void leaveArea(){
-        getOwnerArea().unregisterActor(this);
     }
 
     @Override
@@ -118,6 +98,11 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
     @Override
     public boolean takeCellSpace() {
         return false;
+    }
+
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
     @Override

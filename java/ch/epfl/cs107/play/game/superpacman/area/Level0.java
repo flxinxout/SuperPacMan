@@ -34,6 +34,9 @@ public class Level0 extends SuperPacmanArea {
 
         Gate gate2 = new Gate(this, Orientation.LEFT, new DiscreteCoordinates(6,8), key);
         registerActor(gate2);
+
+        Blinky blinky = new Blinky(this, Orientation.UP, new DiscreteCoordinates(10, 8));
+        registerActor(blinky);
     }
 
     @Override

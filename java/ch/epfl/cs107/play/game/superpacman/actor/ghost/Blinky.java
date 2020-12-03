@@ -15,11 +15,6 @@ public class Blinky extends Ghost {
     }
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
-
-    @Override
     public Orientation getNextOrientation() {
         int randomInt = RandomGenerator.getInstance().nextInt(4);
         return Orientation.fromInt(randomInt);

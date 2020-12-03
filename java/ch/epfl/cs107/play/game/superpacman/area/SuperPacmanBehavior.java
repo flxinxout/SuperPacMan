@@ -1,8 +1,7 @@
 package ch.epfl.cs107.play.game.superpacman.area;
 
-import ch.epfl.cs107.play.game.actor.Actor;
-import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaBehavior;
+import ch.epfl.cs107.play.game.areagame.AreaGraph;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
@@ -15,6 +14,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
 
 public class SuperPacmanBehavior extends AreaBehavior {
+    private AreaGraph graph;
     /**
      * Enum that represent all possible types of each cell in the game
      */
@@ -64,10 +64,33 @@ public class SuperPacmanBehavior extends AreaBehavior {
             for (int x = 0; x < width ; x++) {
                 SuperPacmanCellType color = SuperPacmanCellType.toType(getRGB(height - 1 - y, x));
                 setCell(x, y, new SuperPacmanCell(x,y,color));
+
+                if (color != SuperPacmanCellType.WALL) {
+                    boolean[] graphEdges = computeGraphEdges(x, y);
+                    graph.addNode(new DiscreteCoordinates(x, y), graphEdges[0], graphEdges[1], graphEdges[2], graphEdges[3]);
+                }
             }
         }
     }
 
+    private boolean[] computeGraphEdges(int x, int y ) {
+        boolean[] graphEdges = new boolean[4];
+
+        //TODO: multiple casts and weird method
+        SuperPacmanCell leftCell = (SuperPacmanCell) getCell(x-1 , y);
+        graphEdges[0] = (x > 0 && leftCell.type != SuperPacmanCellType .WALL);
+
+        SuperPacmanCell upCell = (SuperPacmanCell) getCell(x , y+1);
+        graphEdges[1] = (x < getHeight() && upCell.type != SuperPacmanCellType .WALL);
+
+        SuperPacmanCell rightCell = (SuperPacmanCell) getCell(x+1 , y);
+        graphEdges[2] = (x < getWidth() && rightCell.type != SuperPacmanCellType .WALL);
+
+        SuperPacmanCell downCell = (SuperPacmanCell) getCell(x , y-1);
+        graphEdges[3] = (x > 0 && downCell.type != SuperPacmanCellType .WALL);
+
+        return graphEdges;
+    }
     /**
      * Method that registers actors in an area
      * @param area the area where actors will be registered

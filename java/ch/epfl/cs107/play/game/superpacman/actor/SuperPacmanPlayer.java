@@ -215,10 +215,10 @@ public class SuperPacmanPlayer extends Player implements Eatable {
     @Override
     public void eaten() {
         hp--;
-        DiscreteCoordinates spawn = toSuperPacmanArea(getOwnerArea()).getSpawnLocation();
-
-        leaveArea();
-        enterArea(getOwnerArea(), spawn);
+        resetMotion();
+        getOwnerArea().leaveAreaCells(this, getCurrentCells());
+        getOwnerArea().enterAreaCells(this, Collections.singletonList(toSuperPacmanArea(getOwnerArea()).getSpawnLocation()));
+        setCurrentPosition(toSuperPacmanArea(getOwnerArea()).getSpawnLocation().toVector());
     }
 
     /* --------------- Getters --------------- */
