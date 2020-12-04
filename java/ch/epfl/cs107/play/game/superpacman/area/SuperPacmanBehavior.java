@@ -5,7 +5,6 @@ import ch.epfl.cs107.play.game.areagame.AreaGraph;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Cherry;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
@@ -15,9 +14,8 @@ import ch.epfl.cs107.play.game.superpacman.actor.ghost.Inky;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
 
-import java.util.Queue;
-
 public class SuperPacmanBehavior extends AreaBehavior {
+    //Graph associated to the area
     private AreaGraph graph = new AreaGraph();
 
     /**
@@ -84,41 +82,12 @@ public class SuperPacmanBehavior extends AreaBehavior {
         }
     }
 
-    private boolean[] computeGraphEdges(int x, int y) {
-        boolean[] graphEdges = new boolean[4];
+    /* --------------- External Methods --------------- */
 
-        //TODO: multiple casts and weird method
-        if (x > 0) {
-            SuperPacmanCell leftCell = (SuperPacmanCell) getCell(x - 1, y);
-            graphEdges[0] = (leftCell.type != SuperPacmanCellType.WALL);
-        }
-
-        if (y < getHeight() - 1) {
-            SuperPacmanCell upCell = (SuperPacmanCell) getCell(x, y+1);
-            graphEdges[1] = (upCell.type != SuperPacmanCellType.WALL);
-        }
-
-        if (x < getWidth() - 1) {
-            SuperPacmanCell rightCell = (SuperPacmanCell) getCell(x + 1, y);
-            graphEdges[2] = (rightCell.type != SuperPacmanCellType.WALL);
-        }
-
-        if (y > 0) {
-            SuperPacmanCell downCell = (SuperPacmanCell) getCell(x, y-1);
-            graphEdges[3] = (downCell.type != SuperPacmanCellType.WALL);
-        }
-
-        return graphEdges;
-    }
-
-    public Queue<Orientation> shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) {
-        return graph.shortestPath(from, to);
-    }
-
-        /**
-         * Method that registers actors in an area
-         * @param area the area where actors will be registered
-         */
+    /**
+     * Method that registers all actors in an area
+     * @param area the area where actors will be registered
+     */
     //TODO: CHANGE SUPERPACMANAREA TO AREA? --> FIND A BETTER WAY FOR THE DIAMONDS COUNT
     protected void registerActors(SuperPacmanArea area) {
         for (int y = 0; y < getHeight(); y++) {
@@ -149,19 +118,57 @@ public class SuperPacmanBehavior extends AreaBehavior {
                     case FREE_WITH_BLINKY:
                         Blinky blinky = new Blinky(area, Orientation.UP, new DiscreteCoordinates(x, y));
                         area.registerActor(blinky);
-                        area.addGhost(blinky);
                         break;
 
                     case FREE_WITH_INKY:
                         Inky inky = new Inky(area, Orientation.UP, new DiscreteCoordinates(x, y));
                         area.registerActor(inky);
-                        area.addGhost(inky);
                         break;
                 }
             }
         }
     }
 
+    /* --------------- Internal Methods --------------- */
+
+    /**
+     * Method that compute the graph edges of a cell
+     * @param x (int) the x coordinate of the cell
+     * @param y (int) the y coordinate of the cell
+     * @return boolean[] boolean array of the edges (true = exists): 0:= left, 1:= up, 2:= right, 3:= down
+     */
+    private boolean[] computeGraphEdges(int x, int y) {
+        boolean[] graphEdges = new boolean[4];
+
+        //TODO: multiple casts and weird method
+        if (x > 0) {
+            SuperPacmanCell leftCell = (SuperPacmanCell) getCell(x - 1, y);
+            graphEdges[0] = (leftCell.type != SuperPacmanCellType.WALL);
+        }
+
+        if (y < getHeight() - 1) {
+            SuperPacmanCell upCell = (SuperPacmanCell) getCell(x, y+1);
+            graphEdges[1] = (upCell.type != SuperPacmanCellType.WALL);
+        }
+
+        if (x < getWidth() - 1) {
+            SuperPacmanCell rightCell = (SuperPacmanCell) getCell(x + 1, y);
+            graphEdges[2] = (rightCell.type != SuperPacmanCellType.WALL);
+        }
+
+        if (y > 0) {
+            SuperPacmanCell downCell = (SuperPacmanCell) getCell(x, y-1);
+            graphEdges[3] = (downCell.type != SuperPacmanCellType.WALL);
+        }
+
+        return graphEdges;
+    }
+
+    /**
+     * Method that neighborhood of a wall cell
+     * @param cell (SuperPacmanCell) the cell
+     * @return boolean[][] 2D boolean array of the neghborhood of the wall (true = there's a wall)
+     */
     private boolean[][] neighborhood(SuperPacmanCell cell) {
         //First dimension := x, Second dimension := y
         boolean[][] neighborhood = new boolean[3][3];
@@ -186,15 +193,20 @@ public class SuperPacmanBehavior extends AreaBehavior {
         return neighborhood;
     }
 
+    /* --------------- Getters --------------- */
+
+    public AreaGraph getGraph() {
+        return graph;
+    }
+
     /**
      * Cell adapted to the SuperPacman game
      */
     public class SuperPacmanCell extends AreaBehavior.Cell {
-        /// Type of the cell following the enum
         private SuperPacmanCellType type;
 
         /**
-         * Default Tuto2Cell Constructor
+         * Default SuperPacmanCell Constructor
          * @param x (int): x coordinate of the cell
          * @param y (int): y coordinate of the cell
          * @param type (SuperPacmanCellType), not null
@@ -203,6 +215,8 @@ public class SuperPacmanBehavior extends AreaBehavior {
             super(x, y);
             this.type = type;
         }
+
+        /* --------------- Extends Cell --------------- */
 
         @Override
         protected boolean canEnter(Interactable entity) {

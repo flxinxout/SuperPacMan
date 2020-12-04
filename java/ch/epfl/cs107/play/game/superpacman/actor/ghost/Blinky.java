@@ -21,7 +21,7 @@ public class Blinky extends Ghost {
         this , 16, 16, new Orientation [] { Orientation.UP ,
                 Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
         // Create an array of 4 animations
-        Animation[] animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
+        Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
 
         return animations;
     }

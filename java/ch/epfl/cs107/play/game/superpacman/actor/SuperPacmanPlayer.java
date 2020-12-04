@@ -18,18 +18,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class SuperPacmanPlayer extends Player implements Eatable {
-    /// Handler of the SuperPacman
+    /// Handler of the SuperPacmanPlayer
     private SuperPacmanPlayerHandler handler;
 
-    /// StatusGUI of the SuperPacman
+    /// StatusGUI of the SuperPacmanPlayer
     private SuperPacmanPlayerStatusGUI status;
 
-    /// Speed and MAXHP of the SuperPacman
+    /// Constants of the SuperPacmanPlayer
     private final static int SPEED = 6;
     private final static float INVINCIBLE_DURATION = 10;
     public final static int MAXHP = 5;
 
-    /// HP AND SCORE
+    /// Attributes of the SuperPacmanPlayer
     private int hp;
     private int score;
     private boolean invincible;
@@ -37,7 +37,7 @@ public class SuperPacmanPlayer extends Player implements Eatable {
     private DiscreteCoordinates spawnLocation;
     private Orientation desiredOrientation;
 
-    /// Animation duration in frame number
+    /// Animation of the SuperPacmanPlayer
     private final static int ANIMATION_DURATION = 8;
     private Animation[] animations;
     private Animation currentAnimation;
@@ -50,18 +50,15 @@ public class SuperPacmanPlayer extends Player implements Eatable {
     public SuperPacmanPlayer(Area owner, DiscreteCoordinates coordinates) {
         super(owner, Orientation.RIGHT, coordinates);
 
-        //Setup the animations for Pacman
+        //Setup the animations for Pacman. Default: Down
         Sprite [][] sprites = RPGSprite.extractSprites ("superpacman/pacman", 4, 1, 1,
                 this , 64, 64, new Orientation [] { Orientation.UP ,
                         Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
-        // Create an array of 4 animations
         animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
         currentAnimation = animations[2];
 
-        desiredOrientation = Orientation.RIGHT;
-        this.hp = 3;
-        this.score = 0;
-
+        hp = 3;
+        score = 0;
         invincible = false;
         timer = INVINCIBLE_DURATION;
 
@@ -72,13 +69,30 @@ public class SuperPacmanPlayer extends Player implements Eatable {
         status = new SuperPacmanPlayerStatusGUI(this);
     }
 
-    public void invincible() {
+    /* --------------- External Methods --------------- */
+
+    public void addScore(int amount) {
+        score += amount;
+        if (score < 0) {
+            score = 0;
+        }
+    }
+
+    /* --------------- Internal Methods --------------- */
+
+    /**
+     * Method that set the invincibility state of the player
+     */
+    private void invincible() {
         invincible = true;
         Ghost.setAfraid(true);
     }
 
+    /**
+     * Method called in update to update the invincibility state of the player
+     * @param deltaTime (float) the delta time of the update
+     */
     private void refreshInvincibility(float deltaTime) {
-        if (invincible) {
             if (timer > 0) {
                 timer -= deltaTime;
             } else {
@@ -86,21 +100,13 @@ public class SuperPacmanPlayer extends Player implements Eatable {
                 Ghost.setAfraid(false);
                 timer = INVINCIBLE_DURATION;
             }
-        }
     }
 
-    //TODO: DISGUSTING!!!!!!!!!
-    private SuperPacmanArea toSuperPacmanArea(Area area) {
-        return (SuperPacmanArea) area;
-    }
-
-    /* -------------- Implement Actor --------------- */
-
-    @Override
-    public void update(float deltaTime) {
-        //Compute the desired orientation
-        Keyboard keyboard = getOwnerArea().getKeyboard();
-
+    /**
+     * Method that compute the desired orientation if a key is pressed
+     * @param keyboard (Keyboard) reference to the keyboard to check the keys
+     */
+    private void computeDesiredOrientation(Keyboard keyboard) {
         if (keyboard.get(Keyboard.DOWN).isLastPressed()) {
             desiredOrientation = Orientation.DOWN;
         }
@@ -113,19 +119,6 @@ public class SuperPacmanPlayer extends Player implements Eatable {
         else if (keyboard.get(Keyboard.RIGHT).isLastPressed()) {
             desiredOrientation = Orientation.RIGHT;
         }
-
-        //Move if possible
-        if (!isDisplacementOccurs() && getOwnerArea().canEnterAreaCells(this,
-                Collections.singletonList (getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
-            orientate(desiredOrientation);
-            move(SPEED);
-        }
-
-        setAnimations(deltaTime);
-
-        refreshInvincibility(deltaTime);
-
-        super.update(deltaTime);
     }
 
     /**
@@ -156,6 +149,41 @@ public class SuperPacmanPlayer extends Player implements Eatable {
         else {
             currentAnimation.reset();
         }
+    }
+
+    /**
+     * Method to cast an Area in a SuperPacmanArea
+     * @param area (Area) the area to cast
+     */
+    //TODO: DISGUSTING!!!!!!!!!
+    private SuperPacmanArea toSuperPacmanArea(Area area) {
+        return (SuperPacmanArea) area;
+    }
+
+    /* -------------- Implement Actor --------------- */
+
+    @Override
+    public void update(float deltaTime) {
+        //Check the desired orientation
+        Keyboard keyboard = getOwnerArea().getKeyboard();
+        computeDesiredOrientation(keyboard);
+
+        //Move if possible
+        if (!isDisplacementOccurs() && getOwnerArea().canEnterAreaCells(this,
+                Collections.singletonList (getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
+            orientate(desiredOrientation);
+            move(SPEED);
+        }
+
+        //Set animations
+        setAnimations(deltaTime);
+
+        //Check invincibility state
+        if (invincible) {
+            refreshInvincibility(deltaTime);
+        }
+
+        super.update(deltaTime);
     }
 
     @Override
@@ -236,15 +264,6 @@ public class SuperPacmanPlayer extends Player implements Eatable {
 
     public boolean isInvincible() {
         return invincible;
-    }
-
-    /* --------------- External Methods --------------- */
-
-    public void addScore(int amount) {
-        score += amount;
-        if (score < 0) {
-            score = 0;
-        }
     }
 
     /**

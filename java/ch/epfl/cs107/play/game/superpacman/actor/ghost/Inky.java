@@ -25,7 +25,7 @@ public class Inky extends Ghost {
                 this , 16, 16, new Orientation [] { Orientation.UP ,
                         Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
         // Create an array of 4 animations
-        Animation[] animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
+        Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
 
         return animations;
     }
@@ -33,11 +33,11 @@ public class Inky extends Ghost {
     @Override
     public Orientation getNextOrientation() {
         SuperPacmanArea area = (SuperPacmanArea) getOwnerArea();
-        Queue<Orientation> path = area.shortestPath(getCurrentMainCellCoordinates() , getTargetPos());
+        Queue<Orientation> path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
         if (path != null) {
             return path.poll();
         } else {
-            path = area.shortestPath(getCurrentMainCellCoordinates(), randomCellInARange(getMaxDistance()));
+            path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), randomCellInARange(getMaxDistance()));
             return path.poll();
         }
     }
