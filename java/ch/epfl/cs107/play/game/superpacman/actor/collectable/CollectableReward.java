@@ -7,7 +7,6 @@ import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 public abstract class CollectableReward extends CollectableAreaEntity {
-
     /// The reward of the collectable
     private final int REWARD;
 

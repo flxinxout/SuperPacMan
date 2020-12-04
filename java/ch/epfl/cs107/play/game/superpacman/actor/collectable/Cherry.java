@@ -16,8 +16,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class Cherry extends CollectableReward {
-
-    /// Cherry's Sprite
     private Sprite sprite;
 
     /**

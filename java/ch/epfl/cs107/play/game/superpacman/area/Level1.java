@@ -17,6 +17,8 @@ public class Level1 extends SuperPacmanArea{
         return "superpacman/Level1";
     }
 
+    /* --------------- Extends SuperPacmanArea --------------- */
+
     @Override
     protected void createArea() {
         super.createArea();

@@ -27,7 +27,6 @@ public class Bonus extends CollectableAreaEntity {
     public Bonus(Area area, DiscreteCoordinates position) {
         super(area, Orientation.DOWN, position);
 
-        /// Setup the animations
         Sprite[] sprites = Sprite.extractSprites("superpacman/coin", 4, 1, 1, this, 16, 16);
         this.currentAnimation = new Animation(ANIMATION_DURATION, sprites);
     }

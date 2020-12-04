@@ -17,8 +17,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class Diamond extends CollectableReward {
-
-    /// Diamond's Sprite
     private Sprite sprite;
 
     /**
@@ -31,7 +29,7 @@ public class Diamond extends CollectableReward {
         this.sprite = new Sprite("superpacman/diamond", 1, 1, this);
     }
 
-    /* -------------- Implement Actor ---------------- */
+    /* -------------- Implements Actor ---------------- */
 
     @Override
     public void draw(Canvas canvas) {
@@ -39,7 +37,7 @@ public class Diamond extends CollectableReward {
     }
 
 
-    /* -------------- Implement Collectable ---------------- */
+    /* -------------- Implements Collectable ---------------- */
 
     @Override
     public void onCollect() {

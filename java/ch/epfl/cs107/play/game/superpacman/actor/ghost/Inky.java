@@ -14,17 +14,24 @@ import ch.epfl.cs107.play.math.RandomGenerator;
 import java.util.Queue;
 
 public class Inky extends Ghost {
+
+    /**
+     * Default Inky constructor
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity. Not null
+     * @param home        (Coordinate): Initial and home position of the ghost. Not null
+     */
     public Inky(Area area, Orientation orientation, DiscreteCoordinates home) {
         super(area, orientation, home);
     }
 
+    /* --------------- Extends Ghost --------------- */
+
     @Override
     protected Animation[] getAnimations() {
-        //Setup the animations for Pacman
         Sprite[][] sprites = RPGSprite.extractSprites ("superpacman/ghost.inky", 4, 1, 1,
                 this , 16, 16, new Orientation [] { Orientation.UP ,
                         Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
-        // Create an array of 4 animations
         Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
 
         return animations;

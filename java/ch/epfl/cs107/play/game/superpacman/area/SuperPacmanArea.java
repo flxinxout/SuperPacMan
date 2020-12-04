@@ -15,12 +15,14 @@ public abstract class SuperPacmanArea extends Area implements Logic {
     //This signal is activated when every collectable in the area has been collected
     private boolean isCompleted;
 
-    /* --------------- External Methods --------------- */
+    /* --------------- Protected Methods --------------- */
 
     //TODO: SEE IF IT STAYS NON-ABSTRACT???
     protected void createArea() {
         behavior.registerActors(this);
     }
+
+    /* --------------- Public Methods --------------- */
 
     abstract public DiscreteCoordinates getSpawnLocation();
 

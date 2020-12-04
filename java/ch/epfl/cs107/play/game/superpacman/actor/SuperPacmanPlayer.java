@@ -34,7 +34,6 @@ public class SuperPacmanPlayer extends Player implements Eatable {
     private int score;
     private boolean invincible;
     private float timer;
-    private DiscreteCoordinates spawnLocation;
     private Orientation desiredOrientation;
 
     /// Animation of the SuperPacmanPlayer
@@ -69,7 +68,7 @@ public class SuperPacmanPlayer extends Player implements Eatable {
         status = new SuperPacmanPlayerStatusGUI(this);
     }
 
-    /* --------------- External Methods --------------- */
+    /* --------------- Public Methods --------------- */
 
     public void addScore(int amount) {
         score += amount;
@@ -78,7 +77,7 @@ public class SuperPacmanPlayer extends Player implements Eatable {
         }
     }
 
-    /* --------------- Internal Methods --------------- */
+    /* --------------- Private Methods --------------- */
 
     /**
      * Method that set the invincibility state of the player

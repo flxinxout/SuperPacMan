@@ -15,11 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Key extends CollectableAreaEntity implements Logic {
-
-    /// Key's Sprite
     private Sprite sprite;
-
-    /// If the key is collected
     private boolean isCollected;
 
     /**
@@ -33,7 +29,7 @@ public class Key extends CollectableAreaEntity implements Logic {
         isCollected = false;
     }
 
-    /* -------------- Implement Actor ---------------- */
+    /* -------------- Implements Actor ---------------- */
 
     @Override
     public void draw(Canvas canvas) {
@@ -45,7 +41,7 @@ public class Key extends CollectableAreaEntity implements Logic {
         return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
-    /* -------------- Implement Collectable ---------------- */
+    /* -------------- Implements Collectable ---------------- */
 
     @Override
     public void onCollect() {
@@ -53,7 +49,7 @@ public class Key extends CollectableAreaEntity implements Logic {
         isCollected = true;
     }
 
-    /* -------------- Implement Logic ---------------- */
+    /* -------------- Implements Logic ---------------- */
 
     @Override
     public boolean isOn() {

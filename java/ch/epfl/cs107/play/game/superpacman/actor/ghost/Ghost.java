@@ -61,6 +61,41 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
         handler = new GhostHandler();
     }
 
+    /* --------------- Implements Actor --------------- */
+
+    @Override
+    public void update(float deltaTime) {
+        if (isDisplacementOccurs()) {
+            setAnimations(deltaTime);
+        } else {
+            desiredOrientation = getNextOrientation();
+            //Move if possible
+            if (getOwnerArea().canEnterAreaCells(this,
+                    Collections.singletonList (getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
+                orientate(desiredOrientation);
+                move(25);
+            }
+        }
+
+        if (player != null) {
+            if (DiscreteCoordinates.distanceBetween(player.getCurrentCells().get(0), getCurrentMainCellCoordinates()) > FIELD_OF_VIEW) {
+                player = null;
+                targetPos = randomCellInARange(maxDistance);
+            }
+        }
+
+        if (getPosition() == targetPos.toVector()) {
+            targetPos = randomCellInARange(maxDistance);
+        }
+
+        super.update(deltaTime);
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        currentAnimation.draw(canvas);
+    }
+
     /* --------------- Implements Eatable --------------- */
 
     @Override
@@ -171,43 +206,10 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
 
     /* --------------- Public Methods --------------- */
 
-    @Override
-    public void update(float deltaTime) {
-        if (isDisplacementOccurs()) {
-            setAnimations(deltaTime);
-        } else {
-            desiredOrientation = getNextOrientation();
-            //Move if possible
-            if (getOwnerArea().canEnterAreaCells(this,
-                    Collections.singletonList (getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
-                orientate(desiredOrientation);
-                move(25);
-            }
-        }
-
-        if (player != null) {
-            if (DiscreteCoordinates.distanceBetween(player.getCurrentCells().get(0), getCurrentMainCellCoordinates()) > FIELD_OF_VIEW) {
-                player = null;
-                targetPos = randomCellInARange(maxDistance);
-            }
-        }
-
-        if (getPosition() == targetPos.toVector()) {
-            targetPos = randomCellInARange(maxDistance);
-        }
-
-        super.update(deltaTime);
-    }
 
     public static void setAfraid(boolean afraid) {
         isAfraid = afraid;
         maxDistance = afraid ? MAX_DISTANCE_WHEN_SCARED : MAX_DISTANCE_WHEN_NOT_SCARED;
-    }
-
-
-    @Override
-    public void draw(Canvas canvas) {
-        currentAnimation.draw(canvas);
     }
 
     @Override
@@ -243,6 +245,9 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
 
     public abstract Orientation getNextOrientation();
 
+    /**
+     * Interaction handler for a Ghost
+     */
     private class GhostHandler implements SuperPacmanInteractionVisitor {
         @Override
         public void interactWith(SuperPacmanPlayer pacman) {

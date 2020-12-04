@@ -15,8 +15,6 @@ import java.awt.*;
  * Represent the status of the SuperPacmanPlayer
  */
 public class SuperPacmanPlayerStatusGUI implements Graphics {
-
-    /// The SuperPacmanPlayer that play
     private SuperPacmanPlayer player;
 
     /**
