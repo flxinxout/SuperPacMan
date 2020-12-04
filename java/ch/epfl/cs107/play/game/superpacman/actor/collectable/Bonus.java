@@ -32,16 +32,6 @@ public class Bonus extends CollectableAreaEntity {
         this.currentAnimation = new Animation(ANIMATION_DURATION, sprites);
     }
 
-    /* -------------- Implements Collectable ---------------- */
-
-    @Override
-    public void onCollect() {
-        super.onCollect();
-        SuperPacman.player.invincible();
-        //TODO: be careful with the uninstantiated levels
-        Ghost.isAfraid = true;
-    }
-
     /* -------------- Implements Actor ---------------- */
 
     @Override

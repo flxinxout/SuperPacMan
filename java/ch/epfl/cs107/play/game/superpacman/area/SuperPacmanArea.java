@@ -1,6 +1,7 @@
 package ch.epfl.cs107.play.game.superpacman.area;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
@@ -11,6 +12,7 @@ import ch.epfl.cs107.play.window.Window;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 public abstract class SuperPacmanArea extends Area implements Logic {
     private List<Ghost> ghosts = new ArrayList<>();
@@ -36,6 +38,10 @@ public abstract class SuperPacmanArea extends Area implements Logic {
     //TODO: SEE IF IT STAYS NON-ABSTRACT???
     protected void createArea() {
         behavior.registerActors(this);
+    }
+
+    public Queue<Orientation> shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) {
+        return behavior.shortestPath(from, to);
     }
 
     abstract public DiscreteCoordinates getSpawnLocation();

@@ -5,16 +5,21 @@ import ch.epfl.cs107.play.game.areagame.AreaGraph;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Cherry;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
 import ch.epfl.cs107.play.game.superpacman.actor.Wall;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Blinky;
+import ch.epfl.cs107.play.game.superpacman.actor.ghost.Inky;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
 
+import java.util.Queue;
+
 public class SuperPacmanBehavior extends AreaBehavior {
-    private AreaGraph graph;
+    private AreaGraph graph = new AreaGraph();
+
     /**
      * Enum that represent all possible types of each cell in the game
      */
@@ -60,12 +65,18 @@ public class SuperPacmanBehavior extends AreaBehavior {
         super(window, name);
         int height = getHeight();
         int width = getWidth();
+        SuperPacmanCellType color;
         for(int y = 0; y < height; y++) {
             for (int x = 0; x < width ; x++) {
-                SuperPacmanCellType color = SuperPacmanCellType.toType(getRGB(height - 1 - y, x));
+                color = SuperPacmanCellType.toType(getRGB(height - 1 - y, x));
                 setCell(x, y, new SuperPacmanCell(x,y,color));
+            }
+        }
 
-                if (color != SuperPacmanCellType.WALL) {
+        for(int y = 0; y < height; y++) {
+            for (int x = 0; x < width ; x++) {
+                SuperPacmanCell cell = (SuperPacmanCell) getCell(x, y);
+                if (cell.type != SuperPacmanCellType.WALL) {
                     boolean[] graphEdges = computeGraphEdges(x, y);
                     graph.addNode(new DiscreteCoordinates(x, y), graphEdges[0], graphEdges[1], graphEdges[2], graphEdges[3]);
                 }
@@ -73,28 +84,41 @@ public class SuperPacmanBehavior extends AreaBehavior {
         }
     }
 
-    private boolean[] computeGraphEdges(int x, int y ) {
+    private boolean[] computeGraphEdges(int x, int y) {
         boolean[] graphEdges = new boolean[4];
 
         //TODO: multiple casts and weird method
-        SuperPacmanCell leftCell = (SuperPacmanCell) getCell(x-1 , y);
-        graphEdges[0] = (x > 0 && leftCell.type != SuperPacmanCellType .WALL);
+        if (x > 0) {
+            SuperPacmanCell leftCell = (SuperPacmanCell) getCell(x - 1, y);
+            graphEdges[0] = (leftCell.type != SuperPacmanCellType.WALL);
+        }
 
-        SuperPacmanCell upCell = (SuperPacmanCell) getCell(x , y+1);
-        graphEdges[1] = (x < getHeight() && upCell.type != SuperPacmanCellType .WALL);
+        if (y < getHeight() - 1) {
+            SuperPacmanCell upCell = (SuperPacmanCell) getCell(x, y+1);
+            graphEdges[1] = (upCell.type != SuperPacmanCellType.WALL);
+        }
 
-        SuperPacmanCell rightCell = (SuperPacmanCell) getCell(x+1 , y);
-        graphEdges[2] = (x < getWidth() && rightCell.type != SuperPacmanCellType .WALL);
+        if (x < getWidth() - 1) {
+            SuperPacmanCell rightCell = (SuperPacmanCell) getCell(x + 1, y);
+            graphEdges[2] = (rightCell.type != SuperPacmanCellType.WALL);
+        }
 
-        SuperPacmanCell downCell = (SuperPacmanCell) getCell(x , y-1);
-        graphEdges[3] = (x > 0 && downCell.type != SuperPacmanCellType .WALL);
+        if (y > 0) {
+            SuperPacmanCell downCell = (SuperPacmanCell) getCell(x, y-1);
+            graphEdges[3] = (downCell.type != SuperPacmanCellType.WALL);
+        }
 
         return graphEdges;
     }
-    /**
-     * Method that registers actors in an area
-     * @param area the area where actors will be registered
-     */
+
+    public Queue<Orientation> shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) {
+        return graph.shortestPath(from, to);
+    }
+
+        /**
+         * Method that registers actors in an area
+         * @param area the area where actors will be registered
+         */
     //TODO: CHANGE SUPERPACMANAREA TO AREA? --> FIND A BETTER WAY FOR THE DIAMONDS COUNT
     protected void registerActors(SuperPacmanArea area) {
         for (int y = 0; y < getHeight(); y++) {
@@ -126,6 +150,12 @@ public class SuperPacmanBehavior extends AreaBehavior {
                         Blinky blinky = new Blinky(area, Orientation.UP, new DiscreteCoordinates(x, y));
                         area.registerActor(blinky);
                         area.addGhost(blinky);
+                        break;
+
+                    case FREE_WITH_INKY:
+                        Inky inky = new Inky(area, Orientation.UP, new DiscreteCoordinates(x, y));
+                        area.registerActor(inky);
+                        area.addGhost(inky);
                         break;
                 }
             }

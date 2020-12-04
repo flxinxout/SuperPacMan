@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
@@ -25,7 +26,7 @@ public class SuperPacmanPlayer extends Player implements Eatable {
 
     /// Speed and MAXHP of the SuperPacman
     private final static int SPEED = 6;
-    private final static float INVINCIBLE_DURATION = 30;
+    private final static float INVINCIBLE_DURATION = 10;
     public final static int MAXHP = 5;
 
     /// HP AND SCORE
@@ -73,6 +74,7 @@ public class SuperPacmanPlayer extends Player implements Eatable {
 
     public void invincible() {
         invincible = true;
+        Ghost.setAfraid(true);
     }
 
     private void refreshInvincibility(float deltaTime) {
@@ -81,6 +83,7 @@ public class SuperPacmanPlayer extends Player implements Eatable {
                 timer -= deltaTime;
             } else {
                 invincible = false;
+                Ghost.setAfraid(false);
                 timer = INVINCIBLE_DURATION;
             }
         }
@@ -129,7 +132,7 @@ public class SuperPacmanPlayer extends Player implements Eatable {
      * Method that set the current animation of the Pacman
      * @param deltaTime the delta time of the update
      */
-    public void setAnimations(float deltaTime) {
+    private void setAnimations(float deltaTime) {
         if (isDisplacementOccurs()) {
             switch (getOrientation()) {
                 case DOWN:
@@ -215,10 +218,10 @@ public class SuperPacmanPlayer extends Player implements Eatable {
     @Override
     public void eaten() {
         hp--;
-        resetMotion();
-        getOwnerArea().leaveAreaCells(this, getCurrentCells());
-        getOwnerArea().enterAreaCells(this, Collections.singletonList(toSuperPacmanArea(getOwnerArea()).getSpawnLocation()));
+        getOwnerArea().leaveAreaCells(this, getEnteredCells());
         setCurrentPosition(toSuperPacmanArea(getOwnerArea()).getSpawnLocation().toVector());
+        getOwnerArea().enterAreaCells(this, Collections.singletonList(toSuperPacmanArea(getOwnerArea()).getSpawnLocation()));
+        resetMotion();
     }
 
     /* --------------- Getters --------------- */
@@ -254,6 +257,17 @@ public class SuperPacmanPlayer extends Player implements Eatable {
         @Override
         public void interactWith(CollectableAreaEntity collectable) {
             collectable.onCollect();
+
+            //TODO: POLYMORPHISM!!!
+            if (collectable instanceof Bonus) {
+                invincible();
+            }
+        }
+
+        //TODO: Polymorphism here
+        @Override
+        public void interactWith(Bonus bonus) {
+
         }
 
         @Override

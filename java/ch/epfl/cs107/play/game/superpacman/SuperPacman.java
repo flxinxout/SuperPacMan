@@ -47,11 +47,12 @@ public class SuperPacman extends RPG {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        if (player.isInvincible()) {
+        //TODO: verify?
+        /*if (player.isInvincible()) {
             Ghost.isAfraid = true;
         } else {
             Ghost.isAfraid = false;
-        }
+        }*/
     }
 
     @Override
