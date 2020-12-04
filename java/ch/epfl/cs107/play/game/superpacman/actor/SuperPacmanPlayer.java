@@ -61,6 +61,8 @@ public class SuperPacmanPlayer extends Player implements Eatable {
         invincible = false;
         timer = INVINCIBLE_DURATION;
 
+        desiredOrientation = Orientation.RIGHT;
+
         /// Creation of the handler
         handler = new SuperPacmanPlayerHandler();
 
