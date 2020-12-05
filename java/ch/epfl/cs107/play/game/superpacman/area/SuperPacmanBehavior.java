@@ -11,12 +11,17 @@ import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
 import ch.epfl.cs107.play.game.superpacman.actor.Wall;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Blinky;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Inky;
+import ch.epfl.cs107.play.game.superpacman.actor.ghost.Pinky;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SuperPacmanBehavior extends AreaBehavior {
     //Graph associated to the area
     private AreaGraph graph = new AreaGraph();
+    private List<Wall> walls = new ArrayList<>();
 
     /**
      * Enum that represent all possible types of each cell in the game
@@ -98,6 +103,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
                     case WALL:
                         Wall wall = new Wall(area, new DiscreteCoordinates(x, y), neighborhood(cell));
                         area.registerActor(wall);
+                        walls.add(wall);
                         break;
 
                     case FREE_WITH_DIAMOND:
@@ -123,6 +129,11 @@ public class SuperPacmanBehavior extends AreaBehavior {
                     case FREE_WITH_INKY:
                         Inky inky = new Inky(area, Orientation.UP, new DiscreteCoordinates(x, y));
                         area.registerActor(inky);
+                        break;
+
+                    case FREE_WITH_PINKY:
+                        Pinky pinky = new Pinky(area, Orientation.UP, new DiscreteCoordinates(x, y));
+                        area.registerActor(pinky);
                         break;
                 }
             }
@@ -197,6 +208,10 @@ public class SuperPacmanBehavior extends AreaBehavior {
 
     public AreaGraph getGraph() {
         return graph;
+    }
+
+    public List<Wall> getWalls() {
+        return walls;
     }
 
     /**

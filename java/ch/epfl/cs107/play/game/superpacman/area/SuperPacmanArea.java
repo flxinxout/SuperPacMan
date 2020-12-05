@@ -80,4 +80,9 @@ public abstract class SuperPacmanArea extends Area implements Logic {
     public AreaGraph getGraph() {
         return behavior.getGraph();
     }
+
+    //TODO: ENCAPSULATION
+    public SuperPacmanBehavior getBehavior() {
+        return behavior;
+    }
 }

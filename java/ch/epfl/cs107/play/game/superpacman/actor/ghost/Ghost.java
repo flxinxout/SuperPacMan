@@ -1,11 +1,15 @@
 package ch.epfl.cs107.play.game.superpacman.actor.ghost;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.AreaBehavior;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.Eatable;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
+import ch.epfl.cs107.play.game.superpacman.actor.Wall;
+import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
+import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanBehavior;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
@@ -13,14 +17,16 @@ import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Ghost extends MovableAreaEntity implements Interactor, Eatable {
     /// Static attributes of the Ghosts
     private final static int GHOST_SCORE = 500;
-    private final static int FIELD_OF_VIEW = 5;
-    private static final int MAX_DISTANCE_WHEN_SCARED = 5;
-    private static final int MAX_DISTANCE_WHEN_NOT_SCARED = 10;
+    protected final static int FIELD_OF_VIEW = 5;
+    protected static final int MAX_DISTANCE_WHEN_SCARED = 5;
+    protected static final int MAX_DISTANCE_WHEN_NOT_SCARED = 10;
+    protected static final int MIN_AFRAID_DISTANCE = 5;
     private final static int ANIMATION_DURATION = 8;
 
     private static Animation afraidAnimation;
@@ -31,12 +37,14 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
     private Animation[] animations;
     private Animation currentAnimation;
 
-    private DiscreteCoordinates home;
+    protected DiscreteCoordinates home;
     private SuperPacmanPlayer player;
     private Orientation desiredOrientation;
     private DiscreteCoordinates targetPos;
 
     private GhostHandler handler;
+
+    //protected Path graphicPath;
 
     /**
      * Default Ghost constructor
@@ -54,46 +62,55 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
         this.currentAnimation = animations[orientation.ordinal()];
 
         isAfraid = false;
-        maxDistance = MAX_DISTANCE_WHEN_NOT_SCARED;
+        //maxDistance = MAX_DISTANCE_WHEN_NOT_SCARED;
+        maxDistance = saveMaxDistance(false);
         targetPos = randomCellInARange(maxDistance);
 
         /// Creation of the handler
         handler = new GhostHandler();
+
+        //graphicPath = new Path(this.getPosition(), new LinkedList<>(null));
     }
 
     /* --------------- Implements Actor --------------- */
 
     @Override
     public void update(float deltaTime) {
+        super.update(deltaTime);
+
         if (isDisplacementOccurs()) {
             setAnimations(deltaTime);
         } else {
             desiredOrientation = getNextOrientation();
             //Move if possible
             if (getOwnerArea().canEnterAreaCells(this,
-                    Collections.singletonList (getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
+                    Collections.singletonList(getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
                 orientate(desiredOrientation);
-                move(25);
+
+                //TODO: speed modification
+                if(isAfraid) {
+                    move(true);
+                } else {
+                    move(false);
+                }
+                //move(25);
             }
         }
 
-        if (player != null) {
-            if (DiscreteCoordinates.distanceBetween(player.getCurrentCells().get(0), getCurrentMainCellCoordinates()) > FIELD_OF_VIEW) {
-                player = null;
-                targetPos = randomCellInARange(maxDistance);
-            }
-        }
+        // SetTargetPos in turns of the type of the ghost
+        targetPos = saveTargetPos(player);
 
         if (getPosition() == targetPos.toVector()) {
             targetPos = randomCellInARange(maxDistance);
         }
-
-        super.update(deltaTime);
     }
 
     @Override
     public void draw(Canvas canvas) {
         currentAnimation.draw(canvas);
+        /*if(graphicPath != null) {
+            graphicPath.draw(canvas);
+        }*/
     }
 
     /* --------------- Implements Eatable --------------- */
@@ -189,27 +206,13 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
         }
     }
 
-    /* --------------- Protected Methods --------------- */
-
-    protected DiscreteCoordinates randomCellInARange(int range) {
-        int randomX, randomY;
-        DiscreteCoordinates randomCoordinates;
-
-        do {
-            randomX = RandomGenerator.getInstance().nextInt(getOwnerArea().getWidth());
-            randomY = RandomGenerator.getInstance().nextInt(getOwnerArea().getHeight());
-            randomCoordinates = new DiscreteCoordinates(randomX, randomY);
-        }while (DiscreteCoordinates.distanceBetween(home, randomCoordinates) > range);
-
-        return randomCoordinates;
-    }
-
     /* --------------- Public Methods --------------- */
 
 
     public static void setAfraid(boolean afraid) {
         isAfraid = afraid;
         maxDistance = afraid ? MAX_DISTANCE_WHEN_SCARED : MAX_DISTANCE_WHEN_NOT_SCARED;
+        //TODO: METTRE LE SAVEMAXDISTANCE MAIS IMPOSSIBLE CAR CEST PAS STATIC MAIS JSAIS PAS COMMENT FAIRE ??
     }
 
     @Override
@@ -221,6 +224,10 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
     /* --------------- Getters --------------- */
 
     protected abstract Animation[] getAnimations();
+    protected abstract void move(boolean isAfraid);
+    protected abstract DiscreteCoordinates randomCellInARange(int range);
+    protected abstract DiscreteCoordinates saveTargetPos(SuperPacmanPlayer player);
+    protected abstract int saveMaxDistance(boolean isAfraid);
 
     public static int getAnimationDuration() {
         return ANIMATION_DURATION;
@@ -236,6 +243,10 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
 
     protected DiscreteCoordinates getTargetPos() {
         return targetPos;
+    }
+
+    protected void setPlayer(SuperPacmanPlayer player) {
+        this.player = player;
     }
 
     @Override
