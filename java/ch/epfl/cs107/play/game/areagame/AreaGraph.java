@@ -169,6 +169,9 @@ public class AreaGraph {
         AreaNode start = nodes.get(from);
         AreaNode goal = nodes.get(to);
 
+        if (start == null || goal == null) {
+
+        }
         if( goal == null || start == null || start == goal)
             return null;
 

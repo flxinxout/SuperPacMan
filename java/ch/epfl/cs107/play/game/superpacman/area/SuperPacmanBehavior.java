@@ -10,6 +10,7 @@ import ch.epfl.cs107.play.game.superpacman.actor.collectable.Cherry;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
 import ch.epfl.cs107.play.game.superpacman.actor.Wall;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Blinky;
+import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Inky;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Pinky;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -22,6 +23,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
     //Graph associated to the area
     private AreaGraph graph = new AreaGraph();
     private List<Wall> walls = new ArrayList<>();
+    private List<Ghost> ghosts = new ArrayList<>();
 
     /**
      * Enum that represent all possible types of each cell in the game
@@ -88,6 +90,19 @@ public class SuperPacmanBehavior extends AreaBehavior {
     }
 
     /* --------------- External Methods --------------- */
+
+    //TODO: i think no better way --> see this in Piazza
+    public void scareGhosts() {
+        for (Ghost ghost: ghosts) {
+            ghost.setIsScared(true);
+        }
+    }
+
+    public void unScareGhosts() {
+        for (Ghost ghost: ghosts) {
+            ghost.setIsScared(false);
+        }
+    }
 
     /**
      * Method that registers all actors in an area

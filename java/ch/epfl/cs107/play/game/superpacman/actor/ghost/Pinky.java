@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.superpacman.actor.ghost;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Animation;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.areagame.actor.Path;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
@@ -10,9 +11,12 @@ import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class Pinky extends Ghost {
+    private final static int MIN_AFRAID_DISTANCE = 5;
+    private final static int MAX_RANDOM_ATTEMPT = 200;
 
     /**
      * Default Pinky constructor
@@ -36,52 +40,58 @@ public class Pinky extends Ghost {
     }
 
     @Override
-    protected void move(boolean isAfraid) {
-        move(25);
-    }
-
-    @Override
     public Orientation getNextOrientation() {
         SuperPacmanArea area = (SuperPacmanArea) getOwnerArea();
-        Queue<Orientation> path1 = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
+        Queue<Orientation> path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
 
-        if(path1 == null) {
-            Queue<Orientation> path2 = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), randomCellInARange());
-            return path2.poll();
-        } else {
-            return path1.poll();
+        while (path == null || path.isEmpty()) {
+            DiscreteCoordinates cell = randomCell();
+            path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), cell);
         }
+
+        //graphicPath = new Path(this.getPosition(), new LinkedList<>(path));
+        return path.poll();
     }
 
     @Override
-    protected DiscreteCoordinates randomCellInARange(int range) {
-        int randomX, randomY;
-        DiscreteCoordinates randomCoordinates;
+    protected void onScared() {
+        updateTarget();
+    }
+
+    @Override
+    protected void onUnscared() {
+        updateTarget();
+    }
+
+    protected DiscreteCoordinates randomCellFarFromPlayer() {
+        DiscreteCoordinates cellAttempt;
+        int attempts = 0;
 
         do {
-            randomX = RandomGenerator.getInstance().nextInt(getOwnerArea().getWidth());
-            randomY = RandomGenerator.getInstance().nextInt(getOwnerArea().getHeight());
-            randomCoordinates = new DiscreteCoordinates(randomX, randomY);
-        }while (DiscreteCoordinates.distanceBetween(home, randomCoordinates) > MIN_AFRAID_DISTANCE);
+            cellAttempt = randomCell();
+            ++attempts;
+        } while(DiscreteCoordinates.distanceBetween(cellAttempt,
+                getPlayer().getCurrentCells().get(0)) < MIN_AFRAID_DISTANCE
+                && attempts < MAX_RANDOM_ATTEMPT);
 
-        return randomCoordinates;
+        return cellAttempt;
     }
 
     @Override
-    protected DiscreteCoordinates saveTargetPos(SuperPacmanPlayer player) {
-        if (player == null) {
-            if (DiscreteCoordinates.distanceBetween(player.getCurrentCells().get(0), getCurrentMainCellCoordinates()) > FIELD_OF_VIEW) {
-                //TODO: PAS OUF LE SETTER
-                setPlayer(null);
-                return randomCellInARange(getMaxDistance());
+    protected void updateTarget() {
+        if (isAfraid()) {
+            if (getPlayer() == null) {
+                setTargetPos(randomCell());
+            } else {
+                setTargetPos(randomCellFarFromPlayer());
             }
         }
-        return null;
-    }
-
-
-    protected int saveMaxDistance(boolean isAfraid) {
-        //TODO: pas sur du max not scared car sinon je saurais pas quoi mettre
-        return isAfraid ? MIN_AFRAID_DISTANCE : MAX_DISTANCE_WHEN_NOT_SCARED;
+        else {
+            if (getPlayer() == null) {
+                setTargetPos(randomCell());
+            } else {
+                setTargetPos(getPlayer().getCurrentCells().get((0)));
+            }
+        }
     }
 }

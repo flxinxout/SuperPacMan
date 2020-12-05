@@ -5,7 +5,6 @@ import ch.epfl.cs107.play.game.areagame.actor.Animation;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
-import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 
@@ -20,6 +19,15 @@ public class Blinky extends Ghost {
     public Blinky(Area area, Orientation orientation, DiscreteCoordinates home) {
         super(area, orientation, home);
     }
+
+    @Override
+    protected void onScared() { }
+
+    @Override
+    protected void onUnscared() { }
+
+    @Override
+    protected void updateTarget() { }
 
     /* --------------- Extends Ghost --------------- */
 
@@ -37,20 +45,5 @@ public class Blinky extends Ghost {
     public Orientation getNextOrientation() {
         int randomInt = RandomGenerator.getInstance().nextInt(4);
         return Orientation.fromInt(randomInt);
-    }
-
-    @Override
-    protected void move(boolean isAfraid) {
-        move(25);
-    }
-
-    @Override
-    protected DiscreteCoordinates randomCellInARange(int range) {
-        return null;
-    }
-
-    @Override
-    protected DiscreteCoordinates saveTargetPos(SuperPacmanPlayer player) {
-        return null;
     }
 }

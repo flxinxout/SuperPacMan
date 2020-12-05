@@ -35,7 +35,7 @@ public class SuperPacman extends RPG {
 
             createAreas();
             //TODO: STRANGE WAY CAST
-            SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas[0], true);
+            SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas[1], true);
             player = new SuperPacmanPlayer(area, area.getSpawnLocation());
             initPlayer(player);
             return true;
@@ -47,11 +47,12 @@ public class SuperPacman extends RPG {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        //TODO: verify?
-        /*if (player.isInvincible()) {
-            Ghost.isAfraid = true;
+        //TODO: HERE?
+        /*SuperPacmanArea currentArea = (SuperPacmanArea) getCurrentArea();
+        if (player.isInvincible()) {
+            currentArea.getBehavior().scareGhosts();
         } else {
-            Ghost.isAfraid = false;
+            currentArea.getBehavior().unScareGhosts();
         }*/
     }
 

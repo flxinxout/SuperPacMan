@@ -17,6 +17,7 @@ import ch.epfl.cs107.play.window.Keyboard;
 import java.util.Collections;
 import java.util.List;
 
+//TODO: MAKE THE PLAYER A SIGNAL : ON := INVINCIBLE, OFF := VULNERABLE
 public class SuperPacmanPlayer extends Player implements Eatable {
     /// Handler of the SuperPacmanPlayer
     private SuperPacmanPlayerHandler handler;
@@ -86,7 +87,10 @@ public class SuperPacmanPlayer extends Player implements Eatable {
      */
     private void invincible() {
         invincible = true;
-        Ghost.setAfraid(true);
+
+        //TODO: HERE OR IN UPDATE OF THE GAME?
+        SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
+        ownerArea.getBehavior().scareGhosts();
     }
 
     /**
@@ -98,7 +102,10 @@ public class SuperPacmanPlayer extends Player implements Eatable {
                 timer -= deltaTime;
             } else {
                 invincible = false;
-                Ghost.setAfraid(false);
+
+                //TODO: HERE OR IN UPDATE OF THE GAME?
+                SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
+                ownerArea.getBehavior().unScareGhosts();
                 timer = INVINCIBLE_DURATION;
             }
     }
