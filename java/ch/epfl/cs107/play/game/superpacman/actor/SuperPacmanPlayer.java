@@ -37,7 +37,8 @@ public class SuperPacmanPlayer extends Player implements Eatable {
     private boolean invincible;
     // Spawn protection (to avoid spawnkill)
     private boolean protection;
-    private float timer;
+    private float timer_invisible;
+    private float timer_protection;
     private Orientation desiredOrientation;
 
     /// Animation of the SuperPacmanPlayer
@@ -64,7 +65,8 @@ public class SuperPacmanPlayer extends Player implements Eatable {
         score = 0;
         invincible = false;
         protection = false;
-        timer = INVINCIBLE_DURATION;
+        timer_invisible = INVINCIBLE_DURATION;
+        timer_protection = PROTECTION_DURATION;
 
         desiredOrientation = Orientation.RIGHT;
 
@@ -99,7 +101,6 @@ public class SuperPacmanPlayer extends Player implements Eatable {
 
     private void protect() {
         protection = true;
-        timer = PROTECTION_DURATION;
     }
 
     /**
@@ -107,17 +108,29 @@ public class SuperPacmanPlayer extends Player implements Eatable {
      * @param deltaTime (float) the delta time of the update
      */
     private void refreshInvincibility(float deltaTime) {
-            if (timer > 0) {
-                timer -= deltaTime;
+            if (timer_invisible > 0) {
+                timer_invisible -= deltaTime;
             } else {
                 invincible = false;
-                protection = false;
 
                 //TODO: HERE OR IN UPDATE OF THE GAME?
                 SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
                 ownerArea.getBehavior().unScareGhosts();
-                timer = INVINCIBLE_DURATION;
+                timer_invisible = INVINCIBLE_DURATION;
             }
+    }
+
+    /**
+     * Method called in update to update the invincibility state of the player
+     * @param deltaTime (float) the delta time of the update
+     */
+    private void refreshProtection(float deltaTime) {
+        if (timer_protection > 0) {
+            timer_protection -= deltaTime;
+        } else {
+            protection = false;
+            timer_protection = PROTECTION_DURATION;
+        }
     }
 
     /**
@@ -199,6 +212,11 @@ public class SuperPacmanPlayer extends Player implements Eatable {
         //Check invincibility state
         if (invincible) {
             refreshInvincibility(deltaTime);
+        }
+
+        // Check the protection state
+        if(protection) {
+            refreshProtection(deltaTime);
         }
 
         super.update(deltaTime);
@@ -313,7 +331,9 @@ public class SuperPacmanPlayer extends Player implements Eatable {
             if (invincible) {
                 ghost.eaten();
             } else {
-                eaten();
+                if(!protection) {
+                    eaten();
+                }
             }
         }
     }
