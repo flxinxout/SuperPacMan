@@ -11,13 +11,13 @@ import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
 import java.util.Collections;
 import java.util.List;
 
-//TODO: MAKE THE PLAYER A SIGNAL : ON := INVINCIBLE, OFF := VULNERABLE
 public class SuperPacmanPlayer extends Player implements Eatable {
     /// Handler of the SuperPacmanPlayer
     private SuperPacmanPlayerHandler handler;
@@ -28,12 +28,15 @@ public class SuperPacmanPlayer extends Player implements Eatable {
     /// Constants of the SuperPacmanPlayer
     private final static int SPEED = 6;
     private final static float INVINCIBLE_DURATION = 10;
+    private final static float PROTECTION_DURATION = 3;
     public final static int MAXHP = 5;
 
     /// Attributes of the SuperPacmanPlayer
     private int hp;
     private int score;
     private boolean invincible;
+    // Spawn protection (to avoid spawnkill)
+    private boolean protection;
     private float timer;
     private Orientation desiredOrientation;
 
@@ -60,6 +63,7 @@ public class SuperPacmanPlayer extends Player implements Eatable {
         hp = 3;
         score = 0;
         invincible = false;
+        protection = false;
         timer = INVINCIBLE_DURATION;
 
         desiredOrientation = Orientation.RIGHT;
@@ -93,6 +97,11 @@ public class SuperPacmanPlayer extends Player implements Eatable {
         ownerArea.getBehavior().scareGhosts();
     }
 
+    private void protect() {
+        protection = true;
+        timer = PROTECTION_DURATION;
+    }
+
     /**
      * Method called in update to update the invincibility state of the player
      * @param deltaTime (float) the delta time of the update
@@ -102,6 +111,7 @@ public class SuperPacmanPlayer extends Player implements Eatable {
                 timer -= deltaTime;
             } else {
                 invincible = false;
+                protection = false;
 
                 //TODO: HERE OR IN UPDATE OF THE GAME?
                 SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
@@ -254,9 +264,10 @@ public class SuperPacmanPlayer extends Player implements Eatable {
     @Override
     public void eaten() {
         hp--;
+        protect();
         getOwnerArea().leaveAreaCells(this, getEnteredCells());
         setCurrentPosition(toSuperPacmanArea(getOwnerArea()).getSpawnLocation().toVector());
-        getOwnerArea().enterAreaCells(this, Collections.singletonList(toSuperPacmanArea(getOwnerArea()).getSpawnLocation()));
+        getOwnerArea().enterAreaCells(this, getCurrentCells());
         resetMotion();
     }
 

@@ -35,7 +35,7 @@ public class Inky extends Ghost {
 
     @Override
     protected Animation[] getAnimations() {
-        Sprite[][] sprites = RPGSprite.extractSprites ("superpacman/ghost.inky", 4, 1, 1,
+        Sprite[][] sprites = RPGSprite.extractSprites ("superpacman/ghost.inky", 2, 1.f, 1.f,
                 this , 16, 16, new Orientation [] { Orientation.UP ,
                         Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
         Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
@@ -52,7 +52,7 @@ public class Inky extends Ghost {
             path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), randomCell());
         }
 
-        //graphicPath = new Path(this.getPosition(), new LinkedList<>(path));
+        graphicPath = new Path(this.getPosition(), new LinkedList<>(path));
         return path.poll();
     }
 

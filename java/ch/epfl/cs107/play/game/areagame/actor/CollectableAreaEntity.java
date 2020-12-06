@@ -13,6 +13,7 @@ import java.util.List;
  * class that represent an entity in an area that can be collected by an actor
  */
 public abstract class CollectableAreaEntity extends AreaEntity implements Collectable {
+    private final int SPRITE_DEPTH = 100;
 
     /**
      * Default constructor
@@ -56,5 +57,9 @@ public abstract class CollectableAreaEntity extends AreaEntity implements Collec
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((RPGInteractionVisitor)v).interactWith(this);
+    }
+
+    protected int getSPRITE_DEPTH() {
+        return SPRITE_DEPTH;
     }
 }

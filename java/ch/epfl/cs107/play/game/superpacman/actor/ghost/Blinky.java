@@ -20,20 +20,11 @@ public class Blinky extends Ghost {
         super(area, orientation, home);
     }
 
-    @Override
-    protected void onScared() { }
-
-    @Override
-    protected void onUnscared() { }
-
-    @Override
-    protected void updateTarget() { }
-
     /* --------------- Extends Ghost --------------- */
 
     @Override
     protected Animation[] getAnimations() {
-        Sprite[][] sprites = RPGSprite.extractSprites ("superpacman/ghost.blinky", 4, 1, 1,
+        Sprite[][] sprites = RPGSprite.extractSprites ("superpacman/ghost.blinky", 2, 1.f, 1.f,
         this , 16, 16, new Orientation [] { Orientation.UP ,
                 Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
         Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
@@ -46,4 +37,13 @@ public class Blinky extends Ghost {
         int randomInt = RandomGenerator.getInstance().nextInt(4);
         return Orientation.fromInt(randomInt);
     }
+
+    @Override
+    protected void onScared() { }
+
+    @Override
+    protected void onUnscared() { }
+
+    @Override
+    protected void updateTarget() { }
 }

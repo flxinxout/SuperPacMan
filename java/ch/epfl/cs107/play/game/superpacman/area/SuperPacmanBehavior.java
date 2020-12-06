@@ -139,16 +139,19 @@ public class SuperPacmanBehavior extends AreaBehavior {
                     case FREE_WITH_BLINKY:
                         Blinky blinky = new Blinky(area, Orientation.UP, new DiscreteCoordinates(x, y));
                         area.registerActor(blinky);
+                        ghosts.add(blinky);
                         break;
 
                     case FREE_WITH_INKY:
                         Inky inky = new Inky(area, Orientation.UP, new DiscreteCoordinates(x, y));
                         area.registerActor(inky);
+                        ghosts.add(inky);
                         break;
 
                     case FREE_WITH_PINKY:
                         Pinky pinky = new Pinky(area, Orientation.UP, new DiscreteCoordinates(x, y));
                         area.registerActor(pinky);
+                        ghosts.add(pinky);
                         break;
                 }
             }

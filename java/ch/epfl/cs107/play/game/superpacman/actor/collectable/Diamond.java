@@ -11,6 +11,7 @@ import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Collections;
@@ -26,7 +27,8 @@ public class Diamond extends CollectableReward {
      */
     public Diamond(Area area, DiscreteCoordinates position) {
         super(area, Orientation.DOWN, position, 10);
-        this.sprite = new Sprite("superpacman/diamond", 1, 1, this);
+        this.sprite = new Sprite("superpacman/diamond", 1, 1, this,
+                                null, Vector.ZERO, 1.0f, getSPRITE_DEPTH());
     }
 
     /* -------------- Implements Actor ---------------- */

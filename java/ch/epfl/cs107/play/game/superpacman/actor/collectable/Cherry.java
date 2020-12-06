@@ -27,7 +27,8 @@ public class Cherry extends CollectableReward {
         super(area, Orientation.DOWN, position, 200);
 
         //TODO: check eventually the depth to spawn it behind the player
-        this.sprite = new Sprite("superpacman/cherry", 1, 1, this);
+        this.sprite = new Sprite("superpacman/cherry", 1, 1, this,
+                null, Vector.ZERO, 1.0f, getSPRITE_DEPTH());
     }
 
     /* -------------- Implement Actor ---------------- */
