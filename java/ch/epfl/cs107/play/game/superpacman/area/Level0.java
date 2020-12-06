@@ -4,13 +4,19 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.superpacman.actor.Gate;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Key;
+import ch.epfl.cs107.play.game.superpacman.actor.collectable.Life;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Blinky;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
+/**
+ * Level 0 of the game
+ */
 public class Level0 extends SuperPacmanArea {
 
+    // The spawn position in the level
     private final DiscreteCoordinates PLAYER_SPAWN_POSITION = new DiscreteCoordinates(10, 1);
+
 
     /* --------------- Implement Playable --------------- */
 
@@ -18,6 +24,7 @@ public class Level0 extends SuperPacmanArea {
     public String getTitle() {
         return "superpacman/Level0";
     }
+
 
     /* --------------- Extends SuperPacmanArea --------------- */
 
@@ -37,8 +44,8 @@ public class Level0 extends SuperPacmanArea {
         Gate gate2 = new Gate(this, Orientation.LEFT, new DiscreteCoordinates(6,8), key);
         registerActor(gate2);
 
-        /*Blinky blinky = new Blinky(this, Orientation.UP, new DiscreteCoordinates(10, 8));
-        registerActor(blinky);*/
+        Life life = new Life(this, Orientation.UP, new DiscreteCoordinates(1, 4));
+        registerActor(life);
     }
 
     @Override

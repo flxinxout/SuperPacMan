@@ -11,11 +11,22 @@ import ch.epfl.cs107.play.signal.Signal;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Key Item in the SuperPacman game
+ * Used to unlock the door for the next level
+ */
+
 public class Key extends CollectableAreaEntity implements Logic {
+
+    // Default key's Sprite
     private Sprite sprite;
+
     private boolean isCollected;
 
     /**
@@ -37,8 +48,21 @@ public class Key extends CollectableAreaEntity implements Logic {
     }
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
+    public void onSound() {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("res/sounds/pacman/transactionOk.wav").getAbsoluteFile());
+
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.loop(0);
+
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 
     /* -------------- Implements Collectable ---------------- */
@@ -48,6 +72,7 @@ public class Key extends CollectableAreaEntity implements Logic {
         super.onCollect();
         isCollected = true;
     }
+
 
     /* -------------- Implements Logic ---------------- */
 

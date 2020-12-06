@@ -12,10 +12,20 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ *  Cherry item in the SuperPacman game
+ *  Gives a reward when it is collected
+ */
+
 public class Cherry extends CollectableReward {
+
+    // Default cherry's Sprite
     private Sprite sprite;
 
     /**
@@ -31,15 +41,27 @@ public class Cherry extends CollectableReward {
                 null, Vector.ZERO, 1.0f, getSPRITE_DEPTH());
     }
 
+
     /* -------------- Implement Actor ---------------- */
 
     @Override
-    public void draw(Canvas canvas) {
-        sprite.draw(canvas);
-    }
+    public void draw(Canvas canvas) { sprite.draw(canvas); }
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
+    public void onSound() {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("res/sounds/pacman/pacman_eatfruit.wav").getAbsoluteFile());
+
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.loop(0);
+
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 }

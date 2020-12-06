@@ -8,6 +8,11 @@ import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 
+/**
+ * Type of ghost in the SuperPacman game
+ * Does nothing special
+ */
+
 public class Blinky extends Ghost {
 
     /**
@@ -20,13 +25,18 @@ public class Blinky extends Ghost {
         super(area, orientation, home);
     }
 
+
     /* --------------- Extends Ghost --------------- */
 
     @Override
     protected Animation[] getAnimations() {
+
+        // Extracts the sprites of the ghost
         Sprite[][] sprites = RPGSprite.extractSprites ("superpacman/ghost.blinky", 2, 1.f, 1.f,
         this , 16, 16, new Orientation [] { Orientation.UP ,
                 Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
+
+        // Sets the animations of the ghost
         Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
 
         return animations;
@@ -34,7 +44,11 @@ public class Blinky extends Ghost {
 
     @Override
     public Orientation getNextOrientation() {
+
+        // Creates a random number between 0 and 4
         int randomInt = RandomGenerator.getInstance().nextInt(4);
+
+        // Returns an orientation from this random
         return Orientation.fromInt(randomInt);
     }
 

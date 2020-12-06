@@ -6,9 +6,22 @@ import ch.epfl.cs107.play.game.superpacman.actor.collectable.Key;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.And;
 
+/**
+ * Level 2 of the game
+ */
 public class Level2 extends SuperPacmanArea{
-    //TODO: TRY TO PUT IT IN THE SUPER CLASS
+
+    // The spawn position in the level
     private final DiscreteCoordinates PLAYER_SPAWN_POSITION = new DiscreteCoordinates(15, 29);
+
+
+    /* --------------- Implement Playable --------------- */
+
+    @Override
+    public String getTitle() {
+        return "superpacman/Level2";
+    }
+
 
     /* --------------- Extends SuperPacmanArea --------------- */
 
@@ -16,7 +29,6 @@ public class Level2 extends SuperPacmanArea{
     protected void createArea() {
         super.createArea();
 
-        //TODO: make an array of keys and gates? even an attribute?
         Key key1 = new Key(this, new DiscreteCoordinates(3, 16));
         registerActor(key1);
 
@@ -77,10 +89,4 @@ public class Level2 extends SuperPacmanArea{
         return PLAYER_SPAWN_POSITION;
     }
 
-    /* --------------- Implement Playable --------------- */
-
-    @Override
-    public String getTitle() {
-        return "superpacman/Level2";
-    }
 }

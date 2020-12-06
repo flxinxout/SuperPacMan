@@ -6,8 +6,13 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
+/**
+ * Class that represents a collectable entity, but with a reward when it is collected
+ */
+
 public abstract class CollectableReward extends CollectableAreaEntity {
-    /// The reward of the collectable
+
+    // The reward of the collectable
     private final int REWARD;
 
     /**
@@ -21,6 +26,7 @@ public abstract class CollectableReward extends CollectableAreaEntity {
         super(area, orientation, position);
         REWARD = reward;
     }
+
 
     /* ------------------- Implement Collectable ------------------ */
 

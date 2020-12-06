@@ -6,9 +6,14 @@ import ch.epfl.cs107.play.game.superpacman.actor.Gate;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
+/**
+ * Level 1 of the game
+ */
 public class Level1 extends SuperPacmanArea{
-    //TODO: TRY TO PUT IT IN THE SUPER CLASS
+
+    // The spawn position in the level
     private final DiscreteCoordinates PLAYER_SPAWN_POSITION = new DiscreteCoordinates(15, 6);
+
 
     /* --------------- Implement Playable --------------- */
 
@@ -16,6 +21,7 @@ public class Level1 extends SuperPacmanArea{
     public String getTitle() {
         return "superpacman/Level1";
     }
+
 
     /* --------------- Extends SuperPacmanArea --------------- */
 

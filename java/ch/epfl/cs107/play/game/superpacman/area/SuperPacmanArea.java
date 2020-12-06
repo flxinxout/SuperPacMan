@@ -8,23 +8,29 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Window;
 
+/**
+ * Class that represents an Area of the game
+ */
 public abstract class SuperPacmanArea extends Area implements Logic {
-    /// Attributes of the SuperPacmanArea
+
+    // Behavior of the area
     private SuperPacmanBehavior behavior;
+
+    // Attributes of the area
     private int diamondsNumber;
-    //This signal is activated when every collectable in the area has been collected
+    // This signal is activated when every collectable in the area has been collected
     private boolean isCompleted;
 
-    /* --------------- Protected Methods --------------- */
 
-    //TODO: SEE IF IT STAYS NON-ABSTRACT???
+    /* --------------- Abstract Methods --------------- */
+
+    abstract public DiscreteCoordinates getSpawnLocation();
+
+    /* --------------- External Methods --------------- */
+
     protected void createArea() {
         behavior.registerActors(this);
     }
-
-    /* --------------- Public Methods --------------- */
-
-    abstract public DiscreteCoordinates getSpawnLocation();
 
     public void addDiamond() {
         diamondsNumber++;
@@ -34,9 +40,12 @@ public abstract class SuperPacmanArea extends Area implements Logic {
         diamondsNumber--;
         if (diamondsNumber < 0) { diamondsNumber = 0; }
         if (diamondsNumber == 0) {
+
+            // If there are 0 diamond on the area, the signal is set on
             isCompleted = true;
         }
     }
+
 
     /* --------------- Implements Playable --------------- */
 
@@ -44,14 +53,17 @@ public abstract class SuperPacmanArea extends Area implements Logic {
     public boolean begin(Window window, FileSystem fileSystem) {
         super.begin(window, fileSystem);
         if (super.begin(window, fileSystem)) {
+
             // Set the behavior map
             behavior = new SuperPacmanBehavior(window, getTitle());
             setBehavior(behavior);
             createArea();
             return true;
         }
+
         return false;
     }
+
 
     /* ---------------- Implements Logic ---------------- */
 
@@ -70,6 +82,7 @@ public abstract class SuperPacmanArea extends Area implements Logic {
         return (isCompleted) ? 1 : 0;
     }
 
+
     /* --------------- Getters --------------- */
 
     @Override
@@ -77,11 +90,8 @@ public abstract class SuperPacmanArea extends Area implements Logic {
         return SuperPacman.CAMERA_SCALE_FACTOR;
     }
 
-    public AreaGraph getGraph() {
-        return behavior.getGraph();
-    }
+    public AreaGraph getGraph() { return behavior.getGraph(); }
 
-    //TODO: ENCAPSULATION
     public SuperPacmanBehavior getBehavior() {
         return behavior;
     }

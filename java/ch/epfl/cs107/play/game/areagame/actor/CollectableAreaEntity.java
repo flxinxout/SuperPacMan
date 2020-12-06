@@ -5,14 +5,22 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.handler.RPGInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.window.swing.SoundItem;
+import ch.epfl.cs107.play.window.swing.SwingSound;
 
+import javax.sound.sampled.*;
+import javax.sound.sampled.spi.AudioFileReader;
+import java.io.*;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * class that represent an entity in an area that can be collected by an actor
+ * class that represents an entity in an area that can be collected by an actor
  */
+
 public abstract class CollectableAreaEntity extends AreaEntity implements Collectable {
+
+    // Depth of collectable entities
     private final int SPRITE_DEPTH = 100;
 
     /**
@@ -35,9 +43,7 @@ public abstract class CollectableAreaEntity extends AreaEntity implements Collec
     /* ------------- Implement Interactable --------------- */
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
     @Override
     public boolean takeCellSpace() {
@@ -58,6 +64,9 @@ public abstract class CollectableAreaEntity extends AreaEntity implements Collec
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((RPGInteractionVisitor)v).interactWith(this);
     }
+
+
+    /* ------------- External Methods --------------- */
 
     protected int getSPRITE_DEPTH() {
         return SPRITE_DEPTH;

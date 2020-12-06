@@ -11,35 +11,47 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.window.Canvas;
 
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Ghost extends MovableAreaEntity implements Interactor, Eatable {
-    /// Attributes of the Ghosts
+/**
+ * Class that represents ghosts in the SuperPacman game
+ */
+
+public abstract class Ghost extends MovableAreaEntity implements Interactor, Eatable, Sounds {
+
+    // Attributes of the Ghosts
     private final static int GHOST_SCORE = 500;
     private final static int FIELD_OF_VIEW = 5;
     private static final int DEFAULT_SPEED = 25;
+    private int speed;
 
+    // Animation duration in frame number
     private final static int ANIMATION_DURATION = 8;
 
+    // Attributes for the behavior of the ghost when they are afraid
     private Animation afraidAnimation;
     private static boolean isAfraid;
 
-    /// Attributes of the Ghost
+    // Attributes of the Ghost
     private Animation[] animations;
     private Animation currentAnimation;
-
-    private DiscreteCoordinates home;
-    private SuperPacmanPlayer player;
     private Orientation desiredOrientation;
+
+    // The spawn
+    private DiscreteCoordinates home;
+
+    // Target's Attributes
+    private SuperPacmanPlayer player;
     private DiscreteCoordinates targetPos;
-    private int speed;
 
+    // Handler of the ghost
     private GhostHandler handler;
-
-    protected Path graphicPath;
 
     /**
      * Default Ghost constructor
@@ -50,20 +62,22 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
     public Ghost(Area area, Orientation orientation, DiscreteCoordinates home) {
         super(area, orientation, home);
 
-        this.home = home;
+        // Creation of the handler
+        handler = new GhostHandler();
 
+        // Sets the afraid animation which is common has all ghosts
         afraidAnimation = new Animation(ANIMATION_DURATION, Sprite.extractSprites("superpacman/ghost.afraid", 2, 1, 1, this, 16, 16));
+
+        // Sets all animations of ghosts
         animations = getAnimations();
         currentAnimation = animations[orientation.ordinal()];
+
+        this.home = home;
         speed = DEFAULT_SPEED;
-
         isAfraid = false;
-
         targetPos = home;
-
-        /// Creation of the handler
-        handler = new GhostHandler();
     }
+
 
     /* --------------- Implements Actor --------------- */
 
@@ -77,7 +91,7 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
             currentAnimation.reset();
             desiredOrientation = getNextOrientation();
 
-            //Move if possible
+            // If move is possible
             if (getOwnerArea().canEnterAreaCells(this,
                     Collections.singletonList(getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
                 orientate(desiredOrientation);
@@ -92,12 +106,8 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
     }
 
     @Override
-    public void draw(Canvas canvas) {
-        currentAnimation.draw(canvas);
-        if(graphicPath != null) {
-            graphicPath.draw(canvas);
-        }
-    }
+    public void draw(Canvas canvas) { currentAnimation.draw(canvas); }
+
 
     /* --------------- Implements Eatable --------------- */
 
@@ -109,8 +119,30 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
         resetMotion();
 
         player.addScore(GHOST_SCORE);
+
+        // Resets the target
         player = null;
         updateTarget();
+    }
+
+    /* --------------- Implements Sounds --------------- */
+
+    @Override
+    public void onSound() {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("res/sounds/pacman/pacman_eatghost.wav").getAbsoluteFile());
+
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.loop(0);
+
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 
     /* --------------- Implements Interactor --------------- */
@@ -143,11 +175,12 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
         return false;
     }
 
+
     /* --------------- Implements Interactable --------------- */
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
-        ((SuperPacmanInteractionVisitor)v).interactWith (this );
+        ((SuperPacmanInteractionVisitor)v).interactWith (this);
     }
 
     @Override
@@ -165,7 +198,8 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
         return false;
     }
 
-    /* --------------- Private Methods --------------- */
+
+    /* --------------- External Methods --------------- */
 
     /**
      * Method that set the current animation of the Ghost
@@ -197,6 +231,19 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
             currentAnimation.update(deltaTime);
         }
     }
+
+
+    /* --------------- Abstract Methods --------------- */
+
+    protected abstract void onScared();
+
+    protected abstract void onUnscared();
+
+    protected abstract void updateTarget();
+
+    protected abstract Animation[] getAnimations();
+
+    public abstract Orientation getNextOrientation();
 
     /* --------------- Protected Methods --------------- */
 
@@ -231,12 +278,6 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
         return randomCell(center, radius);
     }
 
-    protected abstract void onScared();
-
-    protected abstract void onUnscared();
-
-    protected abstract void updateTarget();
-
     /* --------------- Public Methods --------------- */
 
     public void setIsScared(boolean isScared) {
@@ -255,13 +296,9 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
         this.targetPos = targetPos;
     }
 
-    protected void setSpeed(int speed) {
-        this.speed = speed;
-    }
+    protected void setSpeed(int speed) { this.speed = speed; }
 
     /* --------------- Getters --------------- */
-
-    protected abstract Animation[] getAnimations();
 
     protected DiscreteCoordinates getHome() {
         return home;
@@ -284,16 +321,14 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
     }
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
-    public abstract Orientation getNextOrientation();
 
     /**
      * Interaction handler for a Ghost
      */
     private class GhostHandler implements SuperPacmanInteractionVisitor {
+
         @Override
         public void interactWith(SuperPacmanPlayer pacman) {
             player = pacman;

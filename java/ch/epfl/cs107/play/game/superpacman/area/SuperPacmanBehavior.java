@@ -9,6 +9,7 @@ import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Cherry;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
 import ch.epfl.cs107.play.game.superpacman.actor.Wall;
+import ch.epfl.cs107.play.game.superpacman.actor.collectable.Life;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Blinky;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Inky;
@@ -19,47 +20,17 @@ import ch.epfl.cs107.play.window.Window;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that represents the behavior of the SuperPacman game
+ */
 public class SuperPacmanBehavior extends AreaBehavior {
-    //Graph associated to the area
+
+    // Graph associated to the area
     private AreaGraph graph = new AreaGraph();
+
+    // Lists of walls and ghosts in the game
     private List<Wall> walls = new ArrayList<>();
     private List<Ghost> ghosts = new ArrayList<>();
-
-    /**
-     * Enum that represent all possible types of each cell in the game
-     */
-    public enum SuperPacmanCellType {
-        NONE (0) , // never used as real content
-        WALL ( -16777216) , // black
-        FREE_WITH_DIAMOND ( -1) , // white
-        FREE_WITH_BLINKY ( -65536) , // red
-        FREE_WITH_PINKY ( -157237) , // pink
-        FREE_WITH_INKY ( -16724737) , // cyan
-        FREE_WITH_CHERRY ( -36752) , // light red
-        FREE_WITH_BONUS ( -16478723) , // light blue
-        FREE_EMPTY ( -6118750) ; // sort of gray
-
-        final int type;
-
-        SuperPacmanCellType(int type){
-            this.type = type;
-        }
-
-        /**
-         * A method that returns the type of cell based on a number assigned to it in the enum
-         * @param type number assigned on a cell in the enum
-         * @return the type of the cell
-         */
-        public static SuperPacmanCellType toType(int type){
-            for(SuperPacmanCellType ict : SuperPacmanCellType.values()){
-                if(ict.type == type)
-                    return ict;
-            }
-            // When you add a new color, you can print the int value here before assign it to a type
-            System.out.println(type);
-            return NONE;
-        }
-    }
 
     /**
      * Default SuperPacmanBehavior Constructor
@@ -68,8 +39,12 @@ public class SuperPacmanBehavior extends AreaBehavior {
      */
     public SuperPacmanBehavior(Window window, String name){
         super(window, name);
+
+        // Set the height and the width
         int height = getHeight();
         int width = getWidth();
+
+        // Create all cells of the grid
         SuperPacmanCellType color;
         for(int y = 0; y < height; y++) {
             for (int x = 0; x < width ; x++) {
@@ -78,6 +53,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
             }
         }
 
+        // Create the nodes of the graph
         for(int y = 0; y < height; y++) {
             for (int x = 0; x < width ; x++) {
                 SuperPacmanCell cell = (SuperPacmanCell) getCell(x, y);
@@ -91,13 +67,18 @@ public class SuperPacmanBehavior extends AreaBehavior {
 
     /* --------------- External Methods --------------- */
 
-    //TODO: i think no better way --> see this in Piazza
+    /**
+     * Method used for that ghost when they have to be scared
+     */
     public void scareGhosts() {
         for (Ghost ghost: ghosts) {
             ghost.setIsScared(true);
         }
     }
 
+    /**
+     * Method used for that ghost when they have to not be scared
+     */
     public void unScareGhosts() {
         for (Ghost ghost: ghosts) {
             ghost.setIsScared(false);
@@ -108,7 +89,6 @@ public class SuperPacmanBehavior extends AreaBehavior {
      * Method that registers all actors in an area
      * @param area the area where actors will be registered
      */
-    //TODO: CHANGE SUPERPACMANAREA TO AREA? --> FIND A BETTER WAY FOR THE DIAMONDS COUNT
     protected void registerActors(SuperPacmanArea area) {
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
@@ -153,12 +133,15 @@ public class SuperPacmanBehavior extends AreaBehavior {
                         area.registerActor(pinky);
                         ghosts.add(pinky);
                         break;
+
+                    /*case FREE__WITH_LIFE:
+                        Life life = new Life(area, Orientation.UP, new DiscreteCoordinates(x, y));
+                        area.registerActor(life);
+                        break;*/
                 }
             }
         }
     }
-
-    /* --------------- Internal Methods --------------- */
 
     /**
      * Method that compute the graph edges of a cell
@@ -199,6 +182,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
      * @return boolean[][] 2D boolean array of the neghborhood of the wall (true = there's a wall)
      */
     private boolean[][] neighborhood(SuperPacmanCell cell) {
+
         //First dimension := x, Second dimension := y
         boolean[][] neighborhood = new boolean[3][3];
         DiscreteCoordinates position = cell.getCurrentCells().get(0);
@@ -210,6 +194,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
                     int ry = position.y - y;
 
                     if (rx >= 0 && ry >= 0 && rx < getWidth() && ry < getHeight()) {
+
                         // We're in the grid, check for the borders
                         SuperPacmanCell comparisonCell = (SuperPacmanCell) getCell(rx, ry);
                         if (comparisonCell.type == SuperPacmanCellType.WALL) {
@@ -228,14 +213,12 @@ public class SuperPacmanBehavior extends AreaBehavior {
         return graph;
     }
 
-    public List<Wall> getWalls() {
-        return walls;
-    }
 
     /**
      * Cell adapted to the SuperPacman game
      */
     public class SuperPacmanCell extends AreaBehavior.Cell {
+
         private SuperPacmanCellType type;
 
         /**
@@ -274,6 +257,44 @@ public class SuperPacmanBehavior extends AreaBehavior {
         @Override
         public void acceptInteraction(AreaInteractionVisitor v) {
 
+        }
+    }
+
+    /**
+     * Enum that represent all possible types of each cell in the game
+     */
+    public enum SuperPacmanCellType {
+        NONE (0) , // never used as real content
+        WALL ( -16777216) , // black
+        FREE_WITH_DIAMOND ( -1) , // white
+        FREE_WITH_BLINKY ( -65536) , // red
+        FREE_WITH_PINKY ( -157237) , // pink
+        FREE_WITH_INKY ( -16724737) , // cyan
+        FREE_WITH_CHERRY ( -36752) , // light red
+        FREE_WITH_BONUS ( -16478723) , // light blue
+        FREE_EMPTY ( -6118750) ; // sort of gray
+        //FREE_WITH LIFE () ; // sort of pink
+
+        final int type;
+
+        SuperPacmanCellType(int type){
+            this.type = type;
+        }
+
+        /**
+         * A method that returns the type of cell based on a number assigned to it in the enum
+         * @param type number assigned on a cell in the enum
+         * @return the type of the cell
+         */
+        public static SuperPacmanCellType toType(int type){
+            for(SuperPacmanCellType ict : SuperPacmanCellType.values()){
+                if(ict.type == type)
+                    return ict;
+            }
+
+            // When you add a new color, you can print the int value here before assign it to a type
+            System.out.println(type);
+            return NONE;
         }
     }
 }

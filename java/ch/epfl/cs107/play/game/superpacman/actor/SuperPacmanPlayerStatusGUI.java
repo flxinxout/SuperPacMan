@@ -15,6 +15,7 @@ import java.awt.*;
  * Represent the status of the SuperPacmanPlayer
  */
 public class SuperPacmanPlayerStatusGUI implements Graphics {
+
     private SuperPacmanPlayer player;
 
     /**
@@ -25,19 +26,21 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
         this.player = player;
     }
 
+
     /* --------------- Implement Graphics --------------- */
 
     @Override
     public void draw(Canvas canvas) {
-        /// Set the referential
+
+        // Sets the referential
         float width = canvas.getScaledWidth();
         float height = canvas.getScaledHeight();
         Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(width/2, height/2));
 
-        /// Draw the life
+        // Draw the life
         drawLife(anchor, height, canvas);
 
-        /// Draw the score
+        // Draw the score
         drawScore(canvas, anchor, height);
     }
 
@@ -49,12 +52,13 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
      * @param canvas the canvas
      */
     private void drawLife(float spaceBetweenImages, Vector anchor, float height, Canvas canvas) {
-        //0 if the life icon is yellow, 64 if it is gray
+
+        // 0 if the life icon is yellow, 64 if it is gray
         int m;
 
         ImageGraphics life = null;
 
-        /// For the life of the SuperPacman and set yellow and gray hp
+        // For the life of the SuperPacman and set yellow and gray hp
         for(int i = 1; i <= SuperPacmanPlayer.MAXHP; i++) {
             if(i <= player.getHp()) {
                 m = 0;

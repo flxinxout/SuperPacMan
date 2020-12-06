@@ -5,6 +5,9 @@ import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 
+/**
+ * Interface that represents the different interaction of the SuperPacmamPlayer
+ */
 public interface SuperPacmanInteractionVisitor extends RPGInteractionVisitor {
 
     default void interactWith(SuperPacmanPlayer player) { }
