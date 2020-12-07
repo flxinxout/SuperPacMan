@@ -83,6 +83,12 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
                 this , 64, 64, new Orientation [] { Orientation.UP ,
                         Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
 
+        for (int i = 0; i < sprites.length; i++) {
+            for (int j = 0; j < sprites[i].length; j++) {
+                sprites[i][j].setDepth(975);
+            }
+        }
+
         animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
         currentAnimation = animations[2];
 

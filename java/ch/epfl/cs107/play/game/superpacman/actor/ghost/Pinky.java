@@ -26,6 +26,7 @@ public class Pinky extends Ghost {
 
     // Max attempts allowed to escape
     private final static int MAX_RANDOM_ATTEMPT = 200;
+    private final int AFRAID_SPEED = 15;
 
     /**
      * Default Pinky constructor
@@ -47,6 +48,12 @@ public class Pinky extends Ghost {
         Sprite[][] sprites = RPGSprite.extractSprites ("superpacman/ghost.pinky", 2, 1.f, 1.f,
                 this , 16, 16, new Orientation [] { Orientation.UP ,
                         Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
+
+        for (int i = 0; i < sprites.length; i++) {
+            for (int j = 0; j < sprites[i].length; j++) {
+                sprites[i][j].setDepth(950);
+            }
+        }
 
         // Sets the animations of the ghost
         Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
@@ -99,11 +106,13 @@ public class Pinky extends Ghost {
     @Override
     protected void onScared() {
         updateTarget();
+        setSpeed(AFRAID_SPEED);
     }
 
     @Override
     protected void onUnscared() {
         updateTarget();
+        setSpeed(getDEFAULT_SPEED());
     }
 
 

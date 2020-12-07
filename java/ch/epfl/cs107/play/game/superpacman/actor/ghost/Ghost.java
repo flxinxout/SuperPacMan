@@ -24,9 +24,9 @@ import java.util.List;
 public abstract class Ghost extends MovableAreaEntity implements Interactor, Eatable, Sound {
 
     // Attributes of the Ghosts
-    private final static int GHOST_SCORE = 500;
-    private final static int FIELD_OF_VIEW = 5;
-    private static final int DEFAULT_SPEED = 25;
+    private final int GHOST_SCORE = 500;
+    private final int FIELD_OF_VIEW = 5;
+    private final int DEFAULT_SPEED = 20;
     private int speed;
 
     // Animation duration in frame number
@@ -317,6 +317,8 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
     protected static boolean isAfraid() {
         return isAfraid;
     }
+
+    public int getDEFAULT_SPEED() { return DEFAULT_SPEED; }
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }

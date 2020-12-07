@@ -10,7 +10,7 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 
-public class Foreground extends Entity {
+public class  Foreground extends Entity {
 
     /// Sprite of the actor
     private final ImageGraphics sprite;

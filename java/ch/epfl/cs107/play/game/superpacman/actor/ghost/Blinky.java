@@ -36,6 +36,12 @@ public class Blinky extends Ghost {
         this , 16, 16, new Orientation [] { Orientation.UP ,
                 Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
 
+        for (int i = 0; i < sprites.length; i++) {
+            for (int j = 0; j < sprites[i].length; j++) {
+                sprites[i][j].setDepth(950);
+            }
+        }
+
         // Sets the animations of the ghost
         Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
 

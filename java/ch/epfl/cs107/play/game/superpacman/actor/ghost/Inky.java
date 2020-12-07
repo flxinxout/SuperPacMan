@@ -3,13 +3,11 @@ package ch.epfl.cs107.play.game.superpacman.actor.ghost;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Animation;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.areagame.actor.Path;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -20,14 +18,11 @@ import java.util.Queue;
 public class Inky extends Ghost {
 
     // Attributes of Inky
-    private static final int MAX_DISTANCE_WHEN_SCARED = 5;
-    private static final int MAX_DISTANCE_WHEN_NOT_SCARED = 10;
-
-    private static final int DEFAULT_SPEED = 25;
-    private static final int AFRAID_SPEED = 20;
+    private final int MAX_DISTANCE_WHEN_SCARED = 5;
+    private final int MAX_DISTANCE_WHEN_NOT_SCARED = 10;
 
     // Represents the distance to which he obeys depending on his condition
-    private static int maxDistance;
+    private int maxDistance;
 
     /**
      * Default Inky constructor
@@ -37,7 +32,7 @@ public class Inky extends Ghost {
      */
     public Inky(Area area, Orientation orientation, DiscreteCoordinates home) {
         super(area, orientation, home);
-        setSpeed(DEFAULT_SPEED);
+        setSpeed(getDEFAULT_SPEED());
         maxDistance = MAX_DISTANCE_WHEN_NOT_SCARED;
     }
 
@@ -52,6 +47,11 @@ public class Inky extends Ghost {
                 this , 16, 16, new Orientation [] { Orientation.UP ,
                         Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
 
+        for (int i = 0; i < sprites.length; i++) {
+            for (int j = 0; j < sprites[i].length; j++) {
+                sprites[i][j].setDepth(950);
+            }
+        }
         // Sets the animations of the ghost
         Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
 
@@ -76,14 +76,12 @@ public class Inky extends Ghost {
     @Override
     protected void onScared() {
         maxDistance = MAX_DISTANCE_WHEN_SCARED;
-        setSpeed(AFRAID_SPEED);
         updateTarget();
     }
 
     @Override
     protected void onUnscared() {
         maxDistance = MAX_DISTANCE_WHEN_NOT_SCARED;
-        setSpeed(DEFAULT_SPEED);
         updateTarget();
     }
 
