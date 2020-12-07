@@ -15,7 +15,6 @@ public abstract class SuperPacmanArea extends Area implements Logic {
 
     // Behavior of the area
     private SuperPacmanBehavior behavior;
-
     // Attributes of the area
     private int diamondsNumber;
     // This signal is activated when every collectable in the area has been collected

@@ -7,3 +7,4 @@ Ajout son pour les cherry, eat ghost, death
  Notre projet: modifier vitesse PINKY quand effrayé car plus logique puisqu'il fuit).
 A faire :
     son bien lancé avec temps d'attente,...
+    enlever le diamond sur la case du start du level0

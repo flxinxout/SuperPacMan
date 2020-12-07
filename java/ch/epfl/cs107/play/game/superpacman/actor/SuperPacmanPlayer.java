@@ -6,15 +6,19 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Life;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
+import ch.epfl.cs107.play.game.superpacman.area.util.Eatable;
+import ch.epfl.cs107.play.game.superpacman.area.util.State;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
+import javax.print.DocFlavor;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +62,7 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
     private Orientation desiredOrientation;
 
     // Timer for the start
-    public float timerBeforeStart = 4;
+    private float timerBeforeStart = 4;
 
     // Attributs for the delay in death
     private boolean hasLooseLife;
@@ -118,6 +122,17 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
             }
         }
     }*/
+
+    private boolean starting(float deltaTime) {
+        timerBeforeStart -= deltaTime;
+        System.out.println(timerBeforeStart);
+
+        if(timerBeforeStart < 0) {
+            State.setState(State.RUNNING);
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Method that increase the score of the player
@@ -196,11 +211,6 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
      */
     private void computeDesiredOrientation(Keyboard keyboard, float deltaTime) {
 
-        if(timerBeforeStart > 0) {
-            timerBeforeStart -= deltaTime;
-            return;
-        }
-
         /*if(hasLooseLife) {
             delayForDie(deltaTime);
             return;
@@ -264,30 +274,37 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
     @Override
     public void update(float deltaTime) {
 
-        super.update(deltaTime);
-
-        //Check the desired orientation
-        Keyboard keyboard = getOwnerArea().getKeyboard();
-        computeDesiredOrientation(keyboard, deltaTime);
-
-        // If move is possible
-        if (!isDisplacementOccurs() && getOwnerArea().canEnterAreaCells(this,
-                Collections.singletonList (getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
-            orientate(desiredOrientation);
-            move(SPEED);
+        if(timerBeforeStart > 0) {
+            starting(deltaTime);
+            return;
         }
 
-        // Set animations
-        setAnimations(deltaTime);
+        if(State.isState(State.RUNNING)) {
+            super.update(deltaTime);
 
-        // Check invincibility state
-        if (invincible) {
-            refreshInvincibility(deltaTime);
-        }
+            //Check the desired orientation
+            Keyboard keyboard = getOwnerArea().getKeyboard();
+            computeDesiredOrientation(keyboard, deltaTime);
 
-        // Check the protection state
-        if(protection) {
-            refreshProtection(deltaTime);
+            // If move is possible
+            if (!isDisplacementOccurs() && getOwnerArea().canEnterAreaCells(this,
+                    Collections.singletonList (getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
+                orientate(desiredOrientation);
+                move(SPEED);
+            }
+
+            // Set animations
+            setAnimations(deltaTime);
+
+            // Check invincibility state
+            if (invincible) {
+                refreshInvincibility(deltaTime);
+            }
+
+            // Check the protection state
+            if(protection) {
+                refreshProtection(deltaTime);
+            }
         }
     }
 
@@ -350,12 +367,12 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
     public void eaten() {
         hp--;
         hasLooseLife = true;
+        State.setState(State.PAUSE);
         protect();
         getOwnerArea().leaveAreaCells(this, getEnteredCells());
         setCurrentPosition(toSuperPacmanArea(getOwnerArea()).getSpawnLocation().toVector());
         getOwnerArea().enterAreaCells(this, getCurrentCells());
         resetMotion();
-        //currentAnimation.reset();
     }
 
 
