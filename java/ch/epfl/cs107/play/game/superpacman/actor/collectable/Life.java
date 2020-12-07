@@ -2,6 +2,7 @@ package ch.epfl.cs107.play.game.superpacman.actor.collectable;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
+import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
@@ -10,7 +11,7 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
-public class Life extends CollectableAreaEntity implements Sounds {
+public class Life extends CollectableAreaEntity implements Sound {
 
     // Default Life's Sprite
     private Sprite sprite;
@@ -25,7 +26,7 @@ public class Life extends CollectableAreaEntity implements Sounds {
     public Life(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
-        this.sprite = new Sprite("zelda/grass", 1, 1, this,
+        this.sprite = new Sprite("superpacman/heart", 1, 1, this,
                 null, Vector.ZERO, 1.0f, getSPRITE_DEPTH());
 
     }

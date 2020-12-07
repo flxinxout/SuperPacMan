@@ -43,9 +43,6 @@ public class Level0 extends SuperPacmanArea {
 
         Gate gate2 = new Gate(this, Orientation.LEFT, new DiscreteCoordinates(6,8), key);
         registerActor(gate2);
-
-        Life life = new Life(this, Orientation.UP, new DiscreteCoordinates(1, 4));
-        registerActor(life);
     }
 
     @Override

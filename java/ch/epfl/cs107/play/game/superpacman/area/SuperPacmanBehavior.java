@@ -134,10 +134,10 @@ public class SuperPacmanBehavior extends AreaBehavior {
                         ghosts.add(pinky);
                         break;
 
-                    /*case FREE__WITH_LIFE:
+                    case FREE_WITH_LIFE:
                         Life life = new Life(area, Orientation.UP, new DiscreteCoordinates(x, y));
                         area.registerActor(life);
-                        break;*/
+                        break;
                 }
             }
         }
@@ -272,8 +272,8 @@ public class SuperPacmanBehavior extends AreaBehavior {
         FREE_WITH_INKY ( -16724737) , // cyan
         FREE_WITH_CHERRY ( -36752) , // light red
         FREE_WITH_BONUS ( -16478723) , // light blue
-        FREE_EMPTY ( -6118750) ; // sort of gray
-        //FREE_WITH LIFE () ; // sort of pink
+        FREE_EMPTY ( -6118750) , // sort of gray
+        FREE_WITH_LIFE (-256) ; // sort of yellow
 
         final int type;
 

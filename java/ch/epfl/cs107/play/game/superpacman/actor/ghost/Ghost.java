@@ -3,7 +3,6 @@ package ch.epfl.cs107.play.game.superpacman.actor.ghost;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.Eatable;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
@@ -16,14 +15,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Class that represents ghosts in the SuperPacman game
  */
 
-public abstract class Ghost extends MovableAreaEntity implements Interactor, Eatable, Sounds {
+public abstract class Ghost extends MovableAreaEntity implements Interactor, Eatable, Sound {
 
     // Attributes of the Ghosts
     private final static int GHOST_SCORE = 500;

@@ -1,6 +1,6 @@
 package ch.epfl.cs107.play.game.superpacman;
 
-import ch.epfl.cs107.play.game.areagame.actor.Sounds;
+import ch.epfl.cs107.play.game.areagame.actor.Sound;
 import ch.epfl.cs107.play.game.rpg.RPG;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.game.superpacman.area.Level0;
@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  * Main class of the game
  */
-public class SuperPacman extends RPG implements Sounds {
+public class SuperPacman extends RPG implements Sound {
 
     public final static float CAMERA_SCALE_FACTOR = 15.f;
     //TODO: Let it static? Make a singleton from it?
@@ -25,6 +25,8 @@ public class SuperPacman extends RPG implements Sounds {
     //TODO: maybe a map between areas and spawn coordinates
     private final String[] areas = {"superpacman/Level0", "superpacman/Level1", "superpacman/Level2"};
 
+    //TODO: PAUSE/END/RUNNING STATES
+    private State state;
 
     /* ----------- Implements Sounds ------------- */
 
@@ -51,12 +53,15 @@ public class SuperPacman extends RPG implements Sounds {
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
+            state = State.RUNNING;
             onSound();
             createAreas();
             //TODO: STRANGE WAY CAST
             SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas[0], true);
+
             player = new SuperPacmanPlayer(area, area.getSpawnLocation());
             initPlayer(player);
+
             return true;
         }
         return false;
@@ -85,5 +90,11 @@ public class SuperPacman extends RPG implements Sounds {
         addArea(new Level1());
         addArea(new Level2());
     }
+
+    public enum State {
+        RUNNING,
+        PAUSE
+    }
+
 
 }

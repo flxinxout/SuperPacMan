@@ -2,15 +2,10 @@ package ch.epfl.cs107.play.game.rpg;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
-import ch.epfl.cs107.play.game.areagame.actor.Sounds;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.window.Window;
-
-import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
 
 
 /**

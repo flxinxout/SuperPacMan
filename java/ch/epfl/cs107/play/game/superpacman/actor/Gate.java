@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.signal.logic.Logic;
@@ -22,6 +23,7 @@ public class Gate extends AreaEntity {
 
     // Signals conditioning the gate
     private Logic signal;
+    private DiscreteCoordinates position;
     private Sprite sprite;
 
     /**
@@ -33,10 +35,15 @@ public class Gate extends AreaEntity {
      */
     public Gate(Area area, Orientation orientation, DiscreteCoordinates position, Logic signal) {
         super(area, orientation, position);
+        this.position = position;
         this.signal = signal;
 
         //To choose between the horizontal sprite or the vertical one
         int m = setOrientation(orientation);
+
+        //Deactivate the nodes at the position of the gate
+        SuperPacmanArea ownerArea = (SuperPacmanArea) area;
+        ownerArea.getBehavior().getGraph().setSignal(position, Logic.FALSE);
 
         this.sprite = new Sprite("superpacman/gate", 1, 1, this, new RegionOfInterest(0, m, 64, 64));
     }
@@ -95,6 +102,10 @@ public class Gate extends AreaEntity {
     }
 
     private boolean isOpen() {
+        //Activate the nodes at the position of the gate
+        SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
+        ownerArea.getBehavior().getGraph().setSignal(position, Logic.TRUE);
+
         return signal.isOn();
     }
 }

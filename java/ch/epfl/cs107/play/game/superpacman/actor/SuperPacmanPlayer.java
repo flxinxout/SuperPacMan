@@ -7,13 +7,11 @@ import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
-import ch.epfl.cs107.play.game.superpacman.actor.collectable.Cherry;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Life;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
@@ -27,7 +25,7 @@ import java.util.List;
  * Class that represent the SuperPacmanPlayer in the game
  */
 
-public class SuperPacmanPlayer extends Player implements Eatable, Sounds {
+public class SuperPacmanPlayer extends Player implements Eatable, Sound {
 
     // Handler of the SuperPacmanPlayer
     private SuperPacmanPlayerHandler handler;
@@ -39,7 +37,8 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sounds {
     private final static int SPEED = 6;
     private final static float INVINCIBLE_DURATION = 10;
     private final static float PROTECTION_DURATION = 3;
-    public final static int MAXHP = 5;
+    public final static int MAXHP = 4;
+    public final static int START_HP = 1;
 
     // Attributes of the SuperPacmanPlayer
     private int hp;
@@ -87,7 +86,7 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sounds {
         animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
         currentAnimation = animations[2];
 
-        hp = 3;
+        hp = START_HP;
         score = 0;
         invincible = false;
         protection = false;
@@ -122,6 +121,18 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sounds {
         score += amount;
         if (score < 0) {
             score = 0;
+        }
+    }
+
+    /**
+     * Method that add 1 health point to the player.
+     * If he already has the maximum number of HP, add 250 of score
+     */
+    public void addHP() {
+        if(hp < MAXHP) {
+            hp++;
+        } else {
+            score += 250;
         }
     }
 
@@ -370,14 +381,6 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sounds {
 
     public int getScore() {
         return score;
-    }
-
-    public void addHP() {
-        if(this.hp <= 4) {
-            this.hp += 1;
-        } else {
-            this.score += 50;
-        }
     }
 
     /**
