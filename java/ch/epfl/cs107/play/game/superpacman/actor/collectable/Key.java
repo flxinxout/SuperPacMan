@@ -1,13 +1,10 @@
 package ch.epfl.cs107.play.game.superpacman.actor.collectable;
 
 import ch.epfl.cs107.play.game.areagame.Area;
-import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.CollectableAreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
-import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.signal.Signal;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 
@@ -19,14 +16,11 @@ import java.util.List;
 
 /**
  * Key Item in the SuperPacman game
- * Used to unlock the door for the next level
+ * Used to unlock a gate
  */
-
 public class Key extends CollectableAreaEntity implements Logic {
-
     // Default key's Sprite
     private Sprite sprite;
-
     private boolean isCollected;
 
     /**
@@ -38,6 +32,18 @@ public class Key extends CollectableAreaEntity implements Logic {
         super(area, Orientation.DOWN, position);
         this.sprite = new Sprite("superpacman/key", 1, 1, this);
         isCollected = false;
+    }
+
+    /* -------------- Implements Interactable ---------------- */
+
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
+    }
+
+    @Override
+    public boolean isViewInteractable() {
+        return false;
     }
 
     /* -------------- Implements Actor ---------------- */

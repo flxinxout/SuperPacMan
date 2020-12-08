@@ -99,7 +99,7 @@ public class SuperPacman extends RPG implements Sound {
         onSound();
 
         createAreas();
-        SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas.get(0), true);
+        SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas.get(2), true);
 
         player = new SuperPacmanPlayer(area, area.getSpawnLocation());
         initPlayer(player);

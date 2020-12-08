@@ -9,7 +9,7 @@ import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Cherry;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
 import ch.epfl.cs107.play.game.superpacman.actor.Wall;
-import ch.epfl.cs107.play.game.superpacman.actor.collectable.Life;
+import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Blinky;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Inky;
@@ -68,7 +68,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
     /* --------------- External Methods --------------- */
 
     /**
-     * Method used for that ghost when they have to be scared
+     * Scares the ghosts
      */
     public void scareGhosts() {
         for (Ghost ghost: ghosts) {
@@ -77,7 +77,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
     }
 
     /**
-     * Method used for that ghost when they have to not be scared
+     * Stops scaring the ghosts
      */
     public void unScareGhosts() {
         for (Ghost ghost: ghosts) {
@@ -86,7 +86,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
     }
 
     /**
-     * Method that registers all actors in an area
+     * Registers all actors in an area
      * @param area the area where actors will be registered
      */
     protected void registerActors(SuperPacmanArea area) {
@@ -135,8 +135,8 @@ public class SuperPacmanBehavior extends AreaBehavior {
                         break;
 
                     case FREE_WITH_LIFE:
-                        Life life = new Life(area, Orientation.UP, new DiscreteCoordinates(x, y));
-                        area.registerActor(life);
+                        Heart heart = new Heart(area, Orientation.UP, new DiscreteCoordinates(x, y));
+                        area.registerActor(heart);
                         break;
                 }
             }
@@ -144,10 +144,10 @@ public class SuperPacmanBehavior extends AreaBehavior {
     }
 
     /**
-     * Method that compute the graph edges of a cell
+     * Computes the graph edges of a cell
      * @param x (int) the x coordinate of the cell
      * @param y (int) the y coordinate of the cell
-     * @return boolean[] boolean array of the edges (true = exists): 0:= left, 1:= up, 2:= right, 3:= down
+     * @return boolean[] boolean array of the edges (true := exists): 0:= left, 1:= up, 2:= right, 3:= down
      */
     private boolean[] computeGraphEdges(int x, int y) {
         boolean[] graphEdges = new boolean[4];
@@ -177,9 +177,9 @@ public class SuperPacmanBehavior extends AreaBehavior {
     }
 
     /**
-     * Method that neighborhood of a wall cell
+     * Computes the wall neighborhood of a cell
      * @param cell (SuperPacmanCell) the cell
-     * @return boolean[][] 2D boolean array of the neghborhood of the wall (true = there's a wall)
+     * @return boolean[][] 2D boolean array of the neighborhood of the cell (true = there's a wall)
      */
     private boolean[][] neighborhood(SuperPacmanCell cell) {
 
@@ -212,7 +212,6 @@ public class SuperPacmanBehavior extends AreaBehavior {
     public AreaGraph getGraph() {
         return graph;
     }
-
 
     /**
      * Cell adapted to the SuperPacman game
@@ -261,7 +260,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
     }
 
     /**
-     * Enum that represent all possible types of each cell in the game
+     * Enum that represent all possible types of cells in the game
      */
     public enum SuperPacmanCellType {
         NONE (0) , // never used as real content

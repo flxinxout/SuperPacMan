@@ -11,10 +11,12 @@ import ch.epfl.cs107.play.window.Canvas;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Diamond Item in the SuperPacman game
- * Gives a reward when it is collected
+ * Increases the player's score of 10 when collected
  */
 
 public class Diamond extends CollectableReward {
@@ -24,13 +26,13 @@ public class Diamond extends CollectableReward {
 
     /**
      * Default Diamond Constructor
-     * @param area the area where is the bonus
-     * @param position the position of the bonus in the specific area
+     * @param area the area where is the diamond
+     * @param position the position of the diamond in the specific area
      */
     public Diamond(Area area, DiscreteCoordinates position) {
         super(area, Orientation.DOWN, position, 10);
         this.sprite = new Sprite("superpacman/diamond", 1, 1, this,
-                                null, Vector.ZERO, 1.0f, getSPRITE_DEPTH());
+                                null, Vector.ZERO, 1.0f, 950);
     }
 
 
@@ -41,6 +43,17 @@ public class Diamond extends CollectableReward {
         sprite.draw(canvas);
     }
 
+    /* -------------- Implements Interactable ---------------- */
+
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
+    }
+
+    @Override
+    public boolean isViewInteractable() {
+        return false;
+    }
 
     /* -------------- Implements Collectable ---------------- */
 

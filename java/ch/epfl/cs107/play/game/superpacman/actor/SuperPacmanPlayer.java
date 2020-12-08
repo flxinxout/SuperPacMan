@@ -6,9 +6,8 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
-import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
-import ch.epfl.cs107.play.game.superpacman.actor.collectable.Life;
+import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.area.util.Eatable;
@@ -18,7 +17,6 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
-import javax.print.DocFlavor;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
@@ -223,12 +221,10 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
 
     /**
      * Method that set the current animation of the Pacman
-     * @param deltaTime the delta time of the update
      */
-    private void setAnimations(float deltaTime) {
+    private void setAnimations() {
         if (isDisplacementOccurs()) {
             currentAnimation = animations[getOrientation().ordinal()];
-            currentAnimation.update(deltaTime);
         }
         else {
             currentAnimation.reset();
@@ -266,7 +262,8 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
         super.update(deltaTime);
 
         // Set animations
-        setAnimations(deltaTime);
+        setAnimations();
+        currentAnimation.update(deltaTime);
 
         // Check invincibility state
         if (invincible) {
@@ -397,7 +394,7 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
             }
 
             //TODO: POLYMORPHISM!!!
-            if (collectable instanceof Life) {
+            if (collectable instanceof Heart) {
                 addHP();
             }
         }

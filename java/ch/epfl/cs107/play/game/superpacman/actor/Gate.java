@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Gate in the SuperPacman game
- * Used to upgrade the level
+ * Used to block the way. Can be deactivated by a signal
  */
 
 public class Gate extends AreaEntity {
@@ -46,14 +46,6 @@ public class Gate extends AreaEntity {
         ownerArea.getBehavior().getGraph().setSignal(position, Logic.FALSE);
 
         this.sprite = new Sprite("superpacman/gate", 1, 1, this, new RegionOfInterest(0, m, 64, 64));
-    }
-
-
-    /* --------------- Implements Actor --------------- */
-
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
     }
 
     /* --------------- Implements Interactable --------------- */

@@ -20,27 +20,35 @@ import java.util.List;
 
 /**
  *  Cherry item in the SuperPacman game
- *  Gives a reward when it is collected
+ *  Increases the player's score of 200 when collected
  */
-
 public class Cherry extends CollectableReward {
-
     // Default cherry's Sprite
     private Sprite sprite;
 
     /**
      * Default Cherry constructor
-     * @param area the area where is the bonus
-     * @param position the position of the bonus in the specific area
+     * @param area the area where is the cherry
+     * @param position the position of the cherry in the specific area
      */
     public Cherry(Area area, DiscreteCoordinates position) {
         super(area, Orientation.DOWN, position, 200);
 
-        //TODO: check eventually the depth to spawn it behind the player
         this.sprite = new Sprite("superpacman/cherry", 1, 1, this,
-                null, Vector.ZERO, 1.0f, getSPRITE_DEPTH());
+                null, Vector.ZERO, 1.0f, 950);
     }
 
+    /* -------------- Implements Interactable ---------------- */
+
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
+    }
+
+    @Override
+    public boolean isViewInteractable() {
+        return false;
+    }
 
     /* -------------- Implement Actor ---------------- */
 

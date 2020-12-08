@@ -1,8 +1,8 @@
 package ch.epfl.cs107.play.game.areagame.actor;
 
-
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.rpg.RPG;
 import ch.epfl.cs107.play.game.rpg.handler.RPGInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
@@ -14,9 +14,6 @@ import java.util.List;
  */
 
 public abstract class CollectableAreaEntity extends AreaEntity implements Collectable {
-
-    // Depth of collectable entities
-    private final float SPRITE_DEPTH = -Float.MAX_VALUE;
 
     /**
      * Default constructor
@@ -38,9 +35,6 @@ public abstract class CollectableAreaEntity extends AreaEntity implements Collec
     /* ------------- Implement Interactable --------------- */
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
-
-    @Override
     public boolean takeCellSpace() {
         return false;
     }
@@ -51,19 +45,7 @@ public abstract class CollectableAreaEntity extends AreaEntity implements Collec
     }
 
     @Override
-    public boolean isViewInteractable() {
-        return false;
-    }
-
-    @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((RPGInteractionVisitor)v).interactWith(this);
-    }
-
-
-    /* ------------- External Methods --------------- */
-
-    protected float getSPRITE_DEPTH() {
-        return SPRITE_DEPTH;
     }
 }

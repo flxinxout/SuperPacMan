@@ -8,14 +8,14 @@ import ch.epfl.cs107.play.window.Canvas;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Bonus Item in the SuperPacman game
- * Gives invisibility to SuperPacmanPlayer
+ * Gives invincibility to SuperPacmanPlayer
  */
-
 public class Bonus extends CollectableAreaEntity {
-
     // Animation duration in frame number
     private final static int ANIMATION_DURATION = 8;
     private Animation currentAnimation;
@@ -28,18 +28,25 @@ public class Bonus extends CollectableAreaEntity {
     public Bonus(Area area, DiscreteCoordinates position) {
         super(area, Orientation.DOWN, position);
 
-        // Extract Sprites of the bonus
+        // Extract Sprites and set animations of the bonus
         Sprite[] sprites = Sprite.extractSprites("superpacman/coin", 4, 1, 1, this, 16, 16);
-
-        // Sets the depth of the bonus
         for (Sprite sprite: sprites) {
-            sprite.setDepth(getSPRITE_DEPTH());
+            sprite.setDepth(950);
         }
-
-        // Sets the current animation of the bonus
         this.currentAnimation = new Animation(ANIMATION_DURATION, sprites);
     }
 
+    /* -------------- Implements Interactable ---------------- */
+
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
+    }
+
+    @Override
+    public boolean isViewInteractable() {
+        return false;
+    }
 
     /* -------------- Implements Actor ---------------- */
 
@@ -57,4 +64,5 @@ public class Bonus extends CollectableAreaEntity {
     public void onSound() {
         //TODO: FIND A SOUND
     }
+
 }

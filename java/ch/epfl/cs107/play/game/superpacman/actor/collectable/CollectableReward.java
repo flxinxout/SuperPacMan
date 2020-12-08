@@ -7,16 +7,15 @@ import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 /**
- * Class that represents a collectable entity, but with a reward when it is collected
+ * Class that represents a collectable entity that increases the player's score when it is collected
  */
 
 public abstract class CollectableReward extends CollectableAreaEntity {
-
     // The reward of the collectable
     private final int REWARD;
 
     /**
-     * Default constructor of a collectable with a reward
+     * Default constructor of a collectable reward area entity
      * @param area the area where the collectable is
      * @param orientation the orientation
      * @param position the position in the area
@@ -28,7 +27,7 @@ public abstract class CollectableReward extends CollectableAreaEntity {
     }
 
 
-    /* ------------------- Implement Collectable ------------------ */
+    /* ------------------- Implements Collectable ------------------ */
 
     @Override
     public void onCollect() {
