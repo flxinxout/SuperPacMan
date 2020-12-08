@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Type of ghost in the SuperPacman game
+ * Type of ghost Pinky in the SuperPacman game
  * Ghost that follows and escapes the SuperPacmanPlayer depending on his condition
  */
 
@@ -44,18 +44,15 @@ public class Pinky extends Ghost {
     @Override
     protected Animation[] getAnimations() {
 
-        // Extracts the sprites of the ghost
+        // Extracts the sprites of the ghost and sets the animations of the ghost
         Sprite[][] sprites = RPGSprite.extractSprites ("superpacman/ghost.pinky", 2, 1.f, 1.f,
                 this , 16, 16, new Orientation [] { Orientation.UP ,
                         Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
-
         for (int i = 0; i < sprites.length; i++) {
             for (int j = 0; j < sprites[i].length; j++) {
                 sprites[i][j].setDepth(950);
             }
         }
-
-        // Sets the animations of the ghost
         Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
 
         return animations;
@@ -81,28 +78,25 @@ public class Pinky extends Ghost {
     protected void updateTarget() {
         if (isAfraid()) {
             if (getPlayer() == null) {
-
-                // Sets a random target cell
                 setTargetPos(randomCell());
             } else {
-
-                // Sets a random target cell in the radius of the MIN_AFRAID_DISTANCE
                 setTargetPos(randomCellFarFromPlayer());
             }
         }
         else {
             if (getPlayer() == null) {
-
-                // Sets a random target cell
                 setTargetPos(randomCell());
             } else {
-
-                // Sets the target of the ghost, so the player's position
                 setTargetPos(getPlayer().getCurrentCells().get((0)));
             }
         }
     }
 
+    /**
+     * Note: In the PDF it is written to increase Inky's speed when he's afraid,
+     * we decided to do it with Pinky because, as he runs away when he's scared
+     * it seems more logic
+     */
     @Override
     protected void onScared() {
         updateTarget();
@@ -119,6 +113,7 @@ public class Pinky extends Ghost {
     /* --------------- External Methods --------------- */
 
     /**
+     * Choose a random cell in the map in a minimal distance of the player
      * @return cell's coordinates far from SuperPacmanPlayer, but at "MIN_AFRAID_DISTANCE" from it
      */
     private DiscreteCoordinates randomCellFarFromPlayer() {

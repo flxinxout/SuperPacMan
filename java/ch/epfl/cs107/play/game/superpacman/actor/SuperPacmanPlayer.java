@@ -10,7 +10,6 @@ import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
-import ch.epfl.cs107.play.game.superpacman.area.util.Eatable;
 import ch.epfl.cs107.play.game.superpacman.area.util.State;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -27,7 +26,7 @@ import java.util.List;
  * Class that represent the SuperPacmanPlayer in the game
  */
 
-public class SuperPacmanPlayer extends Player implements Eatable, Sound {
+public class SuperPacmanPlayer extends Player implements Killable, Sound {
 
     // Handler of the SuperPacmanPlayer
     private SuperPacmanPlayerHandler handler;
@@ -330,10 +329,10 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
     }
 
 
-    /* --------------- Implements Eatable --------------- */
+    /* --------------- Implements Killable --------------- */
 
     @Override
-    public void eaten() {
+    public void onDeath() {
         hp--;
         hasLooseLife = true;
         State.setState(State.PAUSE);
@@ -408,11 +407,11 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
         @Override
         public void interactWith(Ghost ghost) {
             if (invincible) {
-                ghost.eaten();
+                ghost.onDeath();
                 ghost.onSound();
             } else {
                 if(!protection) {
-                    eaten();
+                    onDeath();
                     onSound();
                 }
             }

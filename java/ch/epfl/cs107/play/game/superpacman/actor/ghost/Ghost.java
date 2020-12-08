@@ -3,7 +3,7 @@ package ch.epfl.cs107.play.game.superpacman.actor.ghost;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.superpacman.area.util.Eatable;
+import ch.epfl.cs107.play.game.superpacman.actor.Killable;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -21,7 +21,7 @@ import java.util.List;
  * Class that represents ghosts in the SuperPacman game
  */
 
-public abstract class Ghost extends MovableAreaEntity implements Interactor, Eatable, Sound {
+public abstract class Ghost extends MovableAreaEntity implements Interactor, Killable, Sound {
 
     // Attributes of the Ghosts
     private final int GHOST_SCORE = 500;
@@ -36,7 +36,7 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
     private Animation afraidAnimation;
     private static boolean isAfraid;
 
-    // Attributes of the Ghost
+    // Animation
     private Animation[] animations;
     private Animation currentAnimation;
     private Orientation desiredOrientation;
@@ -63,7 +63,7 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
         // Creation of the handler
         handler = new GhostHandler();
 
-        // Sets the afraid animation which is common has all ghosts
+        // Sets the afraid animation which is the same for all ghosts
         afraidAnimation = new Animation(ANIMATION_DURATION, Sprite.extractSprites("superpacman/ghost.afraid", 2, 1, 1, this, 16, 16));
 
         // Sets all animations of ghosts
@@ -81,23 +81,21 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
 
     @Override
     public void update(float deltaTime) {
-        super.update(deltaTime);
-
         if (isDisplacementOccurs()) {
             setAnimations(deltaTime);
         } else {
             currentAnimation.reset();
             desiredOrientation = getNextOrientation();
 
-            // If move is possible
+            // move if possible
             if (getOwnerArea().canEnterAreaCells(this,
                     Collections.singletonList(getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
                 orientate(desiredOrientation);
                 move(speed);
             }
         }
+        super.update(deltaTime);
 
-        //TODO redefine equals?? : getCurrentMainCellCoordinates().equals(targetPos)
         if (DiscreteCoordinates.distanceBetween(getCurrentMainCellCoordinates(), targetPos) < 0.1) {
             updateTarget();
         }
@@ -107,10 +105,10 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
     public void draw(Canvas canvas) { currentAnimation.draw(canvas); }
 
 
-    /* --------------- Implements Eatable --------------- */
+    /* --------------- Implements Killable --------------- */
 
     @Override
-    public void eaten() {
+    public void onDeath() {
         getOwnerArea().leaveAreaCells(this, getEnteredCells());
         setCurrentPosition(home.toVector());
         getOwnerArea().enterAreaCells(this, Collections.singletonList(home));
@@ -156,7 +154,6 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
 
         for (int y = -FIELD_OF_VIEW; y <= FIELD_OF_VIEW; y++) {
             for (int x = -FIELD_OF_VIEW; x <= FIELD_OF_VIEW; x++) {
-                //TODO: conditioning with if else
                 fieldOfView.add(new DiscreteCoordinates(getCurrentMainCellCoordinates().x + x, getCurrentMainCellCoordinates().y + y));
             }
         }
@@ -200,53 +197,50 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
     /* --------------- External Methods --------------- */
 
     /**
-     * Method that set the current animation of the Ghost
+     * Sets the current animation of the Ghost
      * @param deltaTime the delta time of the update
      */
     private void setAnimations(float deltaTime) {
         if (isAfraid) {
             currentAnimation = afraidAnimation;
+        } else {
+            currentAnimation = animations[getOrientation().ordinal()];
         }
-
-        if (!isAfraid) {
-            switch (getOrientation()) {
-                case UP:
-                    currentAnimation = animations[0];
-                    break;
-
-                case RIGHT:
-                    currentAnimation = animations[1];
-                    break;
-
-                case DOWN:
-                    currentAnimation = animations[2];
-                    break;
-
-                case LEFT:
-                    currentAnimation = animations[3];
-                    break;
-            }
-            currentAnimation.update(deltaTime);
-        }
+        currentAnimation.update(deltaTime);
     }
 
 
     /* --------------- Abstract Methods --------------- */
 
+    /**
+     * Called when the ghosts become scared
+     */
     protected abstract void onScared();
 
+    /**
+     * Called when the ghosts stop being scared
+     */
     protected abstract void onUnscared();
 
+    /**
+     * Update the target accordingly to the circumstances
+     */
     protected abstract void updateTarget();
 
+    /**
+     * Getter for the animations
+     */
     protected abstract Animation[] getAnimations();
 
-    public abstract Orientation getNextOrientation();
+    /**
+     * Compute the next orientation following a specific algorithm
+     */
+    protected abstract Orientation getNextOrientation();
 
     /* --------------- Protected Methods --------------- */
 
     /**
-     * Method to choose a random cell in a specific radius around another cell
+     * Choose a random cell in a specific radius around another cell
      * @param centerPos (DiscreteCoordinates) the center cell
      * @param radius (int) the radius allowed
      */
@@ -264,7 +258,7 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
     }
 
     /**
-     * Method to choose a random cell in an entire map
+     * Choose a random cell in an entire map
      */
     protected DiscreteCoordinates randomCell() {
         int width = getOwnerArea().getWidth();
@@ -278,6 +272,10 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
 
     /* --------------- Public Methods --------------- */
 
+    /**
+     * Scares or stops scaring ghosts
+     * @param isScared true := scare ghosts, false := stop scaring them
+     */
     public void setIsScared(boolean isScared) {
         if (isScared) {
             isAfraid = true;
@@ -290,10 +288,16 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
 
     /* --------------- Setters --------------- */
 
+    /**
+     * Sets the target position
+     */
     protected void setTargetPos(DiscreteCoordinates targetPos) {
         this.targetPos = targetPos;
     }
 
+    /**
+     * Sets the speed
+     */
     protected void setSpeed(int speed) { this.speed = speed; }
 
     /* --------------- Getters --------------- */
@@ -322,8 +326,7 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Eat
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
-
-
+    
     /**
      * Interaction handler for a Ghost
      */

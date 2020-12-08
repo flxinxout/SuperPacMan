@@ -42,17 +42,15 @@ public class Inky extends Ghost {
     @Override
     protected Animation[] getAnimations() {
 
-        // Extracts the sprites of the ghost
+        // Extracts the sprites of the ghost and sets the animations of the ghost
         Sprite[][] sprites = RPGSprite.extractSprites ("superpacman/ghost.inky", 2, 1.f, 1.f,
                 this , 16, 16, new Orientation [] { Orientation.UP ,
                         Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
-
         for (int i = 0; i < sprites.length; i++) {
             for (int j = 0; j < sprites[i].length; j++) {
                 sprites[i][j].setDepth(950);
             }
         }
-        // Sets the animations of the ghost
         Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
 
         return animations;
@@ -60,12 +58,11 @@ public class Inky extends Ghost {
 
     @Override
     public Orientation getNextOrientation() {
-
         // Gets the area where is the ghost and the path between the ghost and the SuperPacmanPlayer
         SuperPacmanArea area = (SuperPacmanArea) getOwnerArea();
         Queue<Orientation> path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
 
-        // While the path is null or empty (for example if the ghost has not a target now), generate an other path
+        // While the path is null or empty (for example if the ghost has not a target now), generate another path
         while (path == null || path.isEmpty()) {
             path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), randomCell());
         }
@@ -73,6 +70,11 @@ public class Inky extends Ghost {
         return path.poll();
     }
 
+    /**
+     * Note: In the PDF it is written to increase Inky's speed when he's afraid,
+     * we decided to do it with Pinky because, as he runs away when he's scared
+     * it seems more logic
+     */
     @Override
     protected void onScared() {
         maxDistance = MAX_DISTANCE_WHEN_SCARED;
