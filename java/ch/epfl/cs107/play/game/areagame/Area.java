@@ -2,8 +2,11 @@ package ch.epfl.cs107.play.game.areagame;
 
 import ch.epfl.cs107.play.game.Playable;
 import ch.epfl.cs107.play.game.actor.Actor;
+import ch.epfl.cs107.play.game.actor.ImageGraphics;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Interactor;
+import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
+import ch.epfl.cs107.play.game.superpacman.area.util.State;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Transform;
@@ -41,8 +44,13 @@ public abstract class Area implements Playable {
 	/// The behavior Map
 	private AreaBehavior areaBehavior;
 	/// pause mechanics and menu to display. May be null
+	private ImageGraphics pauseGUI;
+	private ImageGraphics startGUI;
+	private ImageGraphics endGUI;
 	/// - start indicate if area already begins, paused indicate if we display the pause menu
 	private boolean started;
+	private State state;
+	private float startTimer;
 
 
 	/** @return (float): camera scale factor, assume it is the same in x and y direction */
@@ -246,6 +254,14 @@ public abstract class Area implements Playable {
 		interactablesToLeave = new HashMap<>();
 		viewCenter = Vector.ZERO;
 		started = true;
+		state = State.PAUSE;
+		startTimer = 4.f;
+		pauseGUI = new ImageGraphics(ResourcePath.getSprite("superpacman/pauseMenu"), 1.f, 0.75f);
+		pauseGUI.setDepth(999);
+		startGUI = new ImageGraphics(ResourcePath.getSprite("superpacman/pauseMenu"), 1.f, 0.75f);
+		startGUI.setDepth(999);
+		endGUI = new ImageGraphics(ResourcePath.getSprite("superpacman/pauseMenu"), 1.f, 0.75f);
+		endGUI.setDepth(999);
 		return true;
 	}
 
@@ -256,37 +272,39 @@ public abstract class Area implements Playable {
 	 * @return (boolean) : if the resume succeed, true by default
 	 */
 	public boolean resume(Window window, FileSystem fileSystem){
+		this.window = window;
+		this.fileSystem = fileSystem;
+		state = State.RUNNING;
 		return true;
 	}
 
 	@Override
-	public void update(float deltaTime) {    	
-		purgeRegistration();
+	public void update(float deltaTime) {
+			purgeRegistration();
 
-
-		// Update actors
-		for (Actor actor : actors) {
-			actor.update(deltaTime);
-		}
-
-		// Realize interaction between interactors and their cells contents
-		for (Interactor interactor : interactors) {
-			if (interactor.wantsCellInteraction()) {
-				areaBehavior.cellInteractionOf(interactor);
+			// Update actors
+			for (Actor actor : actors) {
+				actor.update(deltaTime);
 			}
-			if (interactor.wantsViewInteraction()) {
-				areaBehavior.viewInteractionOf(interactor);
+
+			// Realize interaction between interactors and their cells contents
+			for (Interactor interactor : interactors) {
+				if (interactor.wantsCellInteraction()) {
+					areaBehavior.cellInteractionOf(interactor);
+				}
+				if (interactor.wantsViewInteraction()) {
+					areaBehavior.viewInteractionOf(interactor);
+				}
 			}
-		}
 
-		// Update camera location
-		updateCamera();
+			// Update camera location
+			updateCamera();
 
-		// Draw actors and play sounds
-		for (Actor actor : actors) {
-			actor.bip(window);
-			actor.draw(window);
-		}
+			// Draw actors and play sounds
+			for (Actor actor : actors) {
+				actor.bip(window);
+				actor.draw(window);
+			}
 	}
 
 	final void purgeRegistration() {
@@ -334,13 +352,12 @@ public abstract class Area implements Playable {
 	 * Suspend method: Can be overridden, called before resume other
 	 */
 	public void suspend(){
-		// Do nothing by default
+		state = State.PAUSE;
 	}
 
 
 	@Override
 	public void end() {
-		// by default does nothing
-		// can save the Area state somewhere if wanted
+		state = State.END;
 	}
 }

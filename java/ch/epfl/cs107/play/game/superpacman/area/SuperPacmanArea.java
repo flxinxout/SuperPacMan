@@ -12,6 +12,7 @@ import ch.epfl.cs107.play.window.Window;
  * Class that represents an Area of the game
  */
 public abstract class SuperPacmanArea extends Area implements Logic {
+    public final static float CAMERA_SCALE_FACTOR = 15.f;
 
     // Behavior of the area
     private SuperPacmanBehavior behavior;
@@ -86,7 +87,7 @@ public abstract class SuperPacmanArea extends Area implements Logic {
 
     @Override
     public float getCameraScaleFactor() {
-        return SuperPacman.CAMERA_SCALE_FACTOR;
+        return CAMERA_SCALE_FACTOR;
     }
 
     public AreaGraph getGraph() { return behavior.getGraph(); }

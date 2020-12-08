@@ -22,14 +22,8 @@ import java.util.List;
  * Main class of the game
  */
 public class SuperPacman extends RPG implements Sound {
-
-    public final static float CAMERA_SCALE_FACTOR = 15.f;
     public static SuperPacmanPlayer player;
-
     private List<String> areas;
-
-    //TODO: PAUSE/END/RUNNING STATES
-    private State state;
 
     /* ----------- External Playable ------------- */
 
@@ -101,12 +95,10 @@ public class SuperPacman extends RPG implements Sound {
      * Initialization of the game
      */
     private void startGame() {
-        State.setState(State.START);
         areas = new ArrayList<>();
         onSound();
 
         createAreas();
-        //TODO: STRANGE WAY CAST
         SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas.get(0), true);
 
         player = new SuperPacmanPlayer(area, area.getSpawnLocation());

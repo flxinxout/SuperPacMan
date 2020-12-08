@@ -48,11 +48,11 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
     private int hp;
     private int score;
     private boolean invincible;
-    private float timer_invisible;
+    private float timerInvincible;
 
     // Spawn protection (to avoid spawn kill)
     private boolean protection;
-    private float timer_protection;
+    private float timerProtection;
 
     // Animation of the SuperPacmanPlayer
     private final static int ANIMATION_DURATION = 8;
@@ -84,25 +84,23 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
 
         //Setup the animations for Pacman. Default: Down
         Sprite [][] sprites = RPGSprite.extractSprites ("superpacman/pacman", 4, 1, 1,
-                this , 64, 64, new Orientation [] { Orientation.UP ,
-                        Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
-
+                this , 64, 64, new Orientation [] { Orientation.DOWN ,
+                        Orientation.LEFT , Orientation.UP , Orientation.RIGHT });
         for (int i = 0; i < sprites.length; i++) {
             for (int j = 0; j < sprites[i].length; j++) {
                 sprites[i][j].setDepth(975);
             }
         }
-
         animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
-        currentAnimation = animations[2];
+        currentAnimation = animations[0];
 
         hp = START_HP;
         score = 0;
         invincible = false;
         protection = false;
         hasLooseLife = false;
-        timer_invisible = INVINCIBLE_DURATION;
-        timer_protection = PROTECTION_DURATION;
+        timerInvincible = INVINCIBLE_DURATION;
+        timerProtection = PROTECTION_DURATION;
 
         desiredOrientation = Orientation.RIGHT;
     }
@@ -162,8 +160,6 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
      */
     private void invincible() {
         invincible = true;
-
-        //TODO: HERE OR IN UPDATE OF THE GAME?
         SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
         ownerArea.getBehavior().scareGhosts();
     }
@@ -180,15 +176,15 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
      * @param deltaTime (float) the delta time of the update
      */
     private void refreshInvincibility(float deltaTime) {
-            if (timer_invisible > 0) {
-                timer_invisible -= deltaTime;
+            if (timerInvincible > 0) {
+                timerInvincible -= deltaTime;
             } else {
                 invincible = false;
 
                 //TODO: HERE OR IN UPDATE OF THE GAME?
                 SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
                 ownerArea.getBehavior().unScareGhosts();
-                timer_invisible = INVINCIBLE_DURATION;
+                timerInvincible = INVINCIBLE_DURATION;
             }
     }
 
@@ -197,24 +193,19 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
      * @param deltaTime (float) the delta time of the update
      */
     private void refreshProtection(float deltaTime) {
-        if (timer_protection > 0) {
-            timer_protection -= deltaTime;
+        if (timerProtection > 0) {
+            timerProtection -= deltaTime;
         } else {
             protection = false;
-            timer_protection = PROTECTION_DURATION;
+            timerProtection= PROTECTION_DURATION;
         }
     }
 
     /**
      * Method that compute the desired orientation if a key is pressed
-     * @param keyboard (Keyboard) reference to the keyboard to check the keys
      */
-    private void computeDesiredOrientation(Keyboard keyboard, float deltaTime) {
-
-        /*if(hasLooseLife) {
-            delayForDie(deltaTime);
-            return;
-        }*/
+    private void computeDesiredOrientation() {
+        Keyboard keyboard = getOwnerArea().getKeyboard();
 
         if (keyboard.get(Keyboard.DOWN).isLastPressed()) {
             desiredOrientation = Orientation.DOWN;
@@ -236,23 +227,7 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
      */
     private void setAnimations(float deltaTime) {
         if (isDisplacementOccurs()) {
-            switch (getOrientation()) {
-                case DOWN:
-                    currentAnimation = animations[0];
-                    break;
-
-                case LEFT:
-                    currentAnimation = animations[1];
-                    break;
-
-                case UP:
-                    currentAnimation = animations[2];
-                    break;
-
-                case RIGHT:
-                    currentAnimation = animations[3];
-                    break;
-            }
+            currentAnimation = animations[getOrientation().ordinal()];
             currentAnimation.update(deltaTime);
         }
         else {
@@ -273,39 +248,36 @@ public class SuperPacmanPlayer extends Player implements Eatable, Sound {
 
     @Override
     public void update(float deltaTime) {
-
         if(timerBeforeStart > 0) {
             starting(deltaTime);
             return;
         }
+        //Check the desired orientation
+        computeDesiredOrientation();
 
-        if(State.isState(State.RUNNING)) {
-            super.update(deltaTime);
-
-            //Check the desired orientation
-            Keyboard keyboard = getOwnerArea().getKeyboard();
-            computeDesiredOrientation(keyboard, deltaTime);
-
-            // If move is possible
-            if (!isDisplacementOccurs() && getOwnerArea().canEnterAreaCells(this,
+        // Move if is possible
+        if (!isDisplacementOccurs()) {
+            if (getOwnerArea().canEnterAreaCells(this,
                     Collections.singletonList (getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
                 orientate(desiredOrientation);
-                move(SPEED);
             }
-
-            // Set animations
-            setAnimations(deltaTime);
-
-            // Check invincibility state
-            if (invincible) {
-                refreshInvincibility(deltaTime);
-            }
-
-            // Check the protection state
-            if(protection) {
-                refreshProtection(deltaTime);
-            }
+            move(SPEED);
         }
+        super.update(deltaTime);
+
+        // Set animations
+        setAnimations(deltaTime);
+
+        // Check invincibility state
+        if (invincible) {
+            refreshInvincibility(deltaTime);
+        }
+
+        // Check the protection state
+        if(protection) {
+            refreshProtection(deltaTime);
+        }
+
     }
 
     @Override
