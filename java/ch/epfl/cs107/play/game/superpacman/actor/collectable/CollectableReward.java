@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.superpacman.actor.collectable;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.CollectableAreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.areagame.actor.Sound;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -11,7 +12,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
  * Class that represents a collectable entity that increases the player's score when it is collected
  */
 
-public abstract class CollectableReward extends CollectableAreaEntity {
+public abstract class CollectableReward extends CollectableAreaEntity implements Sound {
     // The reward of the collectable
     private final int REWARD;
 

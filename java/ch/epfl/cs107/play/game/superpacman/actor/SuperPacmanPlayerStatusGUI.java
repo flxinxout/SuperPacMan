@@ -15,6 +15,7 @@ import java.awt.Color;
  */
 public class SuperPacmanPlayerStatusGUI implements Graphics {
 
+    // The player assigned
     private SuperPacmanPlayer player;
 
     /**
@@ -30,6 +31,7 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
 
     @Override
     public void draw(Canvas canvas) {
+
         // Sets the referential
         float width = canvas.getScaledWidth();
         float height = canvas.getScaledHeight();
@@ -50,8 +52,10 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
      * @param canvas the canvas
      */
     private void drawLife(float spaceBetweenImages, Vector anchor, float height, Canvas canvas) {
+
         // Iterate through the life of the SuperPacman and set yellow and gray hp
         for(int i = 1; i <= player.getMAXHP(); i++) {
+
             // 0 if the life icon is yellow, 64 if it is gray
             int m;
             if(i <= player.getHp()) {
@@ -60,6 +64,7 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
                 m = 64;
             }
 
+            // Creation of the imageGraphic
             ImageGraphics life = new ImageGraphics(ResourcePath.getSprite("superpacman/lifeDisplay"),
                     1.f, 1.f, new RegionOfInterest(m, 0, 64, 64),
                     anchor.add(new Vector(spaceBetweenImages * (i-1), height - 1.375f)), 1, 1);
@@ -84,8 +89,9 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
      * @param canvas the canvas
      */
     private void drawScore(Canvas canvas, Vector anchor, float height) {
-        Vector scoreAnchor = anchor.add(new Vector(player.MAXHP + 1, height - 1.2f));
+        Vector scoreAnchor = anchor.add(new Vector(player.getMAXHP() + 1, height - 1.2f));
 
+        // Creation of the TextGraphics
         TextGraphics score = new TextGraphics("Score: " + player.getScore(), 1f, Color.YELLOW, Color.BLUE, .06f, true, false,
                 scoreAnchor);
         score.draw(canvas);

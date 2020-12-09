@@ -23,6 +23,7 @@ import java.util.List;
  *  Increases the player's score of 200 when collected
  */
 public class Cherry extends CollectableReward {
+
     // Default cherry's Sprite
     private Sprite sprite;
 

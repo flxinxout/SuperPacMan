@@ -31,6 +31,7 @@ public class Diamond extends CollectableReward {
      */
     public Diamond(Area area, DiscreteCoordinates position) {
         super(area, Orientation.DOWN, position, 10);
+
         this.sprite = new Sprite("superpacman/diamond", 1, 1, this,
                                 null, Vector.ZERO, 1.0f, 950);
     }

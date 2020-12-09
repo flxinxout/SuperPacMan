@@ -10,9 +10,11 @@ import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.window.Window;
 
 /**
- * Main class of the game
+ * Main class of the Pacman game
  */
 public class SuperPacman extends RPG  {
+
+    // Array with all titles of the different areas
     private final String[] areas = {"superpacman/Level0", "superpacman/Level1", "superpacman/Level2"};
 
     /* ----------- External Playable ------------- */
@@ -20,6 +22,8 @@ public class SuperPacman extends RPG  {
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
+
+            // Set up the game
             startGame();
             return true;
         }
@@ -43,18 +47,14 @@ public class SuperPacman extends RPG  {
 
     /* ----------- Internal Methods ------------- */
 
-    /**
-     * Creation of the different levels in the game
-     */
+    /** Creation of the different levels in the game */
     private void createAreas(){
         addArea(new Level0());
         addArea(new Level1());
         addArea(new Level2());
     }
 
-    /**
-     * Initialization of the game
-     */
+    /** Initialization of the game */
     private void startGame() {
         createAreas();
         int areaIndex = 2;

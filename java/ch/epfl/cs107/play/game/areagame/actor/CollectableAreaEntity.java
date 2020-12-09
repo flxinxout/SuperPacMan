@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * class that represents an entity in an area that can be collected by an actor
  */
-
 public abstract class CollectableAreaEntity extends AreaEntity implements Collectable {
 
     /**

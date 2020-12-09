@@ -18,7 +18,6 @@ import java.util.Queue;
  * Type of ghost Pinky in the SuperPacman game
  * Ghost that follows and escapes the SuperPacmanPlayer depending on his condition
  */
-
 public class Pinky extends Ghost {
 
     // Minimum distance when he's afraid
@@ -53,6 +52,8 @@ public class Pinky extends Ghost {
                 sprites[i][j].setDepth(950);
             }
         }
+
+        // Sets the animations of the ghost
         Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
 
         return animations;
@@ -79,24 +80,38 @@ public class Pinky extends Ghost {
 
     @Override
     protected void updateTarget() {
+
+        // If ghost is afraid
         if (isAfraid()) {
+
+            // If he's afraid and the target is null
             if (getPlayer() == null) {
+
+                // The target position will be a cell in the area
                 setTargetPos(randomCell());
             } else {
+
+                // The target position will be a random cell in the map in a minimal distance of the player
                 setTargetPos(randomCellFarFromPlayer());
             }
         }
         else {
+
+            // If he's not afraid and the target is null
             if (getPlayer() == null) {
+
+                // The target position will be a cell in the area
                 setTargetPos(randomCell());
             } else {
+
+                // If the target is not null, the target position will be the target's position
                 setTargetPos(getPlayer().getCurrentCells().get((0)));
             }
         }
     }
 
     /**
-     * Note: In the PDF it is written to increase Inky's speed when he's afraid,
+     * @Note: In the PDF it is written to increase Inky's speed when he's afraid,
      * we decided to do it with Pinky too because, as he runs away when he's scared
      * it seems more logic
      */
@@ -123,6 +138,7 @@ public class Pinky extends Ghost {
         DiscreteCoordinates cellAttempt;
         int attempts = 0;
 
+        // Generate a random cell in the area until the distance between this cell is further than the MIN_AFRAID_DISTANCE and that the attempts are less that MAX_RANDOM_ATTEMPT
         do {
             cellAttempt = randomCell();
             ++attempts;

@@ -38,8 +38,8 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
     private final int SPEED = 6;
     private final float INVINCIBLE_DURATION = 10;
     private final float PROTECTION_DURATION = 3;
-    public final int MAXHP = 4;
-    public final int START_HP = 1;
+    private final int MAXHP = 4;
+    private final int START_HP = 1;
 
     // Attributes of the SuperPacmanPlayer
     private int hp;
@@ -56,11 +56,8 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
     private Animation[] animations;
     private Animation currentAnimation;
 
+    // Orientation of the player
     private Orientation desiredOrientation;
-
-    // Attributs for the delay in death
-    private boolean hasLooseLife;
-    private float timerDeath = 2;
 
     /**
      * Default SuperPacmanPlayer Constructor
@@ -85,35 +82,24 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
                 sprites[i][j].setDepth(975);
             }
         }
+
+        // Sets the animations of the player
         animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
         currentAnimation = animations[0];
 
+        // Initialization of player's attributes
         hp = START_HP;
         score = 0;
         invincible = false;
         protection = false;
-        hasLooseLife = false;
         timerInvincible = INVINCIBLE_DURATION;
         timerProtection = PROTECTION_DURATION;
 
+        // Initial orientation
         desiredOrientation = Orientation.RIGHT;
     }
 
     /* --------------- External Methods --------------- */
-
-    /**
-     * Method that sets a delay for the pacman when he dies
-     * @param deltaTime
-     */
-    /*private void delayForDie(float deltaTime) {
-        if(timerDeath > 0) {
-            timerDeath -= deltaTime;
-            if(timerDeath == 0) {
-                timerDeath = 2;
-                hasLooseLife = false;
-            }
-        }
-    }*/
 
     /**
      * Method that increase the score of the player
@@ -138,18 +124,16 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
         }
     }
 
-    /**
-     * Method that set the invincibility state of the player
-     */
+    /** Method that set the invincibility state of the player */
     private void invincible() {
         invincible = true;
         SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
+
+        // Scared all ghost in the area
         ownerArea.getBehavior().scareGhosts();
     }
 
-    /**
-     * Method that set the protection of the player when he's killed
-     */
+    /** Method that set the protection of the player when he's killed*/
     private void protect() {
         protection = true;
     }
@@ -164,7 +148,6 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
             } else {
                 invincible = false;
 
-                //TODO: HERE OR IN UPDATE OF THE GAME?
                 SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
                 ownerArea.getBehavior().unScareGhosts();
                 timerInvincible = INVINCIBLE_DURATION;
@@ -180,16 +163,17 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
             timerProtection -= deltaTime;
         } else {
             protection = false;
-            timerProtection= PROTECTION_DURATION;
+            timerProtection = PROTECTION_DURATION;
         }
     }
 
-    /**
-     * Method that compute the desired orientation if a key is pressed
-     */
+    /** Method that compute the desired orientation if a key is pressed */
     private void computeDesiredOrientation() {
+
+        // Get the keyboard of the gamer
         Keyboard keyboard = getOwnerArea().getKeyboard();
 
+        // Check if this key is pressed and set the orientation of the player
         if (keyboard.get(Keyboard.DOWN).isLastPressed()) {
             desiredOrientation = Orientation.DOWN;
         }
@@ -204,9 +188,7 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
         }
     }
 
-    /**
-     * Method that set the current animation of the Pacman
-     */
+    /** Method that set the current animation of the player */
     private void setAnimations() {
         if (isDisplacementOccurs()) {
             currentAnimation = animations[getOrientation().ordinal()];
@@ -219,16 +201,16 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
     /**
      * Method to cast an Area in a SuperPacmanArea
      * @param area (Area) the area to cast
+     * @return the SuperPacmanArea of the game
      */
     //TODO: DISGUSTING!!!!!!!!!
-    private SuperPacmanArea toSuperPacmanArea(Area area) {
-        return (SuperPacmanArea) area;
-    }
+    private SuperPacmanArea toSuperPacmanArea(Area area) { return (SuperPacmanArea) area; }
 
     /* -------------- Implement Actor --------------- */
 
     @Override
     public void update(float deltaTime) {
+
         //Check the desired orientation
         computeDesiredOrientation();
 
@@ -236,17 +218,20 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
         if (!isDisplacementOccurs()) {
             if (getOwnerArea().canEnterAreaCells(this,
                     Collections.singletonList (getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
+                // Orientation of the player for the next move
                 orientate(desiredOrientation);
             }
+            // Move of the player
             move(SPEED);
         }
+
         super.update(deltaTime);
 
         // Set animations
         setAnimations();
         currentAnimation.update(deltaTime);
 
-        //Pause the game if space is pressed
+        // Pause the game if space is pressed
         if (getOwnerArea().getKeyboard().get(Keyboard.SPACE).isPressed()) {
             getOwnerArea().suspend();
         }
@@ -274,19 +259,13 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
     public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
     @Override
-    public boolean isCellInteractable() {
-        return false;
-    }
+    public boolean isCellInteractable() { return false; }
 
     @Override
-    public boolean isViewInteractable() {
-        return true;
-    }
+    public boolean isViewInteractable() { return true; }
 
     @Override
-    public boolean takeCellSpace() {
-        return false;
-    }
+    public boolean takeCellSpace() { return false; }
 
     @Override
     public void acceptInteraction (AreaInteractionVisitor v) { ((SuperPacmanInteractionVisitor)v).interactWith (this ); }
@@ -295,43 +274,40 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
     /* --------------- Implement Interactor --------------- */
 
     @Override
-    public boolean wantsCellInteraction() {
-        return true;
-    }
+    public boolean wantsCellInteraction() { return true; }
 
     @Override
-    public boolean wantsViewInteraction() {
-        return false;
-    }
+    public boolean wantsViewInteraction() { return false; }
 
     @Override
-    public void interactWith(Interactable other) {
-        other.acceptInteraction(handler);
-    }
+    public void interactWith(Interactable other) { other.acceptInteraction(handler); }
 
     @Override
-    public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return null;
-    }
+    public List<DiscreteCoordinates> getFieldOfViewCells() { return null; }
 
 
     /* --------------- Implements Killable --------------- */
 
     @Override
     public void onDeath() {
+
+        // Decrease the life
         hp--;
+
+        // If the hp is 0 or less it's game over for the player
         if(hp <= 0) {
             SuperPacmanArea owner = (SuperPacmanArea) getOwnerArea();
             owner.gameOver();
             return;
+        } else {
+
+            // else, we set a protection to avoid spawn kill and we discharge the entity in the cells where he is and spawn the player at his home
+            protect();
+            getOwnerArea().leaveAreaCells(this, getEnteredCells());
+            setCurrentPosition(toSuperPacmanArea(getOwnerArea()).getSpawnLocation().toVector());
+            getOwnerArea().enterAreaCells(this, getCurrentCells());
+            resetMotion();
         }
-        hasLooseLife = true;
-        State.setState(State.PAUSE);
-        protect();
-        getOwnerArea().leaveAreaCells(this, getEnteredCells());
-        setCurrentPosition(toSuperPacmanArea(getOwnerArea()).getSpawnLocation().toVector());
-        getOwnerArea().enterAreaCells(this, getCurrentCells());
-        resetMotion();
     }
 
 
@@ -357,15 +333,15 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
 
     /* --------------- Getters --------------- */
 
-    public int getHp() {
-        return hp;
-    }
+    /**@return the life of the player */
+    public int getHp() { return hp; }
 
+    /**@return the max life of the player */
     public int getMAXHP() { return MAXHP; }
 
-    public int getScore() {
-        return score;
-    }
+    /**@return the score of the player */
+    public int getScore() { return score; }
+
 
     /**
      * Interaction handler for a SuperPacmanPlayer
@@ -378,7 +354,9 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
         @Override
         public void interactWith(CollectableAreaEntity collectable) {
             collectable.onCollect();
-            collectable.onSound();
+
+            //TODO POLYMORPHIC VOILA POURQUOI JAVAIS ETENDU COLLECTABLE
+            //collectable.onSound();
 
             //TODO: POLYMORPHISM!!!
             if (collectable instanceof Bonus) {

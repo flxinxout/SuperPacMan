@@ -28,8 +28,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
     // Graph associated to the area
     private AreaGraph graph = new AreaGraph();
 
-    // Lists of walls and ghosts in the game
-    private List<Wall> walls = new ArrayList<>();
+    // List of ghosts in the game
     private List<Ghost> ghosts = new ArrayList<>();
 
     /**
@@ -67,18 +66,14 @@ public class SuperPacmanBehavior extends AreaBehavior {
 
     /* --------------- External Methods --------------- */
 
-    /**
-     * Scares the ghosts
-     */
+    /** Scares the ghosts */
     public void scareGhosts() {
         for (Ghost ghost: ghosts) {
             ghost.setIsScared(true);
         }
     }
 
-    /**
-     * Stops scaring the ghosts
-     */
+    /** Stops scaring the ghosts */
     public void unScareGhosts() {
         for (Ghost ghost: ghosts) {
             ghost.setIsScared(false);
@@ -90,6 +85,8 @@ public class SuperPacmanBehavior extends AreaBehavior {
      * @param area the area where actors will be registered
      */
     protected void registerActors(SuperPacmanArea area) {
+
+        // For each cell in the area, we create an actor at this position if the cell type correspond to a cell type of the area
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
                 SuperPacmanCell cell = (SuperPacmanCell) getCell(x,y);
@@ -98,7 +95,6 @@ public class SuperPacmanBehavior extends AreaBehavior {
                     case WALL:
                         Wall wall = new Wall(area, new DiscreteCoordinates(x, y), neighborhood(cell));
                         area.registerActor(wall);
-                        walls.add(wall);
                         break;
 
                     case FREE_WITH_DIAMOND:
@@ -137,6 +133,9 @@ public class SuperPacmanBehavior extends AreaBehavior {
                     case FREE_WITH_LIFE:
                         Heart heart = new Heart(area, Orientation.UP, new DiscreteCoordinates(x, y));
                         area.registerActor(heart);
+                        break;
+
+                    default:
                         break;
                 }
             }
@@ -183,7 +182,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
      */
     private boolean[][] neighborhood(SuperPacmanCell cell) {
 
-        //First dimension := x, Second dimension := y
+        //First dimension := x, Second dimension := y of the array
         boolean[][] neighborhood = new boolean[3][3];
         DiscreteCoordinates position = cell.getCurrentCells().get(0);
 
@@ -204,14 +203,17 @@ public class SuperPacmanBehavior extends AreaBehavior {
                 }
             }
         }
+
         return neighborhood;
     }
 
     /* --------------- Getters --------------- */
 
+    /**@return the graph of the behavior */
     public AreaGraph getGraph() {
         return graph;
     }
+
 
     /**
      * Cell adapted to the SuperPacman game

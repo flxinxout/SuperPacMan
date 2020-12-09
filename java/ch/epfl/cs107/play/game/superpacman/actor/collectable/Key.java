@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.superpacman.actor.collectable;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.CollectableAreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.areagame.actor.Sound;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
@@ -18,9 +19,12 @@ import java.util.List;
  * Key Item in the SuperPacman game
  * Used to unlock a gate
  */
-public class Key extends CollectableAreaEntity implements Logic {
+public class Key extends CollectableAreaEntity implements Logic, Sound {
+
     // Default key's Sprite
     private Sprite sprite;
+
+    // If the key is collected
     private boolean isCollected;
 
     /**
@@ -30,7 +34,9 @@ public class Key extends CollectableAreaEntity implements Logic {
      */
     public Key(Area area, DiscreteCoordinates position) {
         super(area, Orientation.DOWN, position);
+
         this.sprite = new Sprite("superpacman/key", 1, 1, this);
+
         isCollected = false;
     }
 

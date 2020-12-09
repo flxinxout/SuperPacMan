@@ -12,7 +12,6 @@ import ch.epfl.cs107.play.math.RandomGenerator;
  * Type of ghost in the SuperPacman game
  * Does nothing special
  */
-
 public class Blinky extends Ghost {
 
     /**
@@ -36,6 +35,7 @@ public class Blinky extends Ghost {
         this , 16, 16, new Orientation [] { Orientation.UP ,
                 Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
 
+        // For each sprites, we set the depth of it
         for (int i = 0; i < sprites.length; i++) {
             for (int j = 0; j < sprites[i].length; j++) {
                 sprites[i][j].setDepth(950);

@@ -1,9 +1,8 @@
 package ch.epfl.cs107.play.game.areagame.actor;
 
-import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
-
+/**
+ * Interface that represents something that make sounds
+ */
 public interface Sound {
 
     /**

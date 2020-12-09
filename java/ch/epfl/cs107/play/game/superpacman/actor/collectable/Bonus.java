@@ -5,9 +5,6 @@ import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
-import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,7 +12,8 @@ import java.util.List;
  * Bonus Item in the SuperPacman game
  * Gives invincibility to SuperPacmanPlayer
  */
-public class Bonus extends CollectableAreaEntity {
+public class Bonus extends CollectableAreaEntity implements Sound {
+
     // Animation duration in frame number
     private final static int ANIMATION_DURATION = 8;
     private Animation currentAnimation;
@@ -33,6 +31,7 @@ public class Bonus extends CollectableAreaEntity {
         for (Sprite sprite: sprites) {
             sprite.setDepth(950);
         }
+
         this.currentAnimation = new Animation(ANIMATION_DURATION, sprites);
     }
 
@@ -60,9 +59,9 @@ public class Bonus extends CollectableAreaEntity {
         currentAnimation.draw(canvas);
     }
 
+
     @Override
     public void onSound() {
-        //TODO: FIND A SOUND
+        //TODO FIND A SOUND
     }
-
 }

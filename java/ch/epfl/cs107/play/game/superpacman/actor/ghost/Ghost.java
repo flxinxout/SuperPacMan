@@ -28,6 +28,7 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
     private final int GHOST_SCORE = 500;
     private final int FIELD_OF_VIEW = 5;
     private final int DEFAULT_SPEED = 20;
+    private final float PROTECTION_DURATION = 3;
     private int speed;
 
     // Animation duration in frame number
@@ -42,12 +43,16 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
     private Animation currentAnimation;
     private Orientation desiredOrientation;
 
-    // The spawn
+    // The spawn of the ghost
     private DiscreteCoordinates home;
 
     // Target's Attributes
     private SuperPacmanPlayer player;
     private DiscreteCoordinates targetPos;
+
+    // Spawn protection (to avoid spawn kill)
+    private boolean protection;
+    private float timerProtection;
 
     // Handler of the ghost
     private GhostHandler handler;
@@ -73,10 +78,16 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
         animations = getAnimations();
         currentAnimation = animations[orientation.ordinal()];
 
+        // Sets some attributes of the ghost
         this.home = home;
         speed = DEFAULT_SPEED;
         isAfraid = false;
+
+        // Default target position
         targetPos = home;
+
+        protection = false;
+        timerProtection = PROTECTION_DURATION;
 
         graphicPath = new Path( this . getPosition () , new LinkedList<>());
     }
@@ -86,21 +97,36 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
 
     @Override
     public void update(float deltaTime) {
-            setAnimations(deltaTime);
-            if (!isDisplacementOccurs()) {
-                desiredOrientation = getNextOrientation();
-                // move if possible
-                if (getOwnerArea().canEnterAreaCells(this,
-                        Collections.singletonList(getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
-                    orientate(desiredOrientation);
-                }
-                move(speed);
+        // Set the animations in turns of different parameters
+        setAnimations(deltaTime);
+
+        // If the ghost can not go in a direction
+        if (!isDisplacementOccurs()) {
+
+            // Set the new orientation for the ghost
+            desiredOrientation = getNextOrientation();
+
+            // If move is possible
+            if (getOwnerArea().canEnterAreaCells(this,
+                    Collections.singletonList(getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
+                // Orientation of the ghost for the next move
+                orientate(desiredOrientation);
             }
+
+            // Move of the ghost
+            move(speed);
+        }
 
         super.update(deltaTime);
 
+        // If the ghost and his target position are very close, we update the target in turns of parameters of the game
         if (DiscreteCoordinates.distanceBetween(getCurrentMainCellCoordinates(), targetPos) < 0.1) {
             updateTarget();
+        }
+
+        // Check the protection state
+        if(protection) {
+            refreshProtection(deltaTime);
         }
     }
 
@@ -117,16 +143,23 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
 
     @Override
     public void onDeath() {
-        getOwnerArea().leaveAreaCells(this, getEnteredCells());
-        setCurrentPosition(home.toVector());
-        getOwnerArea().enterAreaCells(this, Collections.singletonList(home));
-        resetMotion();
 
-        player.addScore(GHOST_SCORE);
+        // If the ghost is not protected by the anti-spawnKill
+        if(!protection) {
+            // Discharge the entity in the cells where he is and spawn the ghost to at home
+            protect();
+            getOwnerArea().leaveAreaCells(this, getEnteredCells());
+            setCurrentPosition(home.toVector());
+            getOwnerArea().enterAreaCells(this, Collections.singletonList(home));
+            resetMotion();
 
-        // Resets the target
-        player = null;
-        updateTarget();
+            // Update the score of the player who killed the ghost
+            player.addScore(GHOST_SCORE);
+
+            // Resets the target
+            player = null;
+            updateTarget();
+        }
     }
 
     /* --------------- Implements Sounds --------------- */
@@ -152,54 +185,45 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
     /* --------------- Implements Interactor --------------- */
 
     @Override
-    public void interactWith(Interactable other) {
-        other.acceptInteraction(handler);
-    }
+    public void interactWith(Interactable other) { other.acceptInteraction(handler); }
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
         List<DiscreteCoordinates> fieldOfView = new ArrayList<>();
 
+        // Add the coordinates that are in the field of view of the ghost
         for (int y = -FIELD_OF_VIEW; y <= FIELD_OF_VIEW; y++) {
             for (int x = -FIELD_OF_VIEW; x <= FIELD_OF_VIEW; x++) {
                 fieldOfView.add(new DiscreteCoordinates(getCurrentMainCellCoordinates().x + x, getCurrentMainCellCoordinates().y + y));
             }
         }
+
         return fieldOfView;
     }
 
     @Override
-    public boolean wantsViewInteraction() {
-        return true;
-    }
+    public boolean wantsViewInteraction() { return true; }
 
     @Override
-    public boolean wantsCellInteraction() {
-        return false;
-    }
+    public boolean wantsCellInteraction() { return false; }
 
 
     /* --------------- Implements Interactable --------------- */
 
     @Override
-    public void acceptInteraction(AreaInteractionVisitor v) {
-        ((SuperPacmanInteractionVisitor)v).interactWith (this);
-    }
+    public void acceptInteraction(AreaInteractionVisitor v) { ((SuperPacmanInteractionVisitor)v).interactWith (this); }
 
     @Override
-    public boolean isCellInteractable() {
-        return true;
-    }
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
     @Override
-    public boolean isViewInteractable() {
-        return false;
-    }
+    public boolean isCellInteractable() { return true; }
 
     @Override
-    public boolean takeCellSpace() {
-        return false;
-    }
+    public boolean isViewInteractable() { return false; }
+
+    @Override
+    public boolean takeCellSpace() { return false; }
 
 
     /* --------------- External Methods --------------- */
@@ -210,6 +234,8 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
      */
     private void setAnimations(float deltaTime) {
         if (isAfraid) {
+
+            // Afraid animation
             currentAnimation = afraidAnimation;
         } else {
             if (isDisplacementOccurs()) {
@@ -218,7 +244,26 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
                 currentAnimation.reset();
             }
         }
+
         currentAnimation.update(deltaTime);
+    }
+
+    /** Method that set the protection of the ghost when he's killed */
+    private void protect() {
+        protection = true;
+    }
+
+    /**
+     * Method called in update to update the protection state of the ghost
+     * @param deltaTime (float) the delta time of the update
+     */
+    private void refreshProtection(float deltaTime) {
+        if (timerProtection > 0) {
+            timerProtection -= deltaTime;
+        } else {
+            protection = false;
+            timerProtection = PROTECTION_DURATION;
+        }
     }
 
 
@@ -255,22 +300,26 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
      * Choose a random cell in a specific radius around another cell
      * @param centerPos (DiscreteCoordinates) the center cell
      * @param radius (int) the radius allowed
+     * @return the cell
      */
     protected DiscreteCoordinates randomCell(DiscreteCoordinates centerPos, int radius) {
         int randomX, randomY;
         DiscreteCoordinates randomCoordinates;
 
+        // Generate a random coordinate in the current area until this coordinate will be smaller that the allowed radius of the ghost
         do {
+
             randomX = RandomGenerator.getInstance().nextInt(getOwnerArea().getWidth());
             randomY = RandomGenerator.getInstance().nextInt(getOwnerArea().getHeight());
             randomCoordinates = new DiscreteCoordinates(randomX, randomY);
+
         }while (DiscreteCoordinates.distanceBetween(centerPos, randomCoordinates) > radius);
 
         return randomCoordinates;
     }
 
     /**
-     * Choose a random cell in an entire map
+     * @return a random cell in an entire map
      */
     protected DiscreteCoordinates randomCell() {
         int width = getOwnerArea().getWidth();
@@ -300,44 +349,34 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
 
     /* --------------- Setters --------------- */
 
-    /**
-     * Sets the target position
-     */
+    /** Sets the target position */
     protected void setTargetPos(DiscreteCoordinates targetPos) {
         this.targetPos = targetPos;
     }
 
-    /**
-     * Sets the speed
-     */
+    /** Sets the speed */
     protected void setSpeed(int speed) { this.speed = speed; }
 
     /* --------------- Getters --------------- */
 
-    protected DiscreteCoordinates getHome() {
-        return home;
-    }
+    /**@return the home of the ghost */
+    protected DiscreteCoordinates getHome() { return home; }
 
-    protected int getAnimationDuration() {
-        return ANIMATION_DURATION;
-    }
+    /**@return the animation duration of ghosts */
+    protected int getAnimationDuration() { return ANIMATION_DURATION; }
 
-    protected SuperPacmanPlayer getPlayer() {
-        return player;
-    }
+    /**@return the target of the ghost */
+    protected SuperPacmanPlayer getPlayer() { return player; }
 
-    protected DiscreteCoordinates getTargetPos() {
-        return targetPos;
-    }
+    /**@return the target's position of the ghost */
+    protected DiscreteCoordinates getTargetPos() { return targetPos; }
 
-    protected boolean isAfraid() {
-        return isAfraid;
-    }
+    /**@return is ghosts are afraid */
+    protected boolean isAfraid() { return isAfraid; }
 
+    /**@return the default speed of the ghost */
     public int getDEFAULT_SPEED() { return DEFAULT_SPEED; }
 
-    @Override
-    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
     /**
      * Interaction handler for a Ghost
@@ -346,6 +385,8 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
 
         @Override
         public void interactWith(SuperPacmanPlayer pacman) {
+
+            // Set the target and update it
             player = pacman;
             updateTarget();
         }

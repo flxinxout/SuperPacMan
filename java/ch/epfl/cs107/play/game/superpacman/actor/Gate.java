@@ -18,7 +18,6 @@ import java.util.List;
  * Gate in the SuperPacman game
  * Used to block the way. Can be deactivated by a signal
  */
-
 public class Gate extends AreaEntity {
 
     // Signals conditioning the gate
@@ -73,9 +72,7 @@ public class Gate extends AreaEntity {
     /* -------------- Implements Graphics and Interactable -------------- */
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
     @Override
     public void draw(Canvas canvas) {
@@ -93,6 +90,7 @@ public class Gate extends AreaEntity {
         return m;
     }
 
+    /**@return true := if the signal is on, false := is the signal is off */
     private boolean isOpen() {
         return signal.isOn();
     }

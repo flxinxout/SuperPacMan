@@ -17,6 +17,7 @@ import java.util.List;
  * Gives one HP when collected
  */
 public class Heart extends CollectableAreaEntity implements Sound {
+
     // Default Heart's Sprite
     private Sprite sprite;
 

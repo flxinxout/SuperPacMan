@@ -11,6 +11,7 @@ import ch.epfl.cs107.play.signal.logic.Logic;
  * Level 0 of the game
  */
 public class Level0 extends SuperPacmanArea {
+
     // The spawn position in the level
     private final DiscreteCoordinates PLAYER_SPAWN_POSITION = new DiscreteCoordinates(10, 1);
 
@@ -28,6 +29,8 @@ public class Level0 extends SuperPacmanArea {
     @Override
     protected void createArea() {
         super.createArea();
+
+        // Registration of actors in the level
         Door door = new Door("superpacman/Level1", new DiscreteCoordinates(15, 6), Logic.TRUE, this,
                 Orientation.UP, new DiscreteCoordinates(5, 9), new DiscreteCoordinates(6, 9));
         registerActor(door);

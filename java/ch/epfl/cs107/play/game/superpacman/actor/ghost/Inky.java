@@ -16,13 +16,11 @@ import java.util.Queue;
  * Type of ghost in the SuperPacman game
  * Ghost that follows the SuperPacmanPlayer depending on his condition
  */
-
 public class Inky extends Ghost {
 
     // Attributes of Inky
     private final int MAX_DISTANCE_WHEN_SCARED = 5;
     private final int MAX_DISTANCE_WHEN_NOT_SCARED = 10;
-
     private final int AFRAID_SPEED = 15;
 
     // Represents the distance to which he obeys depending on his condition
@@ -36,7 +34,9 @@ public class Inky extends Ghost {
      */
     public Inky(Area area, Orientation orientation, DiscreteCoordinates home) {
         super(area, orientation, home);
+
         setSpeed(getDEFAULT_SPEED());
+
         maxDistance = MAX_DISTANCE_WHEN_NOT_SCARED;
     }
 
@@ -55,6 +55,8 @@ public class Inky extends Ghost {
                 sprites[i][j].setDepth(950);
             }
         }
+
+        // Sets the animations of the ghost
         Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
 
         return animations;
@@ -62,6 +64,7 @@ public class Inky extends Ghost {
 
     @Override
     public Orientation getNextOrientation() {
+
         // Gets the area where is the ghost and the path between the ghost and the SuperPacmanPlayer
         SuperPacmanArea area = (SuperPacmanArea) getOwnerArea();
         Queue<Orientation> path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
@@ -93,12 +96,22 @@ public class Inky extends Ghost {
 
     @Override
     protected void updateTarget() {
+
+        // If ghost is afraid
         if(isAfraid()) {
+
+            // The target position will be a cell between his home and the maxDistance, so here the distance when he's scared
             setTargetPos(randomCell(getHome(), maxDistance));
         } else {
+
+            // If he's not afraid and the target is null
             if (getPlayer() == null) {
+
+                // The target position will be a random cells between his home and the maxDistance, so here the distance when he's not scared
                 setTargetPos(randomCell(getHome(), maxDistance));
             } else {
+
+                // If the target is not null, the target position will be the target's position
                 setTargetPos(getPlayer().getCurrentCells().get((0)));
             }
         }

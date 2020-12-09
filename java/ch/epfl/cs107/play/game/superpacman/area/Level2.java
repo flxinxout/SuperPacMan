@@ -29,6 +29,7 @@ public class Level2 extends SuperPacmanArea{
     protected void createArea() {
         super.createArea();
 
+        // Registration of actors in the level
         Key key1 = new Key(this, new DiscreteCoordinates(3, 16));
         registerActor(key1);
 
