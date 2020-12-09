@@ -67,6 +67,10 @@ public class AreaGraph {
     	nodes.get(coordinates).setSignal(signal);
     }
 
+    public boolean getSignal(DiscreteCoordinates coordinates) {
+        return nodes.get(coordinates).isActive.isOn();
+    }
+
     private class AreaNode{
         /// Position of the node into the graph, used as key for the map
         private final DiscreteCoordinates coordinates;

@@ -71,6 +71,9 @@ public class Pinky extends Ghost {
             path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), cell);
         }
 
+        graphicPath = new Path( this . getPosition () , new
+                LinkedList< >( path));
+
         return path.poll();
     }
 
@@ -94,7 +97,7 @@ public class Pinky extends Ghost {
 
     /**
      * Note: In the PDF it is written to increase Inky's speed when he's afraid,
-     * we decided to do it with Pinky because, as he runs away when he's scared
+     * we decided to do it with Pinky too because, as he runs away when he's scared
      * it seems more logic
      */
     @Override

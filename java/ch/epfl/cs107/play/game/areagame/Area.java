@@ -43,15 +43,10 @@ public abstract class Area implements Playable {
 	private Map<Interactable, List<DiscreteCoordinates>> interactablesToLeave;
 	/// The behavior Map
 	private AreaBehavior areaBehavior;
-	/// pause mechanics and menu to display. May be null
-	private ImageGraphics pauseGUI;
-	private ImageGraphics startGUI;
-	private ImageGraphics endGUI;
 	/// - start indicate if area already begins, paused indicate if we display the pause menu
 	private boolean started;
-	private State state;
-	private float startTimer;
-
+	private boolean paused;
+	private boolean ended;
 
 	/** @return (float): camera scale factor, assume it is the same in x and y direction */
 	public abstract float getCameraScaleFactor();
@@ -197,6 +192,16 @@ public abstract class Area implements Playable {
 		return started;
 	}
 
+	/** @return (boolean): true if the method begin already called once. You can use resume() instead*/
+	public final boolean isPaused() {
+		return paused;
+	}
+
+	/** @return (boolean): true if the method begin already called once. You can use resume() instead*/
+	public final boolean hasEnded() {
+		return ended;
+	}
+
 	/**
 	 * If possible make the given interactable entity leave the given area cells
 	 * @param entity (Interactable), not null
@@ -253,15 +258,10 @@ public abstract class Area implements Playable {
 		interactablesToEnter = new HashMap<>();
 		interactablesToLeave = new HashMap<>();
 		viewCenter = Vector.ZERO;
+
 		started = true;
-		state = State.PAUSE;
-		startTimer = 4.f;
-		pauseGUI = new ImageGraphics(ResourcePath.getSprite("superpacman/pauseMenu"), 1.f, 0.75f);
-		pauseGUI.setDepth(999);
-		startGUI = new ImageGraphics(ResourcePath.getSprite("superpacman/pauseMenu"), 1.f, 0.75f);
-		startGUI.setDepth(999);
-		endGUI = new ImageGraphics(ResourcePath.getSprite("superpacman/pauseMenu"), 1.f, 0.75f);
-		endGUI.setDepth(999);
+		paused = false;
+		ended = false;
 		return true;
 	}
 
@@ -274,12 +274,13 @@ public abstract class Area implements Playable {
 	public boolean resume(Window window, FileSystem fileSystem){
 		this.window = window;
 		this.fileSystem = fileSystem;
-		state = State.RUNNING;
+		paused = false;
 		return true;
 	}
 
 	@Override
 	public void update(float deltaTime) {
+		if (!paused && !ended) {
 			purgeRegistration();
 
 			// Update actors
@@ -296,15 +297,21 @@ public abstract class Area implements Playable {
 					areaBehavior.viewInteractionOf(interactor);
 				}
 			}
-
-			// Update camera location
-			updateCamera();
-
-			// Draw actors and play sounds
-			for (Actor actor : actors) {
-				actor.bip(window);
-				actor.draw(window);
+		}
+		else {
+			if (getKeyboard().get(Keyboard.SPACE).isPressed()) {
+				resume(window, fileSystem);
 			}
+		}
+
+		// Update camera location
+		updateCamera();
+
+		// Draw actors and play sounds
+		for (Actor actor : actors) {
+			actor.bip(window);
+			actor.draw(window);
+		}
 	}
 
 	final void purgeRegistration() {
@@ -352,12 +359,21 @@ public abstract class Area implements Playable {
 	 * Suspend method: Can be overridden, called before resume other
 	 */
 	public void suspend(){
-		state = State.PAUSE;
+		paused = true;
 	}
 
 
 	@Override
 	public void end() {
-		state = State.END;
+		ended = true;
+	}
+
+	//TODO: DOCUMENTER ON A AJOUTER NOUS
+	public Window getWindow() {
+		return window;
+	}
+
+	public FileSystem getFileSystem() {
+		return fileSystem;
 	}
 }

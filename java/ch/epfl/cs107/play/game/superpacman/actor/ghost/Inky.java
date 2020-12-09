@@ -3,11 +3,13 @@ package ch.epfl.cs107.play.game.superpacman.actor.ghost;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Animation;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.areagame.actor.Path;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -20,6 +22,8 @@ public class Inky extends Ghost {
     // Attributes of Inky
     private final int MAX_DISTANCE_WHEN_SCARED = 5;
     private final int MAX_DISTANCE_WHEN_NOT_SCARED = 10;
+
+    private final int AFRAID_SPEED = 15;
 
     // Represents the distance to which he obeys depending on his condition
     private int maxDistance;
@@ -67,32 +71,36 @@ public class Inky extends Ghost {
             path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), randomCell());
         }
 
+        graphicPath = new Path( this . getPosition () , new
+                LinkedList< >( path));
+
         return path.poll();
     }
 
-    /**
-     * Note: In the PDF it is written to increase Inky's speed when he's afraid,
-     * we decided to do it with Pinky because, as he runs away when he's scared
-     * it seems more logic
-     */
     @Override
     protected void onScared() {
         maxDistance = MAX_DISTANCE_WHEN_SCARED;
+        setSpeed(AFRAID_SPEED);
         updateTarget();
     }
 
     @Override
     protected void onUnscared() {
         maxDistance = MAX_DISTANCE_WHEN_NOT_SCARED;
+        setSpeed(getDEFAULT_SPEED());
         updateTarget();
     }
 
     @Override
     protected void updateTarget() {
-        if (getPlayer() == null) {
+        if(isAfraid()) {
             setTargetPos(randomCell(getHome(), maxDistance));
         } else {
-            setTargetPos(getPlayer().getCurrentCells().get((0)));
+            if (getPlayer() == null) {
+                setTargetPos(randomCell(getHome(), maxDistance));
+            } else {
+                setTargetPos(getPlayer().getCurrentCells().get((0)));
+            }
         }
     }
 }

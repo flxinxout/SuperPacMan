@@ -35,11 +35,11 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
     private SuperPacmanPlayerStatusGUI status;
 
     // Constants of the SuperPacmanPlayer
-    private final static int SPEED = 6;
-    private final static float INVINCIBLE_DURATION = 10;
-    private final static float PROTECTION_DURATION = 3;
-    public final static int MAXHP = 4;
-    public final static int START_HP = 1;
+    private final int SPEED = 6;
+    private final float INVINCIBLE_DURATION = 10;
+    private final float PROTECTION_DURATION = 3;
+    public final int MAXHP = 4;
+    public final int START_HP = 1;
 
     // Attributes of the SuperPacmanPlayer
     private int hp;
@@ -52,14 +52,11 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
     private float timerProtection;
 
     // Animation of the SuperPacmanPlayer
-    private final static int ANIMATION_DURATION = 8;
+    private final int ANIMATION_DURATION = 8;
     private Animation[] animations;
     private Animation currentAnimation;
 
     private Orientation desiredOrientation;
-
-    // Timer for the start
-    private float timerBeforeStart = 4;
 
     // Attributs for the delay in death
     private boolean hasLooseLife;
@@ -117,17 +114,6 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
             }
         }
     }*/
-
-    private boolean starting(float deltaTime) {
-        timerBeforeStart -= deltaTime;
-        System.out.println(timerBeforeStart);
-
-        if(timerBeforeStart < 0) {
-            State.setState(State.RUNNING);
-            return false;
-        }
-        return true;
-    }
 
     /**
      * Method that increase the score of the player
@@ -243,10 +229,6 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
 
     @Override
     public void update(float deltaTime) {
-        if(timerBeforeStart > 0) {
-            starting(deltaTime);
-            return;
-        }
         //Check the desired orientation
         computeDesiredOrientation();
 
@@ -264,6 +246,11 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
         setAnimations();
         currentAnimation.update(deltaTime);
 
+        //Pause the game if space is pressed
+        if (getOwnerArea().getKeyboard().get(Keyboard.SPACE).isPressed()) {
+            getOwnerArea().suspend();
+        }
+
         // Check invincibility state
         if (invincible) {
             refreshInvincibility(deltaTime);
@@ -273,7 +260,6 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
         if(protection) {
             refreshProtection(deltaTime);
         }
-
     }
 
     @Override
@@ -334,6 +320,11 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
     @Override
     public void onDeath() {
         hp--;
+        if(hp <= 0) {
+            SuperPacmanArea owner = (SuperPacmanArea) getOwnerArea();
+            owner.gameOver();
+            return;
+        }
         hasLooseLife = true;
         State.setState(State.PAUSE);
         protect();
@@ -369,6 +360,8 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
     public int getHp() {
         return hp;
     }
+
+    public int getMAXHP() { return MAXHP; }
 
     public int getScore() {
         return score;

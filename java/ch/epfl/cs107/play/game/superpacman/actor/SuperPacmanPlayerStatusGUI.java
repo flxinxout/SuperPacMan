@@ -51,7 +51,7 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
      */
     private void drawLife(float spaceBetweenImages, Vector anchor, float height, Canvas canvas) {
         // Iterate through the life of the SuperPacman and set yellow and gray hp
-        for(int i = 1; i <= SuperPacmanPlayer.MAXHP; i++) {
+        for(int i = 1; i <= player.getMAXHP(); i++) {
             // 0 if the life icon is yellow, 64 if it is gray
             int m;
             if(i <= player.getHp()) {

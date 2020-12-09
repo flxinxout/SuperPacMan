@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.CollectableAreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
+import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 /**
@@ -32,6 +33,7 @@ public abstract class CollectableReward extends CollectableAreaEntity {
     @Override
     public void onCollect() {
         super.onCollect();
-        SuperPacman.player.addScore(REWARD);
+        SuperPacmanArea owner = (SuperPacmanArea) getOwnerArea();
+        owner.getPlayer().addScore(REWARD);
     }
 }

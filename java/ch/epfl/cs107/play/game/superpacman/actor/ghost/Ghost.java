@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,11 +31,11 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
     private int speed;
 
     // Animation duration in frame number
-    private final static int ANIMATION_DURATION = 8;
+    private final int ANIMATION_DURATION = 8;
 
     // Attributes for the behavior of the ghost when they are afraid
     private Animation afraidAnimation;
-    private static boolean isAfraid;
+    private boolean isAfraid;
 
     // Animation
     private Animation[] animations;
@@ -50,6 +51,8 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
 
     // Handler of the ghost
     private GhostHandler handler;
+
+    protected Path graphicPath;
 
     /**
      * Default Ghost constructor
@@ -74,6 +77,8 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
         speed = DEFAULT_SPEED;
         isAfraid = false;
         targetPos = home;
+
+        graphicPath = new Path( this . getPosition () , new LinkedList<>());
     }
 
 
@@ -81,19 +86,17 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
 
     @Override
     public void update(float deltaTime) {
-        if (isDisplacementOccurs()) {
             setAnimations(deltaTime);
-        } else {
-            currentAnimation.reset();
-            desiredOrientation = getNextOrientation();
-
-            // move if possible
-            if (getOwnerArea().canEnterAreaCells(this,
-                    Collections.singletonList(getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
-                orientate(desiredOrientation);
+            if (!isDisplacementOccurs()) {
+                desiredOrientation = getNextOrientation();
+                // move if possible
+                if (getOwnerArea().canEnterAreaCells(this,
+                        Collections.singletonList(getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
+                    orientate(desiredOrientation);
+                }
                 move(speed);
             }
-        }
+
         super.update(deltaTime);
 
         if (DiscreteCoordinates.distanceBetween(getCurrentMainCellCoordinates(), targetPos) < 0.1) {
@@ -102,7 +105,12 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
     }
 
     @Override
-    public void draw(Canvas canvas) { currentAnimation.draw(canvas); }
+    public void draw(Canvas canvas) {
+        if (graphicPath != null) {
+            graphicPath.draw(canvas);
+        }
+        currentAnimation.draw(canvas);
+    }
 
 
     /* --------------- Implements Killable --------------- */
@@ -204,7 +212,11 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
         if (isAfraid) {
             currentAnimation = afraidAnimation;
         } else {
-            currentAnimation = animations[getOrientation().ordinal()];
+            if (isDisplacementOccurs()) {
+                currentAnimation = animations[getOrientation().ordinal()];
+            } else {
+                currentAnimation.reset();
+            }
         }
         currentAnimation.update(deltaTime);
     }
@@ -306,7 +318,7 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
         return home;
     }
 
-    protected static int getAnimationDuration() {
+    protected int getAnimationDuration() {
         return ANIMATION_DURATION;
     }
 
@@ -318,7 +330,7 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
         return targetPos;
     }
 
-    protected static boolean isAfraid() {
+    protected boolean isAfraid() {
         return isAfraid;
     }
 
@@ -326,7 +338,7 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
-    
+
     /**
      * Interaction handler for a Ghost
      */

@@ -43,7 +43,7 @@ public class Gate extends AreaEntity {
 
         //Deactivate the nodes at the position of the gate
         SuperPacmanArea ownerArea = (SuperPacmanArea) area;
-        ownerArea.getBehavior().getGraph().setSignal(position, Logic.FALSE);
+        ownerArea.getBehavior().getGraph().setSignal(position, signal);
 
         this.sprite = new Sprite("superpacman/gate", 1, 1, this, new RegionOfInterest(0, m, 64, 64));
     }
@@ -52,7 +52,7 @@ public class Gate extends AreaEntity {
 
     @Override
     public boolean takeCellSpace() {
-        return isOpen();
+        return !isOpen();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Gate extends AreaEntity {
 
     @Override
     public void draw(Canvas canvas) {
-        if (isOpen()) {
+        if (!isOpen()) {
             sprite.draw(canvas);
         }
     }
@@ -94,10 +94,6 @@ public class Gate extends AreaEntity {
     }
 
     private boolean isOpen() {
-        //Activate the nodes at the position of the gate
-        SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
-        ownerArea.getBehavior().getGraph().setSignal(position, Logic.TRUE);
-
         return signal.isOn();
     }
 }
