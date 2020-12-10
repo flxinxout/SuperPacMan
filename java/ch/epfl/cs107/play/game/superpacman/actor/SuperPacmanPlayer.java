@@ -33,7 +33,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
     private SuperPacmanPlayerStatusGUI status;
 
     // Constants of the SuperPacmanPlayer
-    private final int SPEED = 6;
+    private final int DEFAULT_SPEED = 6;
     private final float INVINCIBLE_DURATION = 10;
     private final float PROTECTION_DURATION = 1.5f;
     private final int MAXHP = 4;
@@ -42,6 +42,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
     // Attributes of the SuperPacmanPlayer
     private int hp;
     private int score;
+    private int speed;
 
     // Invincibilty (when a bonus is eaten)
     private boolean invincible;
@@ -80,9 +81,9 @@ public class SuperPacmanPlayer extends Player implements Killable {
         Sprite [][] sprites = RPGSprite.extractSprites ("superpacman/pacman", 4, 1, 1,
                 this , 64, 64, new Orientation [] { Orientation.DOWN ,
                         Orientation.LEFT , Orientation.UP , Orientation.RIGHT });
-        for (int i = 0; i < sprites.length; i++) {
-            for (int j = 0; j < sprites[i].length; j++) {
-                sprites[i][j].setDepth(975);
+        for (Sprite[] sprite : sprites) {
+            for (Sprite value : sprite) {
+                value.setDepth(975);
             }
         }
 
@@ -96,6 +97,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
         // Initialization of player's attributes
         hp = START_HP;
         score = 0;
+        speed = DEFAULT_SPEED;
         invincible = false;
         protection = false;
         timerInvincible = INVINCIBLE_DURATION;
@@ -228,7 +230,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
                 orientate(desiredOrientation);
             }
             // Move of the player
-            move(SPEED);
+            move(speed);
         }
 
         super.update(deltaTime);
@@ -250,6 +252,15 @@ public class SuperPacmanPlayer extends Player implements Killable {
         // Check the protection state
         if(protection) {
             refreshProtection(deltaTime);
+        }
+
+        // Increase the speed and make invincible if the area is completed
+        SuperPacmanArea owner = toSuperPacmanArea(getOwnerArea());
+        if (owner.isOn()) {
+            invincible();
+            speed = 9;
+        } else {
+            speed = DEFAULT_SPEED;
         }
     }
 

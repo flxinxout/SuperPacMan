@@ -206,7 +206,7 @@ public abstract class SuperPacmanArea extends Area implements Logic {
 
     /* --------------- Getters --------------- */
 
-    /** NOTE: Need to be redefine
+    /** @Note: Need to be redefine
      * @return the player's spawn location of this area
      */
     abstract public DiscreteCoordinates getSpawnLocation();

@@ -12,7 +12,9 @@ Ajout son pour les cherry, eat ghost, death
  
  (Consigne: scare/unscare ghosts dans le update du jeu, 
  notre projet: scare dans "invincible" et unscare dans "refreshinvincibility" du joueur. Economise de la mémoire)
- 
+
+PACMAN augmente sa vitesse quand l'area est complétée
+
 A faire :
     son bien lancé avec temps d'attente,...
     enlever le diamond sur la case du start du level0

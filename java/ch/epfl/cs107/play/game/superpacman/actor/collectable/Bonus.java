@@ -49,6 +49,9 @@ public class Bonus extends CollectableAreaEntity {
 
     /* -------------- Implements Interactable ---------------- */
 
+    /**
+     * WE DECIDED TO DEFINE THEM HERE BECAUSE IT CAN CHANGE FOR SOME INTERACTABLE
+     */
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates());
