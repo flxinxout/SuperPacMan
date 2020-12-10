@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.superpacman.actor;
 
+import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
@@ -7,18 +8,15 @@ import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
+import ch.epfl.cs107.play.game.superpacman.actor.collectable.CollectableReward;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
-import ch.epfl.cs107.play.game.superpacman.area.util.State;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
-import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,7 +24,7 @@ import java.util.List;
  * Class that represent the SuperPacmanPlayer in the game
  */
 
-public class SuperPacmanPlayer extends Player implements Killable, Sound {
+public class SuperPacmanPlayer extends Player implements Killable {
 
     // Handler of the SuperPacmanPlayer
     private SuperPacmanPlayerHandler handler;
@@ -37,13 +35,15 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
     // Constants of the SuperPacmanPlayer
     private final int SPEED = 6;
     private final float INVINCIBLE_DURATION = 10;
-    private final float PROTECTION_DURATION = 3;
+    private final float PROTECTION_DURATION = 1.5f;
     private final int MAXHP = 4;
     private final int START_HP = 1;
 
     // Attributes of the SuperPacmanPlayer
     private int hp;
     private int score;
+
+    // Invincibilty (when a bonus is eaten)
     private boolean invincible;
     private float timerInvincible;
 
@@ -55,6 +55,9 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
     private final int ANIMATION_DURATION = 8;
     private Animation[] animations;
     private Animation currentAnimation;
+
+    // Sounds of the SuperPacmanPlayer
+    SoundAcoustics deathSound;
 
     // Orientation of the player
     private Orientation desiredOrientation;
@@ -83,9 +86,12 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
             }
         }
 
-        // Sets the animations of the player
+        // Set the animations of the player
         animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
         currentAnimation = animations[0];
+
+        // Set the sounds of the player
+        deathSound = new SoundAcoustics("sounds/pacman/pacman_death.wav", 0.50f, false,false,false, true);
 
         // Initialization of player's attributes
         hp = START_HP;
@@ -127,10 +133,10 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
     /** Method that set the invincibility state of the player */
     private void invincible() {
         invincible = true;
-        SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
 
-        // Scared all ghost in the area
-        ownerArea.getBehavior().scareGhosts();
+        SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
+        // Scare all ghost in the area
+        ownerArea.scareGhosts();
     }
 
     /** Method that set the protection of the player when he's killed*/
@@ -149,7 +155,7 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
                 invincible = false;
 
                 SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
-                ownerArea.getBehavior().unScareGhosts();
+                ownerArea.unScareGhosts();
                 timerInvincible = INVINCIBLE_DURATION;
             }
     }
@@ -290,44 +296,26 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
 
     @Override
     public void onDeath() {
+        //Play the death sound
+        deathSound.shouldBeStarted();
+        deathSound.bip(getOwnerArea().getWindow());
 
         // Decrease the life
         hp--;
 
-        // If the hp is 0 or less it's game over for the player
+        // If the hp are 0 it's game over
         if(hp <= 0) {
             SuperPacmanArea owner = (SuperPacmanArea) getOwnerArea();
             owner.gameOver();
             return;
         } else {
 
-            // else, we set a protection to avoid spawn kill and we discharge the entity in the cells where he is and spawn the player at his home
+            // else, we set a protection to avoid spawn kill and we spawn it at its spawn location
             protect();
             getOwnerArea().leaveAreaCells(this, getEnteredCells());
             setCurrentPosition(toSuperPacmanArea(getOwnerArea()).getSpawnLocation().toVector());
             getOwnerArea().enterAreaCells(this, getCurrentCells());
             resetMotion();
-        }
-    }
-
-
-    /* --------------- Implement Sound --------------- */
-
-    @Override
-    public void onSound() {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("res/sounds/pacman/pacman_death.wav").getAbsoluteFile());
-
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.loop(0);
-
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
         }
     }
 
@@ -354,36 +342,36 @@ public class SuperPacmanPlayer extends Player implements Killable, Sound {
         @Override
         public void interactWith(CollectableAreaEntity collectable) {
             collectable.onCollect();
-
-            //TODO POLYMORPHIC VOILA POURQUOI JAVAIS ETENDU COLLECTABLE
-            //collectable.onSound();
-
-            //TODO: POLYMORPHISM!!!
-            if (collectable instanceof Bonus) {
-                invincible();
-            }
-
-            //TODO: POLYMORPHISM!!!
-            if (collectable instanceof Heart) {
-                addHP();
-            }
         }
 
-        //TODO: Polymorphism here
+        @Override
+        public void interactWith(CollectableReward collectable) {
+            interactWith((CollectableAreaEntity) collectable);
+            addScore(collectable.getReward());
+        }
+
         @Override
         public void interactWith(Bonus bonus) {
+            interactWith((CollectableAreaEntity) bonus);
+            invincible();
+        }
 
+        @Override
+        public void interactWith(Heart heart) {
+            interactWith((CollectableAreaEntity) heart);
+            addHP();
         }
 
         @Override
         public void interactWith(Ghost ghost) {
             if (invincible) {
-                ghost.onDeath();
-                ghost.onSound();
+                if (!ghost.isProtected()) {
+                    ghost.onDeath();
+                    addScore(ghost.getScore());
+                }
             } else {
                 if(!protection) {
                     onDeath();
-                    onSound();
                 }
             }
         }

@@ -64,48 +64,30 @@ public class Pinky extends Ghost {
 
         // Gets the area where is the ghost and the path between the ghost and the SuperPacmanPlayer
         SuperPacmanArea area = (SuperPacmanArea) getOwnerArea();
-        Queue<Orientation> path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
+        Queue<Orientation> path = area.shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
 
         // While the path is null or empty (for example if the ghost has not a target now), generate an other path
         while (path == null || path.isEmpty()) {
             DiscreteCoordinates cell = randomCell();
-            path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), cell);
+            path = area.shortestPath(getCurrentMainCellCoordinates(), cell);
         }
-
-        graphicPath = new Path( this . getPosition () , new
-                LinkedList< >( path));
 
         return path.poll();
     }
 
     @Override
-    protected void updateTarget() {
-
-        // If ghost is afraid
+    protected DiscreteCoordinates getTargetPos() {
         if (isAfraid()) {
-
-            // If he's afraid and the target is null
             if (getPlayer() == null) {
-
-                // The target position will be a cell in the area
-                setTargetPos(randomCell());
+                return randomCell();
             } else {
-
-                // The target position will be a random cell in the map in a minimal distance of the player
-                setTargetPos(randomCellFarFromPlayer());
+                return randomCellFarFromPlayer();
             }
-        }
-        else {
-
-            // If he's not afraid and the target is null
+        } else {
             if (getPlayer() == null) {
-
-                // The target position will be a cell in the area
-                setTargetPos(randomCell());
+                return randomCell();
             } else {
-
-                // If the target is not null, the target position will be the target's position
-                setTargetPos(getPlayer().getCurrentCells().get((0)));
+                return getPlayer().getCurrentCells().get((0));
             }
         }
     }
@@ -116,17 +98,14 @@ public class Pinky extends Ghost {
      * it seems more logic
      */
     @Override
-    protected void onScared() {
-        updateTarget();
-        setSpeed(AFRAID_SPEED);
+    protected void onScareChange() {
+        if (!isAfraid()) {
+            setSpeed(AFRAID_SPEED);
+        } else {
+            setSpeed(getDEFAULT_SPEED());
+        }
+        super.onScareChange();
     }
-
-    @Override
-    protected void onUnscared() {
-        updateTarget();
-        setSpeed(getDEFAULT_SPEED());
-    }
-
 
     /* --------------- External Methods --------------- */
 

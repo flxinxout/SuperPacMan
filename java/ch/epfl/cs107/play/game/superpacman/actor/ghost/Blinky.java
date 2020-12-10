@@ -10,7 +10,7 @@ import ch.epfl.cs107.play.math.RandomGenerator;
 
 /**
  * Type of ghost in the SuperPacman game
- * Does nothing special
+ * Move randomly accross the map
  */
 public class Blinky extends Ghost {
 
@@ -50,20 +50,16 @@ public class Blinky extends Ghost {
 
     @Override
     public Orientation getNextOrientation() {
-
-        // Creates a random number between 0 and 4
         int randomInt = RandomGenerator.getInstance().nextInt(4);
-
-        // Returns an orientation from this random
         return Orientation.fromInt(randomInt);
     }
 
+    //TODO: let them abstract or: not and give them a default definition
     @Override
-    protected void onScared() { }
+    protected DiscreteCoordinates getTargetPos() { return null; }
 
     @Override
-    protected void onUnscared() { }
-
-    @Override
-    protected void updateTarget() { }
+    protected void onScareChange() {
+        super.onScareChange();
+    }
 }

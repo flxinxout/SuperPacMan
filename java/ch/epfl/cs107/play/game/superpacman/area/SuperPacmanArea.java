@@ -1,11 +1,7 @@
 package ch.epfl.cs107.play.game.superpacman.area;
 
-import ch.epfl.cs107.play.game.actor.ImageGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
-import ch.epfl.cs107.play.game.areagame.AreaGraph;
-import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
-import ch.epfl.cs107.play.game.superpacman.Menu;
-import ch.epfl.cs107.play.game.superpacman.SuperPacman;
+import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -13,14 +9,14 @@ import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 
+import java.util.Queue;
+
 /**
  * Class that represents an Area of the game
  */
 public abstract class SuperPacmanArea extends Area implements Logic {
-
     // The scale factor of the window and the player in the area
-    public final static float CAMERA_SCALE_FACTOR = 20.f;
-    private SuperPacmanPlayer player;
+    protected final static float CAMERA_SCALE_FACTOR = 20.f;
 
     // Behavior of the area
     private SuperPacmanBehavior behavior;
@@ -31,30 +27,24 @@ public abstract class SuperPacmanArea extends Area implements Logic {
     // This signal is activated when every collectable in the area has been collected
     private boolean isCompleted;
 
-    // Pause mechanics and menu to display. May be null
-    private Menu[] pauseGUI;
-    private Menu gameOverGUI;
-    private Menu winGUI;
+    // Pause mechanics and menu to display.
+    private SuperPacmanMenu[] pauseGUI;
+    private SuperPacmanMenu gameOverGUI;
+    private SuperPacmanMenu winGUI;
+    private int playerScore;
     private boolean won;
     private int desiredGUI = 0;
-
-
-    /* --------------- Abstract Methods --------------- */
-
-    abstract public DiscreteCoordinates getSpawnLocation();
 
 
     /* --------------- External Methods --------------- */
 
     @Override
     public boolean resume(Window window, FileSystem fileSystem) {
-
-        // Set the parameter for the correct gui when it will be open
         desiredGUI = 0;
         return super.resume(window, fileSystem);
     }
 
-    /** Method for the game over, when the player has 0 life */
+    /** Method for the game over, when the player has 0 hp */
     public void gameOver() {
         won = false;
         end();
@@ -86,6 +76,33 @@ public abstract class SuperPacmanArea extends Area implements Logic {
         }
     }
 
+    /**
+     * Calls shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) from its behavior's graph
+     */
+    public Queue<Orientation> shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) {
+        return behavior.shortestPath(from, to);
+    }
+
+    /**
+     * Calls setSignal(DiscreteCoordinates coordinates, Logic signal) from its behavior's graph
+     */
+    public void setSignal(DiscreteCoordinates coordinates, Logic signal) {
+        behavior.setSignal(coordinates, signal);
+    }
+
+    /**
+     * Calls scare() of its behavior
+     */
+    public void scareGhosts() {
+        behavior.scareGhosts();
+    }
+
+    /**
+     * Calls unscareGhosts() of its behavior
+     */
+    public void unScareGhosts() {
+        behavior.unScareGhosts();
+    }
 
     /* --------------- Implements Playable --------------- */
 
@@ -94,35 +111,24 @@ public abstract class SuperPacmanArea extends Area implements Logic {
         super.begin(window, fileSystem);
 
         if (super.begin(window, fileSystem)) {
-
-            // Set the behavior map
             behavior = new SuperPacmanBehavior(window, getTitle());
             setBehavior(behavior);
 
-            // Add the area in actors list
             createArea();
 
-            // Set the default pause gui
             desiredGUI = 0;
-
-            // TODO PLAYER NULL A CAUSE DE QUE L'UPDATE EST BLOQUER DANS LE AREA C BIZARRE
-            if(player == null) {
-                System.out.println("yes");
-            }
-
             // Initialisation GUIs
-            pauseGUI = new Menu[2];
+            pauseGUI = new SuperPacmanMenu[2];
             for (int i = 0; i < pauseGUI.length; i++) {
-                pauseGUI[i] = new Menu("superpacman/pause.menu" + i, 1, player);
+                pauseGUI[i] = new SuperPacmanMenu("superpacman/pause.menu" + i, SuperPacmanMenu.SuperPacmanMenuType.PAUSE, playerScore);
             }
 
-            gameOverGUI = new Menu("superpacman/gameover.menu", 0, player);
-            winGUI = new Menu("superpacman/win.menu", 2, player);
+            gameOverGUI = new SuperPacmanMenu("superpacman/gameover.menu", SuperPacmanMenu.SuperPacmanMenuType.GAMEOVER, playerScore);
+            winGUI = new SuperPacmanMenu("superpacman/win.menu", SuperPacmanMenu.SuperPacmanMenuType.WIN, playerScore);
             won = false;
 
             return true;
         }
-
         return false;
     }
 
@@ -130,9 +136,7 @@ public abstract class SuperPacmanArea extends Area implements Logic {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        // If the game is on pause
         if (isPaused()) {
-
             // Adapt the arrow in the pause GUI
             pauseGUI[desiredGUI].draw(getWindow());
 
@@ -146,13 +150,10 @@ public abstract class SuperPacmanArea extends Area implements Logic {
             if (getKeyboard().get(Keyboard.ENTER).isPressed()) {
                 switch(desiredGUI) {
                     case 0:
-
-                        // If desiredGUI is 0, then resume the game
                         resume(getWindow(), getFileSystem());
                         break;
-                    case 1:
 
-                        // If desiredGUI is 1, then exit the game
+                    case 1:
                         System.exit(1);
                         break;
 
@@ -162,15 +163,10 @@ public abstract class SuperPacmanArea extends Area implements Logic {
             }
         }
 
-        // If the game has ended
         if(hasEnded()) {
-
-            // If the player hasn't won, then display the game over gui
             if (!won) {
                 gameOverGUI.draw(getWindow());
             } else {
-
-                // else display the win gui
                 winGUI.draw(getWindow());
             }
 
@@ -198,22 +194,23 @@ public abstract class SuperPacmanArea extends Area implements Logic {
         return (isCompleted) ? 1 : 0;
     }
 
+    /* --------------- Setters --------------- */
+
+    /** sets the player's score
+     * used in the end menus
+     * @param playerScore player's score
+     */
+    public void setPlayerScore(int playerScore) {
+        this.playerScore = playerScore;
+    }
+
     /* --------------- Getters --------------- */
+
+    /** NOTE: Need to be redefine
+     * @return the player's spawn location of this area
+     */
+    abstract public DiscreteCoordinates getSpawnLocation();
 
     @Override
     public float getCameraScaleFactor() { return CAMERA_SCALE_FACTOR; }
-
-    /** @return the graph of the behavior */
-    public AreaGraph getGraph() { return behavior.getGraph(); }
-
-    /** @return the behavior of the area */
-    public SuperPacmanBehavior getBehavior() { return behavior; }
-
-    /** @return the player of the area */
-    public SuperPacmanPlayer getPlayer() { return player; }
-
-    /* --------------- Setters --------------- */
-
-    /** Set the player in the area */
-    public void setPlayer(SuperPacmanPlayer player) { this.player = player; }
 }

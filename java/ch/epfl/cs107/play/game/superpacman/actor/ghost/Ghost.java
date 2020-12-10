@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.superpacman.actor.ghost;
 
+import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
@@ -10,54 +11,47 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.window.Canvas;
 
-import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Class that represents ghosts in the SuperPacman game
  */
+public abstract class Ghost extends MovableAreaEntity implements Interactor, Killable {
 
-public abstract class Ghost extends MovableAreaEntity implements Interactor, Killable, Sound {
-
-    // Attributes of the Ghosts
+    // Constants of the Ghosts
     private final int GHOST_SCORE = 500;
     private final int FIELD_OF_VIEW = 5;
     private final int DEFAULT_SPEED = 20;
-    private final float PROTECTION_DURATION = 3;
-    private int speed;
+    private final float PROTECTION_DURATION = 2;
+    private final SoundAcoustics DEATH_SOUND;
 
     // Animation duration in frame number
     private final int ANIMATION_DURATION = 8;
 
-    // Attributes for the behavior of the ghost when they are afraid
-    private Animation afraidAnimation;
+    // Attributes of the ghost
+    private final Animation afraidAnimation;
     private boolean isAfraid;
+    private int speed;
 
     // Animation
     private Animation[] animations;
     private Animation currentAnimation;
-    private Orientation desiredOrientation;
 
     // The spawn of the ghost
-    private DiscreteCoordinates home;
+    private final DiscreteCoordinates home;
 
     // Target's Attributes
     private SuperPacmanPlayer player;
     private DiscreteCoordinates targetPos;
 
-    // Spawn protection (to avoid spawn kill)
-    private boolean protection;
+    // Spawn protect (to avoid spawn kill)
+    private boolean protect;
     private float timerProtection;
 
     // Handler of the ghost
-    private GhostHandler handler;
-
-    protected Path graphicPath;
+    private final GhostHandler handler;
 
     /**
      * Default Ghost constructor
@@ -82,14 +76,13 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
         this.home = home;
         speed = DEFAULT_SPEED;
         isAfraid = false;
+        DEATH_SOUND = new SoundAcoustics("sounds/pacman/pacman_eatghost.wav", 0.50f, false,false,false, false);
 
         // Default target position
-        targetPos = home;
+        targetPos = getTargetPos();
 
-        protection = false;
+        protect = false;
         timerProtection = PROTECTION_DURATION;
-
-        graphicPath = new Path( this . getPosition () , new LinkedList<>());
     }
 
 
@@ -97,89 +90,51 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
 
     @Override
     public void update(float deltaTime) {
-        // Set the animations in turns of different parameters
         setAnimations(deltaTime);
 
-        // If the ghost can not go in a direction
         if (!isDisplacementOccurs()) {
+            Orientation desiredOrientation = getNextOrientation();
 
-            // Set the new orientation for the ghost
-            desiredOrientation = getNextOrientation();
-
-            // If move is possible
             if (getOwnerArea().canEnterAreaCells(this,
                     Collections.singletonList(getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
-                // Orientation of the ghost for the next move
                 orientate(desiredOrientation);
             }
-
-            // Move of the ghost
             move(speed);
         }
 
         super.update(deltaTime);
 
         // If the ghost and his target position are very close, we update the target in turns of parameters of the game
-        if (DiscreteCoordinates.distanceBetween(getCurrentMainCellCoordinates(), targetPos) < 0.1) {
-            updateTarget();
+        if (targetPos != null && DiscreteCoordinates.distanceBetween(getCurrentMainCellCoordinates(), targetPos) < 0.1) {
+            targetPos = getTargetPos();
         }
 
-        // Check the protection state
-        if(protection) {
+        // Check the protect state
+        if (protect) {
             refreshProtection(deltaTime);
         }
     }
 
     @Override
     public void draw(Canvas canvas) {
-        if (graphicPath != null) {
-            graphicPath.draw(canvas);
-        }
         currentAnimation.draw(canvas);
     }
-
 
     /* --------------- Implements Killable --------------- */
 
     @Override
     public void onDeath() {
+        DEATH_SOUND.shouldBeStarted();
+        DEATH_SOUND.bip(getOwnerArea().getWindow());
 
-        // If the ghost is not protected by the anti-spawnKill
-        if(!protection) {
-            // Discharge the entity in the cells where he is and spawn the ghost to at home
-            protect();
-            getOwnerArea().leaveAreaCells(this, getEnteredCells());
-            setCurrentPosition(home.toVector());
-            getOwnerArea().enterAreaCells(this, Collections.singletonList(home));
-            resetMotion();
+        protect();
+        getOwnerArea().leaveAreaCells(this, getEnteredCells());
+        setCurrentPosition(home.toVector());
+        getOwnerArea().enterAreaCells(this, Collections.singletonList(home));
+        resetMotion();
 
-            // Update the score of the player who killed the ghost
-            player.addScore(GHOST_SCORE);
-
-            // Resets the target
-            player = null;
-            updateTarget();
-        }
-    }
-
-    /* --------------- Implements Sounds --------------- */
-
-    @Override
-    public void onSound() {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("res/sounds/pacman/pacman_eatghost.wav").getAbsoluteFile());
-
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.loop(0);
-
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        }
+        player = null;
+        targetPos = getTargetPos();
     }
 
     /* --------------- Implements Interactor --------------- */
@@ -234,8 +189,6 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
      */
     private void setAnimations(float deltaTime) {
         if (isAfraid) {
-
-            // Afraid animation
             currentAnimation = afraidAnimation;
         } else {
             if (isDisplacementOccurs()) {
@@ -248,53 +201,30 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
         currentAnimation.update(deltaTime);
     }
 
-    /** Method that set the protection of the ghost when he's killed */
+    /** Method that set the protect of the ghost when he's killed */
     private void protect() {
-        protection = true;
+        protect = true;
     }
 
     /**
-     * Method called in update to update the protection state of the ghost
+     * Method called in update to refresh the protect state of the ghost
      * @param deltaTime (float) the delta time of the update
      */
     private void refreshProtection(float deltaTime) {
         if (timerProtection > 0) {
             timerProtection -= deltaTime;
         } else {
-            protection = false;
+            protect = false;
             timerProtection = PROTECTION_DURATION;
         }
     }
 
-
-    /* --------------- Abstract Methods --------------- */
-
-    /**
-     * Called when the ghosts become scared
-     */
-    protected abstract void onScared();
-
-    /**
-     * Called when the ghosts stop being scared
-     */
-    protected abstract void onUnscared();
-
-    /**
-     * Update the target accordingly to the circumstances
-     */
-    protected abstract void updateTarget();
-
-    /**
-     * Getter for the animations
-     */
-    protected abstract Animation[] getAnimations();
-
-    /**
-     * Compute the next orientation following a specific algorithm
-     */
-    protected abstract Orientation getNextOrientation();
-
     /* --------------- Protected Methods --------------- */
+
+    /** Called when the ghosts become scared or stop being scared */
+    protected void onScareChange() {
+        targetPos = getTargetPos();
+    }
 
     /**
      * Choose a random cell in a specific radius around another cell
@@ -308,19 +238,16 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
 
         // Generate a random coordinate in the current area until this coordinate will be smaller that the allowed radius of the ghost
         do {
-
             randomX = RandomGenerator.getInstance().nextInt(getOwnerArea().getWidth());
             randomY = RandomGenerator.getInstance().nextInt(getOwnerArea().getHeight());
             randomCoordinates = new DiscreteCoordinates(randomX, randomY);
-
         }while (DiscreteCoordinates.distanceBetween(centerPos, randomCoordinates) > radius);
 
         return randomCoordinates;
     }
 
-    /**
-     * @return a random cell in an entire map
-     */
+    //TODO: check if there's already a way to get the center of the area + the radius
+    /** @return a random cell in an entire map*/
     protected DiscreteCoordinates randomCell() {
         int width = getOwnerArea().getWidth();
         int height = getOwnerArea().getHeight();
@@ -333,31 +260,39 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
 
     /* --------------- Public Methods --------------- */
 
-    /**
-     * Scares or stops scaring ghosts
-     * @param isScared true := scare ghosts, false := stop scaring them
-     */
-    public void setIsScared(boolean isScared) {
-        if (isScared) {
-            isAfraid = true;
-            onScared();
-        } else {
-            isAfraid = false;
-            onUnscared();
-        }
+    /** Scares ghosts */
+    public void scare() {
+        isAfraid = true;
+        onScareChange();
+    }
+
+    /** unScares ghosts */
+    public void unScare() {
+        isAfraid = false;
+        onScareChange();
     }
 
     /* --------------- Setters --------------- */
-
-    /** Sets the target position */
-    protected void setTargetPos(DiscreteCoordinates targetPos) {
-        this.targetPos = targetPos;
-    }
 
     /** Sets the speed */
     protected void setSpeed(int speed) { this.speed = speed; }
 
     /* --------------- Getters --------------- */
+
+    /** NEED TO BE OVERRIDDEN
+     *  @return the target accordingly to the circumstances
+     */
+    protected abstract DiscreteCoordinates getTargetPos();
+
+    /** NEED TO BE OVERRIDDEN
+     * @return the animations accordingly to the ghost
+     */
+    protected abstract Animation[] getAnimations();
+
+    /** NEED TO BE OVERRIDDEN
+     * @return the next orientation following a specific algorithm
+     */
+    protected abstract Orientation getNextOrientation();
 
     /**@return the home of the ghost */
     protected DiscreteCoordinates getHome() { return home; }
@@ -368,27 +303,27 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
     /**@return the target of the ghost */
     protected SuperPacmanPlayer getPlayer() { return player; }
 
-    /**@return the target's position of the ghost */
-    protected DiscreteCoordinates getTargetPos() { return targetPos; }
-
-    /**@return is ghosts are afraid */
+    /**@return if ghosts are afraid */
     protected boolean isAfraid() { return isAfraid; }
 
+    /**@return if this ghost is protected */
+    public boolean isProtected() { return protect; }
+
     /**@return the default speed of the ghost */
-    public int getDEFAULT_SPEED() { return DEFAULT_SPEED; }
+    protected int getDEFAULT_SPEED() { return DEFAULT_SPEED; }
+
+    /**@return the score given on death */
+    public int getScore() { return GHOST_SCORE; }
 
 
     /**
      * Interaction handler for a Ghost
      */
     private class GhostHandler implements SuperPacmanInteractionVisitor {
-
         @Override
         public void interactWith(SuperPacmanPlayer pacman) {
-
-            // Set the target and update it
             player = pacman;
-            updateTarget();
+            targetPos = getTargetPos();
         }
     }
 }

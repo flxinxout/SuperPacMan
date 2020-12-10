@@ -15,10 +15,12 @@ import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Inky;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Pinky;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Window;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Class that represents the behavior of the SuperPacman game
@@ -30,6 +32,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
 
     // List of ghosts in the game
     private List<Ghost> ghosts = new ArrayList<>();
+
 
     /**
      * Default SuperPacmanBehavior Constructor
@@ -69,14 +72,14 @@ public class SuperPacmanBehavior extends AreaBehavior {
     /** Scares the ghosts */
     public void scareGhosts() {
         for (Ghost ghost: ghosts) {
-            ghost.setIsScared(true);
+            ghost.scare();
         }
     }
 
     /** Stops scaring the ghosts */
     public void unScareGhosts() {
         for (Ghost ghost: ghosts) {
-            ghost.setIsScared(false);
+            ghost.unScare();
         }
     }
 
@@ -209,15 +212,23 @@ public class SuperPacmanBehavior extends AreaBehavior {
 
     /* --------------- Getters --------------- */
 
-    /**@return the graph of the behavior */
-    public AreaGraph getGraph() {
-        return graph;
+    /**
+     * Calls shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) from its graph
+     */
+    public Queue<Orientation> shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) {
+        return graph.shortestPath(from, to);
     }
 
-
     /**
-     * Cell adapted to the SuperPacman game
+     * Calls setSignal(DiscreteCoordinates coordinates, Logic signal) from its graph
      */
+    public void setSignal(DiscreteCoordinates coordinates, Logic signal) {
+        graph.setSignal(coordinates, signal);
+    }
+
+        /**
+         * Cell adapted to the SuperPacman game
+         */
     public class SuperPacmanCell extends AreaBehavior.Cell {
 
         private SuperPacmanCellType type;

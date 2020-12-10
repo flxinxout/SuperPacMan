@@ -1,17 +1,14 @@
 package ch.epfl.cs107.play.game.superpacman.actor.collectable;
 
+import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.CollectableAreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.areagame.actor.Sound;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 
-import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,13 +16,12 @@ import java.util.List;
  * Key Item in the SuperPacman game
  * Used to unlock a gate
  */
-public class Key extends CollectableAreaEntity implements Logic, Sound {
+public class Key extends CollectableAreaEntity implements Logic {
 
-    // Default key's Sprite
     private Sprite sprite;
-
-    // If the key is collected
     private boolean isCollected;
+    private final SoundAcoustics ON_COLLECT_SOUND;
+
 
     /**
      * Default Key Constructor
@@ -35,9 +31,10 @@ public class Key extends CollectableAreaEntity implements Logic, Sound {
     public Key(Area area, DiscreteCoordinates position) {
         super(area, Orientation.DOWN, position);
 
-        this.sprite = new Sprite("superpacman/key", 1, 1, this);
-
+        sprite = new Sprite("superpacman/key", 1, 1, this);
         isCollected = false;
+        ON_COLLECT_SOUND = new SoundAcoustics("sounds/pacman/transactionOK.wav", 0.35f, false,false,false, false);
+
     }
 
     /* -------------- Implements Interactable ---------------- */
@@ -59,25 +56,8 @@ public class Key extends CollectableAreaEntity implements Logic, Sound {
         sprite.draw(canvas);
     }
 
-    @Override
-    public void onSound() {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("res/sounds/pacman/transactionOk.wav").getAbsoluteFile());
 
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.loop(0);
-
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /* -------------- Implements Collectable ---------------- */
+    /* -------------- Extends CollectableAreaEntity ---------------- */
 
     @Override
     public void onCollect() {
@@ -85,6 +65,10 @@ public class Key extends CollectableAreaEntity implements Logic, Sound {
         isCollected = true;
     }
 
+    @Override
+    public SoundAcoustics getSoundOnCollect() {
+        return ON_COLLECT_SOUND;
+    }
 
     /* -------------- Implements Logic ---------------- */
 

@@ -1,14 +1,14 @@
 package ch.epfl.cs107.play.game.superpacman.actor.collectable;
 
+import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
+import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
-import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,10 +16,10 @@ import java.util.List;
  * Heart Item in the SuperPacman game
  * Gives one HP when collected
  */
-public class Heart extends CollectableAreaEntity implements Sound {
-
-    // Default Heart's Sprite
+public class Heart extends CollectableAreaEntity {
     private Sprite sprite;
+    private final SoundAcoustics ON_COLLECT_SOUND;
+
 
     /**
      * Default Heart constructor
@@ -33,6 +33,7 @@ public class Heart extends CollectableAreaEntity implements Sound {
         this.sprite = new Sprite("superpacman/heart", 1, 1, this,
                 null, Vector.ZERO, 1.0f, 950);
 
+        ON_COLLECT_SOUND = new SoundAcoustics("sounds/pacman/transactionOK.wav", 0.35f, false,false,false, false);
     }
 
     /* -------------- Implements Interactable ---------------- */
@@ -47,26 +48,21 @@ public class Heart extends CollectableAreaEntity implements Sound {
         return false;
     }
 
+    @Override
+    public void acceptInteraction(AreaInteractionVisitor v) {
+        ((SuperPacmanInteractionVisitor)v).interactWith(this);
+    }
+
     /* -------------- Implement Actor ---------------- */
 
     @Override
     public void draw(Canvas canvas) { sprite.draw(canvas); }
 
+    /* -------------- Extends CollectableAreaEntity ---------------- */
+
     @Override
-    public void onSound() {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("res/sounds/pacman/transactionOk.wav").getAbsoluteFile());
-
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.loop(0);
-
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        }
+    public SoundAcoustics getSoundOnCollect() {
+        return ON_COLLECT_SOUND;
     }
+
 }

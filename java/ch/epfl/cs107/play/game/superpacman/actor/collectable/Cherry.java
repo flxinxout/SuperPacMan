@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.superpacman.actor.collectable;
 
+import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.CollectableAreaEntity;
@@ -23,9 +24,9 @@ import java.util.List;
  *  Increases the player's score of 200 when collected
  */
 public class Cherry extends CollectableReward {
-
-    // Default cherry's Sprite
     private Sprite sprite;
+    private final int REWARD = 200;
+    private final SoundAcoustics ON_COLLECT_SOUND;
 
     /**
      * Default Cherry constructor
@@ -37,6 +38,8 @@ public class Cherry extends CollectableReward {
 
         this.sprite = new Sprite("superpacman/cherry", 1, 1, this,
                 null, Vector.ZERO, 1.0f, 950);
+
+        ON_COLLECT_SOUND = new SoundAcoustics("sounds/pacman/pacman_eatfruit.wav", 0.35f, false,false,false, false);
     }
 
     /* -------------- Implements Interactable ---------------- */
@@ -56,21 +59,15 @@ public class Cherry extends CollectableReward {
     @Override
     public void draw(Canvas canvas) { sprite.draw(canvas); }
 
+    /* -------------- Extends CollectableReward---------------- */
+
     @Override
-    public void onSound() {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("res/sounds/pacman/pacman_eatfruit.wav").getAbsoluteFile());
+    public int getReward() {
+        return REWARD;
+    }
 
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.loop(0);
-
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public SoundAcoustics getSoundOnCollect() {
+        return ON_COLLECT_SOUND;
     }
 }

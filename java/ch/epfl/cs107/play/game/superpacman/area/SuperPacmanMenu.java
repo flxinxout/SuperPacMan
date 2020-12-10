@@ -1,11 +1,9 @@
-package ch.epfl.cs107.play.game.superpacman;
+package ch.epfl.cs107.play.game.superpacman.area;
 
 import ch.epfl.cs107.play.game.actor.Graphics;
 import ch.epfl.cs107.play.game.actor.ImageGraphics;
 import ch.epfl.cs107.play.game.actor.TextGraphics;
 import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
-import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
-import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
@@ -15,32 +13,30 @@ import java.awt.*;
 /**
  * Represent the status Graphic Interface of the different GUIs of the game
  */
-public class Menu implements Graphics {
+public class SuperPacmanMenu implements Graphics {
 
     // Attributes of the GUIs
-    private SuperPacmanPlayer player;
     private String imageName;
-    private int type;
+    private SuperPacmanMenuType type;
+    private int score;
 
     /**
      * Default constructor of the GUI
      * @param imageName the image name for the resource path
-     * @param type the type of GUI (represented by an int)
-     * @param player the player associated
+     * @param type the type of GUI
+     * @param score the player's score
      */
-    public Menu(String imageName, int type, SuperPacmanPlayer player) {
+    public SuperPacmanMenu(String imageName, SuperPacmanMenuType type, int score) {
         this.imageName = imageName;
         this.type = type;
-        this.player = player;
+        this.score = score;
     }
 
     @Override
     public void draw(Canvas canvas) {
-
         // Sets the referential
         Vector anchor = canvas.getTransform().getOrigin();
 
-        // Get the camera scale factor of the game
         float imageSizeX = SuperPacmanArea.CAMERA_SCALE_FACTOR;
 
         // Create the imageGraphic with the proportions of the camera scale factor
@@ -51,21 +47,26 @@ public class Menu implements Graphics {
 
         image.draw(canvas);
 
-        TextGraphics score;
-
-        switch (type) {
-            case 0:
-                Vector scoreAnchor = anchor.add(new Vector(0, 50f));
-                /*if(player.getScore() == null) {
-                    System.out.println("yes");
-                }*/
-               // System.out.println("Score " + player.getScore());
-                //score = new TextGraphics("Score " + player.getScore(), 2f, Color.YELLOW, Color.BLACK, .6f, false, false, scoreAnchor);
-                //score.draw(canvas);
+        /*switch (type) {
+            case PAUSE:
                 break;
 
             default:
+                TextGraphics scoreText;
+                Vector scoreAnchor = anchor.add(new Vector(0, 1f));
+                scoreText = new TextGraphics("Score " + score, 2f, Color.YELLOW, Color.BLACK, .6f, false, false, scoreAnchor);
+                scoreText.draw(canvas);
                 break;
-        }
+        }*/
+    }
+
+    //TODO: check if it stays an inner enum or not
+    /**
+     * Enum that represent all possible types of menus in the game
+     */
+    public enum SuperPacmanMenuType {
+        PAUSE,
+        GAMEOVER,
+        WIN;
     }
 }

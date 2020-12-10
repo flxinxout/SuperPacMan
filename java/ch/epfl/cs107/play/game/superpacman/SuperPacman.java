@@ -61,8 +61,5 @@ public class SuperPacman extends RPG  {
         SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas[areaIndex], true);
 
         initPlayer(new SuperPacmanPlayer(area, area.getSpawnLocation()));
-
-        SuperPacmanPlayer pacmanPlayer = (SuperPacmanPlayer) getPlayer();
-        area.setPlayer(pacmanPlayer);
     }
 }

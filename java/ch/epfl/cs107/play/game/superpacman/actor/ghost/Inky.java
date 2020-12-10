@@ -36,7 +36,6 @@ public class Inky extends Ghost {
         super(area, orientation, home);
 
         setSpeed(getDEFAULT_SPEED());
-
         maxDistance = MAX_DISTANCE_WHEN_NOT_SCARED;
     }
 
@@ -67,52 +66,37 @@ public class Inky extends Ghost {
 
         // Gets the area where is the ghost and the path between the ghost and the SuperPacmanPlayer
         SuperPacmanArea area = (SuperPacmanArea) getOwnerArea();
-        Queue<Orientation> path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
+        Queue<Orientation> path = area.shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
 
         // While the path is null or empty (for example if the ghost has not a target now), generate another path
         while (path == null || path.isEmpty()) {
-            path = area.getGraph().shortestPath(getCurrentMainCellCoordinates(), randomCell());
+            path = area.shortestPath(getCurrentMainCellCoordinates(), randomCell());
         }
-
-        graphicPath = new Path( this . getPosition () , new
-                LinkedList< >( path));
 
         return path.poll();
     }
 
     @Override
-    protected void onScared() {
-        maxDistance = MAX_DISTANCE_WHEN_SCARED;
-        setSpeed(AFRAID_SPEED);
-        updateTarget();
-    }
-
-    @Override
-    protected void onUnscared() {
-        maxDistance = MAX_DISTANCE_WHEN_NOT_SCARED;
-        setSpeed(getDEFAULT_SPEED());
-        updateTarget();
-    }
-
-    @Override
-    protected void updateTarget() {
-
-        // If ghost is afraid
-        if(isAfraid()) {
-
-            // The target position will be a cell between his home and the maxDistance, so here the distance when he's scared
-            setTargetPos(randomCell(getHome(), maxDistance));
+    protected void onScareChange() {
+        if (!isAfraid()) {
+            maxDistance = MAX_DISTANCE_WHEN_SCARED;
+            setSpeed(AFRAID_SPEED);
         } else {
+            maxDistance = MAX_DISTANCE_WHEN_NOT_SCARED;
+            setSpeed(getDEFAULT_SPEED());
+        }
+        super.onScareChange();
+    }
 
-            // If he's not afraid and the target is null
+    @Override
+    protected DiscreteCoordinates getTargetPos() {
+        if(isAfraid()) {
+            return randomCell(getHome(), maxDistance);
+        } else {
             if (getPlayer() == null) {
-
-                // The target position will be a random cells between his home and the maxDistance, so here the distance when he's not scared
-                setTargetPos(randomCell(getHome(), maxDistance));
+                return randomCell(getHome(), maxDistance);
             } else {
-
-                // If the target is not null, the target position will be the target's position
-                setTargetPos(getPlayer().getCurrentCells().get((0)));
+                return getPlayer().getCurrentCells().get((0));
             }
         }
     }

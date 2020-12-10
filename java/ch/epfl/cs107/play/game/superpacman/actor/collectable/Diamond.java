@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.superpacman.actor.collectable;
 
+import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
@@ -8,9 +9,6 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
-import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,9 +18,10 @@ import java.util.List;
  */
 
 public class Diamond extends CollectableReward {
-
-    // Default diamond's Sprite
     private Sprite sprite;
+    private final int REWARD = 10;
+    private final SoundAcoustics ON_COLLECT_SOUND;
+
 
     /**
      * Default Diamond Constructor
@@ -34,6 +33,8 @@ public class Diamond extends CollectableReward {
 
         this.sprite = new Sprite("superpacman/diamond", 1, 1, this,
                                 null, Vector.ZERO, 1.0f, 950);
+
+        ON_COLLECT_SOUND = new SoundAcoustics("sounds/pacman/pacman_chomp.wav", 0.20f, false,false,false, false);
     }
 
 
@@ -66,21 +67,15 @@ public class Diamond extends CollectableReward {
         area.removeDiamond();
     }
 
+    /* -------------- Extends CollectableReward ---------------- */
+
     @Override
-    public void onSound() {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("res/sounds/pacman/pacman_chomp.wav").getAbsoluteFile());
+    public int getReward() {
+        return REWARD;
+    }
 
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.loop(0);
-
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public SoundAcoustics getSoundOnCollect() {
+        return ON_COLLECT_SOUND;
     }
 }

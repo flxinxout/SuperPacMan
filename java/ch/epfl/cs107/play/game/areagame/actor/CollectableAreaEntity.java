@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.areagame.actor;
 
+import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.RPG;
@@ -13,7 +14,6 @@ import java.util.List;
  * class that represents an entity in an area that can be collected by an actor
  */
 public abstract class CollectableAreaEntity extends AreaEntity implements Collectable {
-
     /**
      * Default constructor
      * @param area the area where is the entity
@@ -24,11 +24,15 @@ public abstract class CollectableAreaEntity extends AreaEntity implements Collec
         super(area, orientation, position);
     }
 
+    public abstract SoundAcoustics getSoundOnCollect();
+
     /* ------------- Implement Collectable --------------- */
 
     @Override
     public void onCollect() {
         getOwnerArea().unregisterActor(this);
+        getSoundOnCollect().shouldBeStarted();
+        getSoundOnCollect().bip(getOwnerArea().getWindow());
     }
 
     /* ------------- Implement Interactable --------------- */
