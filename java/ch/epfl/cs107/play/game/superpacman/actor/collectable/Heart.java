@@ -17,9 +17,11 @@ import java.util.List;
  * Gives one HP when collected
  */
 public class Heart extends CollectableAreaEntity {
-    private Sprite sprite;
-    private final SoundAcoustics ON_COLLECT_SOUND;
 
+    // Animation duration in frame number
+    private final static int ANIMATION_DURATION = 8;
+    private Animation currentAnimation;
+    private final SoundAcoustics ON_COLLECT_SOUND;
 
     /**
      * Default Heart constructor
@@ -30,8 +32,13 @@ public class Heart extends CollectableAreaEntity {
     public Heart(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
-        this.sprite = new Sprite("superpacman/heart", 1, 1, this,
-                null, Vector.ZERO, 1.0f, 950);
+        // Extract Sprites and set animations of the heart
+        Sprite[] sprites = Sprite.extractSprites("zelda/heart", 4, 1, 1, this, 16, 16);
+        for (Sprite sprite: sprites) {
+            sprite.setDepth(950);
+        }
+
+        currentAnimation = new Animation(ANIMATION_DURATION, sprites);
 
         ON_COLLECT_SOUND = new SoundAcoustics("sounds/pacman/transactionOK.wav", 0.35f, false,false,false, false);
     }
@@ -56,7 +63,12 @@ public class Heart extends CollectableAreaEntity {
     /* -------------- Implement Actor ---------------- */
 
     @Override
-    public void draw(Canvas canvas) { sprite.draw(canvas); }
+    public void draw(Canvas canvas) { currentAnimation.draw(canvas); }
+
+    @Override
+    public void update(float deltaTime) {
+        currentAnimation.update(deltaTime);
+    }
 
     /* -------------- Extends CollectableAreaEntity ---------------- */
 

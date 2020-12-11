@@ -1,6 +1,7 @@
 package ch.epfl.cs107.play.game.superpacman.area;
 
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.superpacman.actor.BonusPortal;
 import ch.epfl.cs107.play.game.superpacman.actor.Gate;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Key;
@@ -30,6 +31,11 @@ public class BonusLevel extends SuperPacmanArea {
     @Override
     protected void createArea() {
         super.createArea();
+
+        // Registration of actors in the level
+        Door door = new Door("superpacman/Level2", new DiscreteCoordinates(15, 29), Logic.TRUE, this,
+                Orientation.DOWN, new DiscreteCoordinates(9, 1), new DiscreteCoordinates(9, 1));
+        registerActor(door);
     }
 
     @Override
