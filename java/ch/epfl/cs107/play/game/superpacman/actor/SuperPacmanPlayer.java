@@ -58,7 +58,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
     private Animation currentAnimation;
 
     // Sounds of the SuperPacmanPlayer
-    SoundAcoustics deathSound;
+    private SoundAcoustics deathSound;
 
     // Orientation of the player
     private Orientation desiredOrientation;

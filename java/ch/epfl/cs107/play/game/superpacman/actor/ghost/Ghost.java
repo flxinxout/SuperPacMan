@@ -92,7 +92,7 @@ public abstract class Ghost extends MovableAreaEntity implements Interactor, Kil
     public void update(float deltaTime) {
         setAnimations(deltaTime);
 
-        if (!isDisplacementOccurs()) {
+        if (!isDisplacementOccurs() && !protect) {
             Orientation desiredOrientation = getNextOrientation();
 
             if (getOwnerArea().canEnterAreaCells(this,

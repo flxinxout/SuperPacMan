@@ -1,0 +1,24 @@
+____________________________*_CONTROLS_*____________________________
+                    LEFT:       left
+                    RIGHT:      right
+                    UP:         up
+                    DOWN:       down
+                    SPACE:      pause
+                    ENTER:      select (in menu)
+
+__________________________*_WALKTHROUGH_*___________________________
+ To have the best score possible, collect every item of each area and kill as many ghosts
+ as you can.
+
+ > Level 1
+    - To have the best score possible, collect every item of the map
+    - Collect the heart to win a health point
+    - Collect the key to open the gates and unlock the way to the Level 2
+
+> Level 2
+    - Be careful, there are ennemies in this level
+
+    - Collect the heart to win a health point
+    - Collect the key to open the gates and unlock the way to the Level 2
+
+    TODO: HEALTH REMAINING AT THE END GIVE BONUS SCORE

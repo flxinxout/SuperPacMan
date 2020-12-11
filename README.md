@@ -1,4 +1,7 @@
 # SuperPacMan
+##Giovanni Ranieri et Dylan Vairoli
+
+
 Ajout de anti-spawnkill
 
 Ajout item pour ajouter de la vie (mais à enlever le diamand sur la case)
