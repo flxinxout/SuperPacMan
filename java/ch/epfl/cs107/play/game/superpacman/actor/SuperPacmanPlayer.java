@@ -219,6 +219,12 @@ public class SuperPacmanPlayer extends Player implements Killable {
     @Override
     public void update(float deltaTime) {
 
+        if (getOwnerArea().getKeyboard().get(Keyboard.TAB).isPressed()) {
+            FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(),
+                    getCurrentMainCellCoordinates().jump(getOrientation().toVector()).jump(getOrientation().toVector()));
+            getOwnerArea().registerActor(fireBall);
+        }
+
         //Check the desired orientation
         computeDesiredOrientation();
 
@@ -341,7 +347,6 @@ public class SuperPacmanPlayer extends Player implements Killable {
     /**@return the score of the player */
     public int getScore() { return score; }
 
-
     /**
      * Interaction handler for a SuperPacmanPlayer
      */
@@ -385,6 +390,11 @@ public class SuperPacmanPlayer extends Player implements Killable {
                     onDeath();
                 }
             }
+        }
+
+        @Override
+        public void interactWith(Projectile projectile) {
+            onDeath();
         }
     }
 }

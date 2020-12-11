@@ -57,7 +57,6 @@ public class DarkLord extends MovableAreaEntity implements Interactor {
         desiredOrientation = Orientation.RIGHT;
 
         handler = new DarkLordHandler();
-
     }
 
     /**
@@ -167,6 +166,4 @@ public class DarkLord extends MovableAreaEntity implements Interactor {
 
         }
     }
-
-
 }

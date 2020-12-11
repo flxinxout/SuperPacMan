@@ -2,7 +2,6 @@ package ch.epfl.cs107.play.game.superpacman;
 
 import ch.epfl.cs107.play.game.rpg.RPG;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
-import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.area.*;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.window.Window;
@@ -56,7 +55,7 @@ public class SuperPacman extends RPG  {
     /** Initialization of the game */
     private void startGame() {
         createAreas();
-        int areaIndex = 1;
+        int areaIndex = 2;
         SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas[areaIndex], true);
 
         initPlayer(new SuperPacmanPlayer(area, area.getSpawnLocation()));

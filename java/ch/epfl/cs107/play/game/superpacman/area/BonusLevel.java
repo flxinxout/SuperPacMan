@@ -2,11 +2,7 @@ package ch.epfl.cs107.play.game.superpacman.area;
 
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
-import ch.epfl.cs107.play.game.superpacman.actor.BonusPortal;
-import ch.epfl.cs107.play.game.superpacman.actor.Gate;
-import ch.epfl.cs107.play.game.superpacman.actor.collectable.Key;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.signal.logic.And;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 /**
@@ -25,7 +21,6 @@ public class BonusLevel extends SuperPacmanArea {
         return "superpacman/BonusLevel";
     }
 
-
     /* --------------- Extends SuperPacmanArea --------------- */
 
     @Override
@@ -34,7 +29,7 @@ public class BonusLevel extends SuperPacmanArea {
 
         // Registration of actors in the level
         Door door = new Door("superpacman/Level2", new DiscreteCoordinates(15, 29), Logic.TRUE, this,
-                Orientation.DOWN, new DiscreteCoordinates(9, 1), new DiscreteCoordinates(9, 1));
+                Orientation.DOWN, new DiscreteCoordinates(9, 0), new DiscreteCoordinates(10, 0));
         registerActor(door);
     }
 

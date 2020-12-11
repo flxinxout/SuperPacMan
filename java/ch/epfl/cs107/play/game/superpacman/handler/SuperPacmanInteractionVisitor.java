@@ -1,7 +1,9 @@
 package ch.epfl.cs107.play.game.superpacman.handler;
 
 import ch.epfl.cs107.play.game.rpg.handler.RPGInteractionVisitor;
+import ch.epfl.cs107.play.game.superpacman.actor.Projectile;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
+import ch.epfl.cs107.play.game.superpacman.actor.Wall;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.CollectableReward;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
@@ -21,4 +23,8 @@ public interface SuperPacmanInteractionVisitor extends RPGInteractionVisitor {
     default void interactWith(Heart heart) { }
 
     default void interactWith(CollectableReward collectableReward) { }
+
+    default void interactWith(Wall wall) { }
+
+    default void interactWith(Projectile projectile) { }
 }

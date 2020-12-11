@@ -13,7 +13,7 @@ public class BonusPortal extends Door {
 
     public BonusPortal(String destination, Logic signal, Area area, Orientation orientation, DiscreteCoordinates position) {
         super(destination, new DiscreteCoordinates(9, 18), signal, area, orientation, position);
-        this.sprite = new Sprite("Icball", 1f, 1f, this);
+        this.sprite = new Sprite("superpacman/portal", 1f, 1f, this);
     }
 
     @Override
