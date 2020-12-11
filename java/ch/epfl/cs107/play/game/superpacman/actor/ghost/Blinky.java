@@ -16,9 +16,10 @@ public class Blinky extends Ghost {
 
     /**
      * Default Blinky constructor
-     * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity. Not null
-     * @param home        (Coordinate): Initial and home position of the ghost. Not null
+     *
+     * @param area        (Area): owner area. Not null
+     * @param orientation (Orientation): initial orientation of the entity. Not null
+     * @param home        (Coordinate): initial and home position of the ghost. Not null
      */
     public Blinky(Area area, Orientation orientation, DiscreteCoordinates home) {
         super(area, orientation, home);
@@ -54,7 +55,6 @@ public class Blinky extends Ghost {
         return Orientation.fromInt(randomInt);
     }
 
-    //TODO: let them abstract or: not and give them a default definition
     @Override
     protected DiscreteCoordinates getTargetPos() { return null; }
 

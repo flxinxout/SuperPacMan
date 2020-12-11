@@ -18,19 +18,19 @@ public class SuperPacmanMenu implements Graphics {
     // Attributes of the GUIs
     private String imageName;
     private SuperPacmanMenuType type;
-    private int score;
 
     /**
      * Default constructor of the GUI
-     * @param imageName the image name for the resource path
-     * @param type the type of GUI
-     * @param score the player's score
+     *
+     * @param imageName (String): the image name for the resource path. Not null
+     * @param type      (SuperPacmanMenuType): the type of GUI. Not null
      */
-    public SuperPacmanMenu(String imageName, SuperPacmanMenuType type, int score) {
+    public SuperPacmanMenu(String imageName, SuperPacmanMenuType type) {
         this.imageName = imageName;
         this.type = type;
-        this.score = score;
     }
+
+    /* -------------- Implements Graphics --------------- */
 
     @Override
     public void draw(Canvas canvas) {
@@ -46,18 +46,6 @@ public class SuperPacmanMenu implements Graphics {
         image.setDepth(999);
 
         image.draw(canvas);
-
-        /*switch (type) {
-            case PAUSE:
-                break;
-
-            default:
-                TextGraphics scoreText;
-                Vector scoreAnchor = anchor.add(new Vector(0, 1f));
-                scoreText = new TextGraphics("Score " + score, 2f, Color.YELLOW, Color.BLACK, .6f, false, false, scoreAnchor);
-                scoreText.draw(canvas);
-                break;
-        }*/
     }
 
     //TODO: check if it stays an inner enum or not

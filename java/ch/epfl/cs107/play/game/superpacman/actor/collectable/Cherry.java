@@ -24,37 +24,32 @@ import java.util.List;
  *  Increases the player's score of 200 when collected
  */
 public class Cherry extends CollectableReward {
+
+    // Cherry's Attributes
     private Sprite sprite;
     private final int REWARD = 200;
-    private final SoundAcoustics ON_COLLECT_SOUND;
-
     /**
      * Default Cherry constructor
-     * @param area the area where is the cherry
-     * @param position the position of the cherry in the specific area
+     * @param area     (Area): the area where is the cherry. Not null
+     * @param position (DiscreteCoordinates): the position of the cherry in the specific area. Not null
      */
     public Cherry(Area area, DiscreteCoordinates position) {
-        super(area, Orientation.DOWN, position, 200);
+        super(area, Orientation.DOWN, position, new SoundAcoustics("sounds/pacman/pacman_eatfruit.wav", 0.35f, false,false,false, false));
 
         this.sprite = new Sprite("superpacman/cherry", 1, 1, this,
-                null, Vector.ZERO, 1.0f, 950);
-
-        ON_COLLECT_SOUND = new SoundAcoustics("sounds/pacman/pacman_eatfruit.wav", 0.35f, false,false,false, false);
-    }
+                null, Vector.ZERO, 1.0f, 950); }
 
     /* -------------- Implements Interactable ---------------- */
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
     @Override
     public boolean isViewInteractable() {
         return false;
     }
 
-    /* -------------- Implement Actor ---------------- */
+    /* -------------- Implements Graphics ---------------- */
 
     @Override
     public void draw(Canvas canvas) { sprite.draw(canvas); }
@@ -64,10 +59,5 @@ public class Cherry extends CollectableReward {
     @Override
     public int getReward() {
         return REWARD;
-    }
-
-    @Override
-    public SoundAcoustics getSoundOnCollect() {
-        return ON_COLLECT_SOUND;
     }
 }

@@ -40,6 +40,7 @@ public abstract class Area implements Playable {
 	private Map<Interactable, List<DiscreteCoordinates>> interactablesToLeave;
 	/// The behavior Map
 	private AreaBehavior areaBehavior;
+
 	/// - start indicate if area already begins, paused indicate if we display the pause menu
 	private boolean started;
 	private boolean paused;
@@ -184,17 +185,17 @@ public abstract class Area implements Playable {
 		return mouseCoordinate;
 	}
 
-	/** @return (boolean): true if the method begin already called once. You can use resume() instead*/
+	/** @return (boolean): true if the method begin already called once. You can use resume() instead */
 	public final boolean isStarted() {
 		return started;
 	}
 
-	/** @return (boolean): true if the method begin already called once. You can use resume() instead*/
+	/** @return (boolean): true if the method begin already called once. You can use resume() instead */
 	public final boolean isPaused() {
 		return paused;
 	}
 
-	/** @return (boolean): true if the method begin already called once. You can use resume() instead*/
+	/** @return (boolean): true if the method begin already called once. You can use resume() instead */
 	public final boolean hasEnded() {
 		return ended;
 	}
@@ -256,6 +257,7 @@ public abstract class Area implements Playable {
 		interactablesToLeave = new HashMap<>();
 		viewCenter = Vector.ZERO;
 
+		// Initialization of the boolean for the pause
 		started = true;
 		paused = false;
 		ended = false;
@@ -352,25 +354,19 @@ public abstract class Area implements Playable {
 		window.setRelativeTransform(viewTransform);
 	}
 
-	/**
-	 * Suspend method: Can be overridden, called before resume other
-	 */
+	/** Suspend method: Can be overridden, called before resume other */
 	public void suspend(){
 		paused = true;
 	}
-
 
 	@Override
 	public void end() {
 		ended = true;
 	}
 
-	//TODO: DOCUMENTER ON A AJOUTER NOUS
-	public Window getWindow() {
-		return window;
-	}
+	/** @return (Window): the window of the area */
+	public Window getWindow() { return window; }
 
-	public FileSystem getFileSystem() {
-		return fileSystem;
-	}
+	/** @return (FileSystem): the file System of the area */
+	public FileSystem getFileSystem() { return fileSystem; }
 }

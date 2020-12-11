@@ -33,11 +33,11 @@ public class SuperPacmanBehavior extends AreaBehavior {
     // List of ghosts in the game
     private List<Ghost> ghosts = new ArrayList<>();
 
-
     /**
      * Default SuperPacmanBehavior Constructor
-     * @param window (Window), not null
-     * @param name (String): Name of the Behavior, not null
+     *
+     * @param window (Window): the window. Not null
+     * @param name   (String): the name of the Behavior. Not null
      */
     public SuperPacmanBehavior(Window window, String name){
         super(window, name);
@@ -67,25 +67,11 @@ public class SuperPacmanBehavior extends AreaBehavior {
         }
     }
 
-    /* --------------- External Methods --------------- */
-
-    /** Scares the ghosts */
-    public void scareGhosts() {
-        for (Ghost ghost: ghosts) {
-            ghost.scare();
-        }
-    }
-
-    /** Stops scaring the ghosts */
-    public void unScareGhosts() {
-        for (Ghost ghost: ghosts) {
-            ghost.unScare();
-        }
-    }
+    /* --------------- Protected Methods --------------- */
 
     /**
      * Registers all actors in an area
-     * @param area the area where actors will be registered
+     * @param area (Area): the area where actors will be registered
      */
     protected void registerActors(SuperPacmanArea area) {
 
@@ -145,11 +131,13 @@ public class SuperPacmanBehavior extends AreaBehavior {
         }
     }
 
+    /* --------------- External Methods --------------- */
+
     /**
      * Computes the graph edges of a cell
-     * @param x (int) the x coordinate of the cell
-     * @param y (int) the y coordinate of the cell
-     * @return boolean[] boolean array of the edges (true := exists): 0:= left, 1:= up, 2:= right, 3:= down
+     * @param x (int): the x coordinate of the cell
+     * @param y (int): the y coordinate of the cell
+     * @return (boolean[]): boolean array of the edges (true := exists): 0:= left, 1:= up, 2:= right, 3:= down
      */
     private boolean[] computeGraphEdges(int x, int y) {
         boolean[] graphEdges = new boolean[4];
@@ -180,8 +168,8 @@ public class SuperPacmanBehavior extends AreaBehavior {
 
     /**
      * Computes the wall neighborhood of a cell
-     * @param cell (SuperPacmanCell) the cell
-     * @return boolean[][] 2D boolean array of the neighborhood of the cell (true = there's a wall)
+     * @param cell (SuperPacmanCell): the cell
+     * @return (boolean[][]): 2D boolean array of the neighborhood of the cell (true = there's a wall)
      */
     private boolean[][] neighborhood(SuperPacmanCell cell) {
 
@@ -210,34 +198,46 @@ public class SuperPacmanBehavior extends AreaBehavior {
         return neighborhood;
     }
 
+    /** Scares the ghosts */
+    public void scareGhosts() {
+        for (Ghost ghost: ghosts) {
+            ghost.scare();
+        }
+    }
+
+    /** Stops scaring the ghosts */
+    public void unScareGhosts() {
+        for (Ghost ghost: ghosts) {
+            ghost.unScare();
+        }
+    }
+
     /* --------------- Getters --------------- */
 
-    /**
-     * Calls shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) from its graph
-     */
+    /** Calls shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) from its graph */
     public Queue<Orientation> shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) {
         return graph.shortestPath(from, to);
     }
 
-    /**
-     * Calls setSignal(DiscreteCoordinates coordinates, Logic signal) from its graph
-     */
+    /** Calls setSignal(DiscreteCoordinates coordinates, Logic signal) from its graph */
     public void setSignal(DiscreteCoordinates coordinates, Logic signal) {
         graph.setSignal(coordinates, signal);
     }
 
-        /**
-         * Cell adapted to the SuperPacman game
-         */
+
+    /**
+    * Cell adapted to the SuperPacman game
+    */
     public class SuperPacmanCell extends AreaBehavior.Cell {
 
         private SuperPacmanCellType type;
 
         /**
          * Default SuperPacmanCell Constructor
-         * @param x (int): x coordinate of the cell
-         * @param y (int): y coordinate of the cell
-         * @param type (SuperPacmanCellType), not null
+         *
+         * @param x     (int): x coordinate of the cell. Not null
+         * @param y     (int): y coordinate of the cell. Not null
+         * @param type  (SuperPacmanCellType). Not null
          */
         public SuperPacmanCell(int x, int y, SuperPacmanCellType type) {
             super(x, y);
@@ -255,6 +255,8 @@ public class SuperPacmanBehavior extends AreaBehavior {
         protected boolean canLeave(Interactable entity) {
             return true;
         }
+
+        /* --------------- Implements Interactable --------------- */
 
         @Override
         public boolean isCellInteractable() {
@@ -295,8 +297,8 @@ public class SuperPacmanBehavior extends AreaBehavior {
 
         /**
          * A method that returns the type of cell based on a number assigned to it in the enum
-         * @param type number assigned on a cell in the enum
-         * @return the type of the cell
+         * @param type (int): number assigned on a cell in the enum
+         * @return (SuperPacmanCellType): the type of the cell
          */
         public static SuperPacmanCellType toType(int type){
             for(SuperPacmanCellType ict : SuperPacmanCellType.values()){

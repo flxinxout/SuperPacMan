@@ -16,29 +16,25 @@ import java.util.List;
  * Diamond Item in the SuperPacman game
  * Increases the player's score of 10 when collected
  */
-
 public class Diamond extends CollectableReward {
+
+    // Diamond's Attributes
     private Sprite sprite;
     private final int REWARD = 10;
-    private final SoundAcoustics ON_COLLECT_SOUND;
-
 
     /**
      * Default Diamond Constructor
-     * @param area the area where is the diamond
-     * @param position the position of the diamond in the specific area
+     * @param area     (Area): the area where is the diamond. Not null
+     * @param position (DiscreteCoordinates): the position of the diamond in the specific area. Not null
      */
     public Diamond(Area area, DiscreteCoordinates position) {
-        super(area, Orientation.DOWN, position, 10);
+        super(area, Orientation.DOWN, position, new SoundAcoustics("sounds/pacman/pacman_chomp.wav", 0.20f, false,false,false, false));
 
         this.sprite = new Sprite("superpacman/diamond", 1, 1, this,
                                 null, Vector.ZERO, 1.0f, 950);
-
-        ON_COLLECT_SOUND = new SoundAcoustics("sounds/pacman/pacman_chomp.wav", 0.20f, false,false,false, false);
     }
 
-
-    /* -------------- Implements Actor ---------------- */
+    /* -------------- Implements Graphics ---------------- */
 
     @Override
     public void draw(Canvas canvas) {
@@ -48,9 +44,7 @@ public class Diamond extends CollectableReward {
     /* -------------- Implements Interactable ---------------- */
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
     @Override
     public boolean isViewInteractable() {
@@ -72,10 +66,5 @@ public class Diamond extends CollectableReward {
     @Override
     public int getReward() {
         return REWARD;
-    }
-
-    @Override
-    public SoundAcoustics getSoundOnCollect() {
-        return ON_COLLECT_SOUND;
     }
 }

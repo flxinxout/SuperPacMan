@@ -7,15 +7,24 @@ import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 
+/**
+ * Class that represents a FireBall in the game
+ */
 public class FireBall extends Projectile {
+
+    // Attributes of the FireBall
     private final int SPEED = 10;
     private final int FRAME_DURATION = 4;
 
+    /**
+     * Default FireBall constructor
+     *
+     * @param area         (Area): the area where the fire ball is. Not null
+     * @param orientation  (Orientation): the orientation of the fire ball. Not null
+     * @param position     (DiscreteCoordinates): the position of the fire ball. Not null
+     */
     public FireBall(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
-
-        //TODO: IS CAST GOOD?
-        //FRAME_DURATION = (int) (24 * LIFE_DURATION / FRAME_NUMBER);
     }
 
     /* --------------- Extends Projectile --------------- */

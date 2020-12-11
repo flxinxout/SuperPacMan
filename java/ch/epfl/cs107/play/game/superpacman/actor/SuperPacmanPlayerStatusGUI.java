@@ -20,7 +20,8 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
 
     /**
      * Default constructor
-     * @param player the SuperPacmanPlayer
+     *
+     * @param player (SuperPacmanPlayer): the SuperPacmanPlayer. Not null
      */
     protected SuperPacmanPlayerStatusGUI(SuperPacmanPlayer player) {
         this.player = player;
@@ -46,10 +47,10 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
 
     /**
      * Method that create an ImageGraphics of the life of the SuperPacman
-     * @param spaceBetweenImages the space between the images
-     * @param anchor the vector
-     * @param height the height of the window
-     * @param canvas the canvas
+     * @param spaceBetweenImages (float): the space between the images
+     * @param anchor             (Vector): the vector
+     * @param height             (float): the height of the window
+     * @param canvas             (Canvas): the canvas
      */
     private void drawLife(float spaceBetweenImages, Vector anchor, float height, Canvas canvas) {
 
@@ -74,9 +75,9 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
 
     /**
      * Default method that create the ImageGraphics of the life of the SuperPacman with 1 in space
-     * @param anchor the vector
-     * @param height the height of the window
-     * @param canvas the canvas
+     * @param anchor (Vector): the vector
+     * @param height (float): the height of the window
+     * @param canvas (Canvas): the canvas
      */
     private void drawLife(Vector anchor, float height, Canvas canvas) {
         drawLife(1, anchor, height, canvas);
@@ -84,9 +85,9 @@ public class SuperPacmanPlayerStatusGUI implements Graphics {
 
     /**
      * Default method that create the ImageGraphics of the score of the SuperPacman
-     * @param anchor the vector
-     * @param height the height of the window
-     * @param canvas the canvas
+     * @param anchor (Vector): the vector
+     * @param height (float): the height of the window
+     * @param canvas (Canvas): the canvas
      */
     private void drawScore(Canvas canvas, Vector anchor, float height) {
         Vector scoreAnchor = anchor.add(new Vector(player.getMAXHP() + 1, height - 1.2f));

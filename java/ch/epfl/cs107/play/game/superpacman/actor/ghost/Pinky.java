@@ -21,17 +21,18 @@ import java.util.Queue;
 public class Pinky extends Ghost {
 
     // Minimum distance when he's afraid
-    private final static int MIN_AFRAID_DISTANCE = 5;
+    private final int MIN_AFRAID_DISTANCE = 5;
 
     // Max attempts allowed to escape
-    private final static int MAX_RANDOM_ATTEMPT = 200;
+    private final int MAX_RANDOM_ATTEMPT = 200;
     private final int AFRAID_SPEED = 15;
 
     /**
      * Default Pinky constructor
-     * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity. Not null
-     * @param home        (Coordinate): Initial and home position of the ghost. Not null
+     *
+     * @param area        (Area): owner area. Not null
+     * @param orientation (Orientation): initial orientation of the entity. Not null
+     * @param home        (Coordinate): initial and home position of the ghost. Not null
      */
     public Pinky(Area area, Orientation orientation, DiscreteCoordinates home) {
         super(area, orientation, home);

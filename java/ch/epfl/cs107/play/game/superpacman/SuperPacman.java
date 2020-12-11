@@ -14,7 +14,8 @@ public class SuperPacman extends RPG  {
     // Array with all titles of the different areas
     private final String[] areas = {"superpacman/Level0", "superpacman/Level1", "superpacman/Level2"};
 
-    /* ----------- External Playable ------------- */
+
+    /* ----------- Implements Playable ------------- */
 
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
@@ -37,12 +38,16 @@ public class SuperPacman extends RPG  {
         return "Super Pac-Man";
     }
 
+
+    /* ----------- Implements Graphics ------------- */
+
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
     }
 
-    /* ----------- Internal Methods ------------- */
+
+    /* ----------- External Methods ------------- */
 
     /** Creation of the different levels in the game */
     private void createAreas(){
@@ -54,10 +59,10 @@ public class SuperPacman extends RPG  {
 
     /** Initialization of the game */
     private void startGame() {
-        createAreas();
-        int areaIndex = 2;
-        SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas[areaIndex], true);
+        int areaIndex = 0;
 
+        createAreas();
+        SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas[areaIndex], true);
         initPlayer(new SuperPacmanPlayer(area, area.getSpawnLocation()));
     }
 }

@@ -15,6 +15,7 @@ import java.util.Queue;
  * Class that represents an Area of the game
  */
 public abstract class SuperPacmanArea extends Area implements Logic {
+
     // The scale factor of the window and the player in the area
     protected final static float CAMERA_SCALE_FACTOR = 20.f;
 
@@ -36,72 +37,11 @@ public abstract class SuperPacmanArea extends Area implements Logic {
     private int desiredGUI = 0;
 
 
-    /* --------------- External Methods --------------- */
-
-    @Override
-    public boolean resume(Window window, FileSystem fileSystem) {
-        desiredGUI = 0;
-        return super.resume(window, fileSystem);
-    }
-
-    /** Method for the game over, when the player has 0 hp */
-    public void gameOver() {
-        won = false;
-        end();
-    }
+    /* --------------- Protected Methods --------------- */
 
     /** Add the area in actors list */
     protected void createArea() {
         behavior.registerActors(this);
-    }
-
-    /** Increase diamond that has been collected */
-    public void addDiamond() {
-        diamondsNumber++;
-    }
-
-    /** Decrease diamond number and check if all diamonds in the area were collected for set the correct signal */
-    public void removeDiamond() {
-        diamondsNumber--;
-        if (diamondsNumber < 0) { diamondsNumber = 0; }
-        if (diamondsNumber == 0) {
-            // If there are 0 diamond on the area, the signal is set on
-            isCompleted = true;
-
-            // If there are 0 diamond in the last level, then the player wins
-            if (this instanceof Level2) {
-                won = true;
-                end();
-            }
-        }
-    }
-
-    /**
-     * Calls shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) from its behavior's graph
-     */
-    public Queue<Orientation> shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) {
-        return behavior.shortestPath(from, to);
-    }
-
-    /**
-     * Calls setSignal(DiscreteCoordinates coordinates, Logic signal) from its behavior's graph
-     */
-    public void setSignal(DiscreteCoordinates coordinates, Logic signal) {
-        behavior.setSignal(coordinates, signal);
-    }
-
-    /**
-     * Calls scare() of its behavior
-     */
-    public void scareGhosts() {
-        behavior.scareGhosts();
-    }
-
-    /**
-     * Calls unscareGhosts() of its behavior
-     */
-    public void unScareGhosts() {
-        behavior.unScareGhosts();
     }
 
     /* --------------- Implements Playable --------------- */
@@ -113,22 +53,22 @@ public abstract class SuperPacmanArea extends Area implements Logic {
         if (super.begin(window, fileSystem)) {
             behavior = new SuperPacmanBehavior(window, getTitle());
             setBehavior(behavior);
-
             createArea();
-
             desiredGUI = 0;
+
             // Initialisation GUIs
             pauseGUI = new SuperPacmanMenu[2];
             for (int i = 0; i < pauseGUI.length; i++) {
-                pauseGUI[i] = new SuperPacmanMenu("superpacman/pause.menu" + i, SuperPacmanMenu.SuperPacmanMenuType.PAUSE, playerScore);
+                pauseGUI[i] = new SuperPacmanMenu("superpacman/pause.menu" + i, SuperPacmanMenu.SuperPacmanMenuType.PAUSE);
             }
 
-            gameOverGUI = new SuperPacmanMenu("superpacman/gameover.menu", SuperPacmanMenu.SuperPacmanMenuType.GAMEOVER, playerScore);
-            winGUI = new SuperPacmanMenu("superpacman/win.menu", SuperPacmanMenu.SuperPacmanMenuType.WIN, playerScore);
+            gameOverGUI = new SuperPacmanMenu("superpacman/gameover.menu", SuperPacmanMenu.SuperPacmanMenuType.GAMEOVER);
+            winGUI = new SuperPacmanMenu("superpacman/win.menu", SuperPacmanMenu.SuperPacmanMenuType.WIN);
             won = false;
 
             return true;
         }
+
         return false;
     }
 
@@ -177,6 +117,62 @@ public abstract class SuperPacmanArea extends Area implements Logic {
         }
     }
 
+    /* --------------- External Methods --------------- */
+
+    @Override
+    public boolean resume(Window window, FileSystem fileSystem) {
+        desiredGUI = 0;
+        return super.resume(window, fileSystem);
+    }
+
+    /** Method for the game over, when the player has 0 hp */
+    public void gameOver() {
+        won = false;
+        end();
+    }
+
+    /** Increase diamond that has been collected */
+    public void addDiamond() {
+        diamondsNumber++;
+    }
+
+    /** Decrease diamond number and check if all diamonds in the area were collected for set the correct signal */
+    public void removeDiamond() {
+        diamondsNumber--;
+        if (diamondsNumber < 0) { diamondsNumber = 0; }
+        if (diamondsNumber == 0) {
+            // If there are 0 diamond on the area, the signal is set on
+            isCompleted = true;
+
+            // If there are 0 diamond in the last level, then the player wins
+            if (this instanceof Level2) {
+                won = true;
+                end();
+            }
+        }
+    }
+
+    /** Calls shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) from its behavior's graph */
+    public Queue<Orientation> shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) {
+        return behavior.shortestPath(from, to);
+    }
+
+    /** Calls setSignal(DiscreteCoordinates coordinates, Logic signal) from its behavior's graph */
+    public void setSignal(DiscreteCoordinates coordinates, Logic signal) {
+        behavior.setSignal(coordinates, signal);
+    }
+
+    /** Calls scare() of its behavior */
+    public void scareGhosts() {
+        behavior.scareGhosts();
+    }
+
+    /** Calls unscareGhosts() of its behavior */
+    public void unScareGhosts() {
+        behavior.unScareGhosts();
+    }
+
+
     /* ---------------- Implements Logic ---------------- */
 
     @Override
@@ -194,20 +190,11 @@ public abstract class SuperPacmanArea extends Area implements Logic {
         return (isCompleted) ? 1 : 0;
     }
 
-    /* --------------- Setters --------------- */
-
-    /** sets the player's score
-     * used in the end menus
-     * @param playerScore player's score
-     */
-    public void setPlayerScore(int playerScore) {
-        this.playerScore = playerScore;
-    }
 
     /* --------------- Getters --------------- */
 
-    /** @Note: Need to be redefine
-     * @return the player's spawn location of this area
+    /** @NEED TO BE OVERRIDDEN
+     * @return (DiscreteCoordinates): the player's spawn location of this area
      */
     abstract public DiscreteCoordinates getSpawnLocation();
 

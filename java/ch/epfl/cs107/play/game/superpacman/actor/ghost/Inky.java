@@ -28,9 +28,10 @@ public class Inky extends Ghost {
 
     /**
      * Default Inky constructor
-     * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity. Not null
-     * @param home        (Coordinate): Initial and home position of the ghost. Not null
+     *
+     * @param area        (Area): owner area. Not null
+     * @param orientation (Orientation): initial orientation of the entity. Not null
+     * @param home        (Coordinate): initial and home position of the ghost. Not null
      */
     public Inky(Area area, Orientation orientation, DiscreteCoordinates home) {
         super(area, orientation, home);

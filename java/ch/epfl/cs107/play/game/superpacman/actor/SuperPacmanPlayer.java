@@ -44,7 +44,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
     private int score;
     private int speed;
 
-    // Invincibilty (when a bonus is eaten)
+    // Invincibility (when a bonus is eaten)
     private boolean invincible;
     private float timerInvincible;
 
@@ -65,8 +65,9 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     /**
      * Default SuperPacmanPlayer Constructor
-     * @param owner (Area): owner area of the player
-     * @param coordinates(DiscreteCoordinates): coordinate of the player
+     *
+     * @param owner       (Area): owner area of the player. Not null
+     * @param coordinates (DiscreteCoordinates): coordinate of the player. Not null
      */
     public SuperPacmanPlayer(Area owner, DiscreteCoordinates coordinates) {
         super(owner, Orientation.RIGHT, coordinates);
@@ -111,7 +112,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     /**
      * Method that increase the score of the player
-     * @param amount the amount increased
+     * @param amount (int): the amount increased
      */
     public void addScore(int amount) {
         score += amount;
@@ -148,7 +149,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     /**
      * Method called in update to update the invincibility state of the player
-     * @param deltaTime (float) the delta time of the update
+     * @param deltaTime (float): the delta time of the update
      */
     private void refreshInvincibility(float deltaTime) {
             if (timerInvincible > 0) {
@@ -164,7 +165,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     /**
      * Method called in update to update the protection state of the player
-     * @param deltaTime (float) the delta time of the update
+     * @param deltaTime (float): the delta time of the update
      */
     private void refreshProtection(float deltaTime) {
         if (timerProtection > 0) {
@@ -208,13 +209,13 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     /**
      * Method to cast an Area in a SuperPacmanArea
-     * @param area (Area) the area to cast
-     * @return the SuperPacmanArea of the game
+     * @param area (Area): the area to cast
+     * @return (SuperPacmanArea): the SuperPacmanArea of the game
      */
     //TODO: DISGUSTING!!!!!!!!!
     private SuperPacmanArea toSuperPacmanArea(Area area) { return (SuperPacmanArea) area; }
 
-    /* -------------- Implement Actor --------------- */
+    /* -------------- Implements Graphics --------------- */
 
     @Override
     public void update(float deltaTime) {
@@ -338,13 +339,13 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     /* --------------- Getters --------------- */
 
-    /**@return the life of the player */
+    /**@return (int): the life of the player */
     public int getHp() { return hp; }
 
-    /**@return the max life of the player */
+    /**@return (int): the max life of the player */
     public int getMAXHP() { return MAXHP; }
 
-    /**@return the score of the player */
+    /**@return (int): the score of the player */
     public int getScore() { return score; }
 
     /**

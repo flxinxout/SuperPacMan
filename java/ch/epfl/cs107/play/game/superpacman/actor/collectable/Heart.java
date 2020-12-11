@@ -20,16 +20,15 @@ public class Heart extends CollectableAreaEntity {
     // Animation duration in frame number
     private final static int ANIMATION_DURATION = 8;
     private Animation currentAnimation;
-    private final SoundAcoustics ON_COLLECT_SOUND;
-
     /**
      * Default Heart constructor
-     * @param area        the area where is the entity
-     * @param orientation the orientation
-     * @param position    the position in the area
+     *
+     * @param area        (Area): the area where is the entity. Not null
+     * @param orientation (Orientation): the orientation. Not null
+     * @param position    (DiscreteCoordinates): the position in the area. Not null
      */
     public Heart(Area area, Orientation orientation, DiscreteCoordinates position) {
-        super(area, orientation, position);
+        super(area, orientation, position, new SoundAcoustics("sounds/pacman/transactionOK.wav", 0.35f, false,false,false, false));
 
         // Extract Sprites and set animations of the heart
         Sprite[] sprites = Sprite.extractSprites("zelda/heart", 4, 1, 1, this, 16, 16);
@@ -37,17 +36,12 @@ public class Heart extends CollectableAreaEntity {
             sprite.setDepth(950);
         }
 
-        currentAnimation = new Animation(ANIMATION_DURATION, sprites);
-
-        ON_COLLECT_SOUND = new SoundAcoustics("sounds/pacman/transactionOK.wav", 0.35f, false,false,false, false);
-    }
+        currentAnimation = new Animation(ANIMATION_DURATION, sprites); }
 
     /* -------------- Implements Interactable ---------------- */
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
     @Override
     public boolean isViewInteractable() {
@@ -59,7 +53,7 @@ public class Heart extends CollectableAreaEntity {
         ((SuperPacmanInteractionVisitor)v).interactWith(this);
     }
 
-    /* -------------- Implement Actor ---------------- */
+    /* -------------- Implements Graphics ---------------- */
 
     @Override
     public void draw(Canvas canvas) { currentAnimation.draw(canvas); }
@@ -67,13 +61,6 @@ public class Heart extends CollectableAreaEntity {
     @Override
     public void update(float deltaTime) {
         currentAnimation.update(deltaTime);
-    }
-
-    /* -------------- Extends CollectableAreaEntity ---------------- */
-
-    @Override
-    public SoundAcoustics getSoundOnCollect() {
-        return ON_COLLECT_SOUND;
     }
 
 }

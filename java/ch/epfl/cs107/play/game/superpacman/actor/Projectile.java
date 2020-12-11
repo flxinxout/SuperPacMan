@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.superpacman.actor;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.superpacman.actor.killer.Villain;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
@@ -11,11 +12,21 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class Projectile extends MovableAreaEntity implements Interactor {
+
+    // Projectile's Animations
     private Animation[] animations;
     private Animation currentAnimation;
 
+    // Handler of the projectile
     private ProjectileHandler handler;
 
+    /**
+     * Default Projectile constructor
+     *
+     * @param area         (Area): the area where the projectile is. Not null
+     * @param orientation  (Orientation): the orientation of the projectile. Not null
+     * @param position     (DiscreteCoordinates): the position of the projectile. Not null
+     */
     public Projectile(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
@@ -25,29 +36,16 @@ public abstract class Projectile extends MovableAreaEntity implements Interactor
         handler = new ProjectileHandler();
     }
 
+    /** Method that unregister the actor */
     private void leaveArea() {
         getOwnerArea().unregisterActor(this);
     }
 
     /* --------------- Extends MovableAreaEntity --------------- */
 
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-        move(getSpeed());
+    /* --------------- Implements Graphics --------------- */
 
-        currentAnimation.update(deltaTime);
-
-        if (Math.abs(getVelocity().x) < 0.1 && Math.abs(getVelocity().y) < 0.1) {
-            leaveArea();
-        }
-    }
-
-    @Override
-    public void draw(Canvas canvas) { currentAnimation.draw(canvas); }
-
-    @Override
-    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
+    /* --------------- Implements Interactable --------------- */
 
     @Override
     public boolean takeCellSpace() {
@@ -66,6 +64,27 @@ public abstract class Projectile extends MovableAreaEntity implements Interactor
 
     @Override
     public void acceptInteraction (AreaInteractionVisitor v) { ((SuperPacmanInteractionVisitor)v).interactWith (this ); }
+
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
+
+    /* --------------- Implements Interactor --------------- */
+
+    @Override
+    public void draw(Canvas canvas) { currentAnimation.draw(canvas); }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        move(getSpeed());
+
+        currentAnimation.update(deltaTime);
+
+        if (Math.abs(getVelocity().x) < 0.1 && Math.abs(getVelocity().y) < 0.1) {
+            getOwnerArea().unregisterActor(this);
+        }
+    }
+
 
     /* --------------- Implement Interactor --------------- */
 
@@ -89,11 +108,20 @@ public abstract class Projectile extends MovableAreaEntity implements Interactor
         other.acceptInteraction(handler);
     }
 
-    /* --------------- Getters --------------- */
+    /* --------------- Abstract Methods --------------- */
 
+    /**
+     * @NEED TO BE OVERRIDDEN
+     * @return (Animation[]): the animations accordingly to the projectile
+     */
     protected abstract Animation[] getAnimations();
 
+    /**
+     * @NEED TO BE OVERRIDDEN
+     * @return (int): the speed of the projectile
+     */
     protected abstract int getSpeed();
+
 
     /**
      * Interaction handler for a Projectile

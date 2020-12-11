@@ -17,7 +17,7 @@ public class Level2 extends SuperPacmanArea{
     private final DiscreteCoordinates PLAYER_SPAWN_POSITION = new DiscreteCoordinates(15, 29);
 
 
-    /* --------------- Implement Playable --------------- */
+    /* --------------- Implements Playable --------------- */
 
     @Override
     public String getTitle() {

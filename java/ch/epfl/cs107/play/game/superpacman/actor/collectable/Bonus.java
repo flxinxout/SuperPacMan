@@ -20,42 +20,28 @@ public class Bonus extends CollectableAreaEntity {
     // Animation duration in frame number
     private final static int ANIMATION_DURATION = 8;
     private Animation currentAnimation;
-    private final SoundAcoustics ON_COLLECT_SOUND;
-
     /**
      * Default Bonus Constructor
-     * @param area the area where is the bonus
-     * @param position the position of the bonus in the specific area
+     *
+     * @param area     (Area): the area where is the bonus. Not null
+     * @param position (DiscreteCoordinates): the position of the bonus in the specific area. Not null
      */
     public Bonus(Area area, DiscreteCoordinates position) {
-        super(area, Orientation.DOWN, position);
+        super(area, Orientation.DOWN, position, new SoundAcoustics("sounds/pacman/transactionOK.wav", 0.35f, false,false,false, false));
 
         // Extract Sprites and set animations of the bonus
         Sprite[] sprites = Sprite.extractSprites("superpacman/coin", 4, 1, 1, this, 16, 16);
         for (Sprite sprite: sprites) {
             sprite.setDepth(950);
         }
-        currentAnimation = new Animation(ANIMATION_DURATION, sprites);
 
-        ON_COLLECT_SOUND = new SoundAcoustics("sounds/pacman/transactionOK.wav", 0.35f, false,false,false, false);
-    }
-
-    /* -------------- Extends CollectableAreaEntity ---------------- */
-
-    @Override
-    public SoundAcoustics getSoundOnCollect() {
-        return ON_COLLECT_SOUND;
-    }
+        currentAnimation = new Animation(ANIMATION_DURATION, sprites); }
 
     /* -------------- Implements Interactable ---------------- */
 
-    /**
-     * WE DECIDED TO DEFINE THEM HERE BECAUSE IT CAN CHANGE FOR SOME INTERACTABLE
-     */
+    /** WE DECIDED TO DEFINE THEM HERE BECAUSE IT CAN CHANGE FOR SOME INTERACTABLE */
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
     @Override
     public boolean isViewInteractable() {
@@ -67,7 +53,7 @@ public class Bonus extends CollectableAreaEntity {
         ((SuperPacmanInteractionVisitor)v).interactWith(this);
     }
 
-    /* -------------- Implements Actor ---------------- */
+    /* -------------- Implements Graphics ---------------- */
 
     @Override
     public void update(float deltaTime) {

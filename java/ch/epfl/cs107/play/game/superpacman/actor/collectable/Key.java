@@ -18,38 +18,33 @@ import java.util.List;
  */
 public class Key extends CollectableAreaEntity implements Logic {
 
+    // Key's Attributes
     private Sprite sprite;
     private boolean isCollected;
-    private final SoundAcoustics ON_COLLECT_SOUND;
-
 
     /**
      * Default Key Constructor
-     * @param area the area where is the bonus
-     * @param position the position of the bonus in the specific area
+     * @param area     (Area): the area where is the bonus. Not null
+     * @param position (DiscreteCoordinates): the position of the bonus in the specific area. Not null
      */
     public Key(Area area, DiscreteCoordinates position) {
-        super(area, Orientation.DOWN, position);
+        super(area, Orientation.DOWN, position, new SoundAcoustics("sounds/pacman/transactionOK.wav", 0.35f, false,false,false, false));
 
         sprite = new Sprite("superpacman/key", 1, 1, this);
         isCollected = false;
-        ON_COLLECT_SOUND = new SoundAcoustics("sounds/pacman/transactionOK.wav", 0.35f, false,false,false, false);
-
     }
 
     /* -------------- Implements Interactable ---------------- */
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
     @Override
     public boolean isViewInteractable() {
         return false;
     }
 
-    /* -------------- Implements Actor ---------------- */
+    /* -------------- Implements Graphics ---------------- */
 
     @Override
     public void draw(Canvas canvas) {
@@ -63,11 +58,6 @@ public class Key extends CollectableAreaEntity implements Logic {
     public void onCollect() {
         super.onCollect();
         isCollected = true;
-    }
-
-    @Override
-    public SoundAcoustics getSoundOnCollect() {
-        return ON_COLLECT_SOUND;
     }
 
     /* -------------- Implements Logic ---------------- */

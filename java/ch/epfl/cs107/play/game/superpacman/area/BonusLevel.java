@@ -14,7 +14,7 @@ public class BonusLevel extends SuperPacmanArea {
     private final DiscreteCoordinates PLAYER_SPAWN_POSITION = new DiscreteCoordinates(9, 19);
 
 
-    /* --------------- Implement Playable --------------- */
+    /* --------------- Implements Playable --------------- */
 
     @Override
     public String getTitle() {

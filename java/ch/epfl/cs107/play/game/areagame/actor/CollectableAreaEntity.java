@@ -7,28 +7,31 @@ import ch.epfl.cs107.play.game.rpg.handler.RPGInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 /**
- * class that represents an entity in an area that can be collected by an actor
+ * Class that represents an entity in an area that can be collected by an actor
  */
 public abstract class CollectableAreaEntity extends AreaEntity implements Collectable {
-    /**
-     * Default constructor
-     * @param area the area where is the entity
-     * @param orientation the orientation
-     * @param position the position in the area
-     */
-    public CollectableAreaEntity(Area area, Orientation orientation, DiscreteCoordinates position) {
-        super(area, orientation, position);
-    }
 
-    public abstract SoundAcoustics getSoundOnCollect();
+    private final SoundAcoustics soundAcoustics;
+
+    /**
+     * Default CollectableAreaEntity constructor
+     *
+     * @param area        (Area): the area where is the entity. Not null
+     * @param orientation (Orientation): the orientation of the entity. Not null
+     * @param position    (DiscreteCoordinates): the position in the area. Not null
+     */
+    public CollectableAreaEntity(Area area, Orientation orientation, DiscreteCoordinates position, SoundAcoustics soundAcoustics) {
+        super(area, orientation, position);
+        this.soundAcoustics = soundAcoustics;
+    }
 
     /* ------------- Implement Collectable --------------- */
 
     @Override
     public void onCollect() {
         getOwnerArea().unregisterActor(this);
-        getSoundOnCollect().shouldBeStarted();
-        getSoundOnCollect().bip(getOwnerArea().getWindow());
+        soundAcoustics.shouldBeStarted();
+        soundAcoustics.bip(getOwnerArea().getWindow());
     }
 
     /* ------------- Implement Interactable --------------- */

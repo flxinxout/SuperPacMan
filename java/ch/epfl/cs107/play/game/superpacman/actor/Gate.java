@@ -26,11 +26,12 @@ public class Gate extends AreaEntity {
     private Sprite sprite;
 
     /**
-     * Default gate constructor
-     * @param area        the area where is the gate
-     * @param orientation the orientation of the gate
-     * @param position    the position of the gate
-     * @param signal      the signal of the gate
+     * Default Gate constructor
+     *
+     * @param area        (Area): the area where is the gate
+     * @param orientation (Orientation): the orientation of the gate
+     * @param position    (DiscreteCoordinates): the position of the gate
+     * @param signal      (Logic): the signal of the gate
      */
     public Gate(Area area, Orientation orientation, DiscreteCoordinates position, Logic signal) {
         super(area, orientation, position);
@@ -90,7 +91,7 @@ public class Gate extends AreaEntity {
         return m;
     }
 
-    /**@return true := if the signal is on, false := is the signal is off */
+    /** @return true := if the signal is on, false := is the signal is off */
     private boolean isOpen() {
         return signal.isOn();
     }
