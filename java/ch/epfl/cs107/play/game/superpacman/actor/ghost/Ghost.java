@@ -5,21 +5,18 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.superpacman.actor.Killable;
+import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanEnnemy;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
-import ch.epfl.cs107.play.game.superpacman.actor.killer.Villain;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.window.Canvas;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Class that represents ghosts in the SuperPacman game
  */
-public abstract class Ghost extends Villain implements Killable {
+public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
 
     // Constants of the Ghosts
     private final int GHOST_SCORE = 500;
@@ -33,7 +30,12 @@ public abstract class Ghost extends Villain implements Killable {
     private final int ANIMATION_DURATION = 8;
 
     // Attributes of the ghost
-    private final Animation afraidAnimation;
+    private final DiscreteCoordinates HOME;
+    private final SoundAcoustics DEATH_SOUND;
+
+    private final Animation AFRAID_ANIMATION;
+    private final Animation PROTECTED_ANIMATION;
+
     private boolean isAfraid;
     private Animation currentAnimation;
 
@@ -48,18 +50,22 @@ public abstract class Ghost extends Villain implements Killable {
      * Default Ghost constructor
      * @param area        (Area): owner area. Not null
      * @param orientation (Orientation): initial orientation of the entity. Not null
-     * @param home        (Coordinate): initial and home position of the ghost. Not null
+     * @param home        (Coordinate): initial and HOME position of the ghost. Not null
+     * @param speed       (int): initial speed of the ghost. Strictly greater than 0.
+     * @param fieldOfView (int): field of view of the ghost. Strictly greater than 0.
      */
-    public Ghost(Area area, Orientation orientation, DiscreteCoordinates home) {
-        super(area, orientation, home,
-                new SoundAcoustics("sounds/pacman/pacman_eatghost.wav", 0.50f, false,false,false, false),
-                20, 5);
+    public Ghost(Area area, Orientation orientation, DiscreteCoordinates home, int speed, int fieldOfView) {
+        super(area, orientation, home, speed, fieldOfView);
+
+        this.HOME = home;
+        DEATH_SOUND = new SoundAcoustics("sounds/pacman/pacman_eatghost.wav", 0.5f, false, false, false, false);
 
         // Creation of the handler
         handler = new GhostHandler();
 
         // Sets the afraid animation which is the same for all ghosts
-        afraidAnimation = new Animation(ANIMATION_DURATION, Sprite.extractSprites("superpacman/ghost.afraid", 2, 1, 1, this, 16, 16));
+        AFRAID_ANIMATION = new Animation(ANIMATION_DURATION, Sprite.extractSprites("superpacman/ghost.afraid", 2, 1, 1, this, 16, 16));
+        PROTECTED_ANIMATION = new Animation(ANIMATION_DURATION, Sprite.extractSprites("superpacman/ghost.protect", 2, 1, 1, this, 16, 16));
         currentAnimation = getAnimations()[orientation.ordinal()];
 
         // Sets some attributes of the ghost
@@ -72,6 +78,15 @@ public abstract class Ghost extends Villain implements Killable {
         timerProtection = PROTECTION_DURATION;
     }
 
+    /**
+     * Default Ghost constructor
+     * @param area        (Area): owner area. Not null
+     * @param orientation (Orientation): initial orientation of the entity. Not null
+     * @param home        (Coordinate): initial and HOME position of the ghost. Not null
+     */
+    public Ghost(Area area, Orientation orientation, DiscreteCoordinates home) {
+        this(area, orientation, home, 20, 5);
+    }
 
     /* --------------- Implements Graphics --------------- */
 
@@ -86,7 +101,7 @@ public abstract class Ghost extends Villain implements Killable {
                     Collections.singletonList(getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
                 orientate(desiredOrientation);
             }
-            move(getDEFAULT_SPEED());
+            move(getSpeed());
         }
 
         super.update(deltaTime);
@@ -112,7 +127,14 @@ public abstract class Ghost extends Villain implements Killable {
 
     @Override
     public void onDeath() {
-        super.onDeath();
+        DEATH_SOUND.shouldBeStarted();
+        DEATH_SOUND.bip(getOwnerArea().getWindow());
+
+        // We spawn the ghost at its spawn location
+        getOwnerArea().leaveAreaCells(this, getEnteredCells());
+        setCurrentPosition(HOME.toVector());
+        getOwnerArea().enterAreaCells(this, Collections.singletonList(HOME));
+        resetMotion();
 
         protect();
         player = null;
@@ -149,8 +171,10 @@ public abstract class Ghost extends Villain implements Killable {
      * @param deltaTime (float): the delta time of the update. Not null
      */
     private void setAnimations(float deltaTime) {
-        if (isAfraid) {
-            currentAnimation = afraidAnimation;
+        if (protect) {
+            currentAnimation = PROTECTED_ANIMATION;
+        } else if (isAfraid) {
+            currentAnimation = AFRAID_ANIMATION;
         } else {
             if (isDisplacementOccurs()) {
                 currentAnimation = getAnimations()[getOrientation().ordinal()];
@@ -158,8 +182,7 @@ public abstract class Ghost extends Villain implements Killable {
                 currentAnimation.reset();
             }
         }
-
-        currentAnimation.update(deltaTime);
+            currentAnimation.update(deltaTime);
     }
 
     /** Method that set the protect of the ghost when he's killed */
@@ -187,6 +210,11 @@ public abstract class Ghost extends Villain implements Killable {
         targetPos = getTargetPos();
     }
 
+    /** @NEED TO BE OVERRIDDEN
+     * @return (Animation[]): the animations accordingly to the villain
+     */
+    protected abstract Animation[] getAnimations();
+
     /* --------------- Public Methods --------------- */
 
     /** Scares ghosts */
@@ -202,6 +230,9 @@ public abstract class Ghost extends Villain implements Killable {
     }
 
     /* --------------- Getters --------------- */
+
+    /**@return (DiscreteCoordinates): the HOME */
+    protected DiscreteCoordinates getHOME() { return HOME; }
 
     /** NEED TO BE OVERRIDDEN
      * @return the target accordingly to the circumstances

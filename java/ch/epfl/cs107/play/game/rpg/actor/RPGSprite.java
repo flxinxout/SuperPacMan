@@ -121,8 +121,8 @@ public class RPGSprite extends Sprite {
 	 * to the orientation Orientation.dir). 
 	 * @param name (String): the name of the image 
 	 * @param nbFrames (int): number of frames in each row
-	 * @param width (int): actual image width, before transformation
-     * @param height (int): actual image height, before transformation
+	 * @param width (float): actual image width, before transformation
+     * @param height (float): actual image height, before transformation
      * @param parent (Positionable): parent of this, not null
      * @param regionWidth (int): width of frame (number of pixels in the image)
      * @param regionHeight (int): height of frame (number of pixels in the image)
@@ -153,8 +153,8 @@ public class RPGSprite extends Sprite {
 	 * to the orientation Orientation.dir). 
 	 * @param name (String): the name of the image 
 	 * @param nbFrames (int): number of frames in each row
-	 * @param width (int): actual image width, before transformation
-     * @param height (int): actual image height, before transformation
+	 * @param width (float): actual image width, before transformation
+     * @param height (float): actual image height, before transformation
      * @param parent (Positionable): parent of this, not null
      * @param anchor (Vector) : image anchor, not null
      * @param regionWidth (int): width of frame (number of pixels in the image)

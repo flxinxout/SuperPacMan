@@ -1,4 +1,4 @@
-package ch.epfl.cs107.play.game.superpacman.actor.killer;
+package ch.epfl.cs107.play.game.superpacman.actor;
 
 import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
@@ -14,37 +14,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Villain extends MovableAreaEntity implements Interactor, Killable {
+public abstract class SuperPacmanEnnemy extends MovableAreaEntity implements Interactor {
 
-    // Animations
-    private Animation[] animations;
-
-    // Attributes of the villain
-    private final DiscreteCoordinates home;
+    // Attributes of an ennemy
     private final int fieldOfView;
-    private final SoundAcoustics deathSound;
     private int speed;
 
     /**
-     * Default Villain constructor
+     * Default SuperPacmanEnnemy constructor
      *
-     * @param area        (Area): owner area. Not null
-     * @param orientation (Orientation): initial orientation of the entity. Not null
-     * @param position    (Coordinate): initial position of the entity. Not null
-     * @param deathSound  (SoundAcoustics): death Sound of the entity. May be null
-     * @param speed       (int): the speed of the entity. Not null
-     * @param fieldOfView (int): the field of view of the entity. Not null
+     * @param area              (Area): owner area. Not null
+     * @param orientation       (Orientation): initial orientation of the entity. Not null
+     * @param position          (Coordinate): initial position of the entity. Not null
+     * @param speed             (int): the speed of the entity. Strictly greater than 0
+     * @param fieldOfView       (int): the field of view of the entity. Strictly greater than 0
      */
-    public Villain(Area area, Orientation orientation, DiscreteCoordinates position, SoundAcoustics deathSound, int speed, int fieldOfView) {
+    public SuperPacmanEnnemy(Area area, Orientation orientation, DiscreteCoordinates position, int speed, int fieldOfView) {
         super(area, orientation, position);
 
-        this.home = position;
-        this.speed = speed;
-        this.fieldOfView = fieldOfView;
-        this.deathSound = deathSound;
-
-        // Sets all animations fo the sprite
-        animations = getAnimations();
+        this.speed = speed > 0 ? speed : 1;
+        this.fieldOfView = fieldOfView > 0 ? fieldOfView : 1;
     }
 
     /* ------------- Protected Methods --------------- */
@@ -81,30 +70,9 @@ public abstract class Villain extends MovableAreaEntity implements Interactor, K
     }
 
     /** @NEED TO BE OVERRIDDEN
-     * @return (Animation[]): the animations accordingly to the villain
-     */
-    protected abstract Animation[] getAnimations();
-
-    /** @NEED TO BE OVERRIDDEN
      * @return (Orientation): the next orientation following a specific algorithm
      */
     protected abstract Orientation getNextOrientation();
-
-    /* ------------- Implements Killable --------------- */
-
-    @Override
-    public void onDeath() {
-        if(deathSound != null) {
-            deathSound.shouldBeStarted();
-            deathSound.bip(getOwnerArea().getWindow());
-        }
-
-        // We spawn the villain at its spawn location
-        getOwnerArea().leaveAreaCells(this, getEnteredCells());
-        setCurrentPosition(home.toVector());
-        getOwnerArea().enterAreaCells(this, Collections.singletonList(home));
-        resetMotion();
-    }
 
     /* ------------- Implements Interactor --------------- */
 
@@ -124,15 +92,6 @@ public abstract class Villain extends MovableAreaEntity implements Interactor, K
 
     public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
-    /* ------------- Implements Interactor --------------- */
-
-    /**@return (int): the default speed */
-    protected int getDEFAULT_SPEED() { return speed; }
-
-    /**@return (DiscreteCoordinates): the home */
-    protected DiscreteCoordinates getHome() { return home; }
-
-
     /* --------------- Implements Interactable --------------- */
 
     @Override
@@ -142,5 +101,10 @@ public abstract class Villain extends MovableAreaEntity implements Interactor, K
 
     /** Sets the speed */
     protected void setSpeed(int speed) { this.speed = speed; }
+
+    /* --------------- Getters --------------- */
+
+    /** @return ennemy's speed */
+    protected int getSpeed() { return speed; }
 
 }

@@ -25,6 +25,7 @@ public class Pinky extends Ghost {
 
     // Max attempts allowed to escape
     private final int MAX_RANDOM_ATTEMPT = 200;
+    private final int DEFAULT_SPEED = 20;
     private final int AFRAID_SPEED = 15;
 
     /**
@@ -103,7 +104,7 @@ public class Pinky extends Ghost {
         if (!isAfraid()) {
             setSpeed(AFRAID_SPEED);
         } else {
-            setSpeed(getDEFAULT_SPEED());
+            setSpeed(DEFAULT_SPEED);
         }
         super.onScareChange();
     }
@@ -118,7 +119,7 @@ public class Pinky extends Ghost {
         DiscreteCoordinates cellAttempt;
         int attempts = 0;
 
-        // Generate a random cell in the area until the distance between this cell is further than the MIN_AFRAID_DISTANCE and that the attempts are less that MAX_RANDOM_ATTEMPT
+        // Generate a random cell in the area until the distance between this cell is further than the MIN_AFRAID_DISTANCE and that the attempts are less than MAX_RANDOM_ATTEMPT
         do {
             cellAttempt = randomCell();
             ++attempts;

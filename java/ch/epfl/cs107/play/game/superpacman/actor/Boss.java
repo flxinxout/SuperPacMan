@@ -4,11 +4,10 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
-import ch.epfl.cs107.play.game.superpacman.actor.killer.Villain;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.math.RandomGenerator;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.ArrayList;
@@ -16,20 +15,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 
-public class DarkLord extends Villain implements Interactor {
+public class Boss extends SuperPacmanEnnemy implements Interactor {
 
-    // Handler of the DarkLord
-    private final DarkLordHandler handler;
+    // Handler of the Boss
+    private final BossHandler handler;
 
-    // Animation of the DarkLord
+    // Animation of the Boss
     private final int ANIMATION_DURATION = 8;
     private Animation[] animations;
     private Animation currentAnimation;
 
-    // Field of view of DarkLord
-    private final int FIELD_OF_VIEW = 20;
+    // Field of view of Boss
+    private final int SPEED = 15;
+    private final int FIELD_OF_VIEW = 10;
 
-    // Orientation of the DarkLord
+    // Orientation of the Boss
     private Orientation desiredOrientation;
 
     // Target's Attributes
@@ -37,23 +37,35 @@ public class DarkLord extends Villain implements Interactor {
     private DiscreteCoordinates targetPos;
 
     /**
-     * Default DarkLord constructor
+     * Default Boss constructor
      *
      * @param area        (Area): owner area. Not null
      * @param orientation (Orientation): initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): initial position of the entity in the Area. Not null
      */
-    public DarkLord(Area area, Orientation orientation, DiscreteCoordinates position) {
-        super(area, orientation, position, null, 15, 12);
+    public Boss(Area area, Orientation orientation, DiscreteCoordinates position) {
+        super(area, orientation, position, 15, 10);
 
         // Initial orientation
         desiredOrientation = Orientation.RIGHT;
 
         // Creation of the handler
-        handler = new DarkLordHandler();
+        handler = new BossHandler();
 
         // Default target position
         targetPos = getTargetPos();
+
+        // Extracts the sprites of the ghost and sets the animations of the ghost
+        Sprite[][] sprites = RPGSprite.extractSprites ("zelda/flameskull", 3, 2f, 2f,
+                this, 32, 32, new Vector(-0.5f, -0.5f), new Orientation [] { Orientation.UP ,
+                        Orientation.LEFT , Orientation.DOWN , Orientation.RIGHT });
+        for (Sprite[] sprite : sprites) {
+            for (Sprite value : sprite) {
+                value.setDepth(950);
+            }
+        }
+        animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
+
     }
 
     /* --------------- Implements Graphics -------------- */
@@ -68,12 +80,12 @@ public class DarkLord extends Villain implements Interactor {
 
             if (getOwnerArea().canEnterAreaCells(this,
                     Collections.singletonList (getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
-                // Orientation of the DarkLord for the next move
+                // Orientation of the Boss for the next move
                 orientate(desiredOrientation);
             }
 
-            // Move of the DarkLord
-            move(getDEFAULT_SPEED());
+            // Move of the Boss
+            move(SPEED);
         }
 
         // Set animations
@@ -103,6 +115,10 @@ public class DarkLord extends Villain implements Interactor {
         }
     }
 
+    private void shoot() {
+        FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
+        getOwnerArea().registerActor(fireBall);
+    }
     /* --------------- protected Methods -------------- */
 
     @Override
@@ -119,24 +135,6 @@ public class DarkLord extends Villain implements Interactor {
         }
 
         return path.poll();
-    }
-
-    @Override
-    public Animation[] getAnimations() {
-
-        // Extracts the sprites of the ghost and sets the animations of the ghost
-        Sprite[][] sprites = RPGSprite.extractSprites ("zelda/darkLord", 1, 1f, 1f,
-                this , 25, 31, new Orientation [] { Orientation.UP ,
-                        Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
-        for (int i = 0; i < sprites.length; i++) {
-            for (int j = 0; j < sprites[i].length; j++) {
-                sprites[i][j].setDepth(950);
-            }
-        }
-
-        // Set the animations of the player
-        animations = Animation.createAnimations (ANIMATION_DURATION / 2, sprites);
-        return animations;
     }
 
     /**@return (DiscreteCoordinates): the target's position */
@@ -192,9 +190,9 @@ public class DarkLord extends Villain implements Interactor {
 
 
     /**
-     * Interaction handler for a DarkLord
+     * Interaction handler for a Boss
      */
-    private class DarkLordHandler implements SuperPacmanInteractionVisitor {
+    private class BossHandler implements SuperPacmanInteractionVisitor {
 
         @Override
         public void interactWith(SuperPacmanPlayer pacman) {

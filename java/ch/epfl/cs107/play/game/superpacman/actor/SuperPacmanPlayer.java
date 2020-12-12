@@ -35,7 +35,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
     // Constants of the SuperPacmanPlayer
     private final int DEFAULT_SPEED = 6;
     private final float INVINCIBLE_DURATION = 10;
-    private final float PROTECTION_DURATION = 1.5f;
+    private final float PROTECTION_DURATION = 2.5f;
     private final int MAXHP = 4;
     private final int START_HP = 1;
 
@@ -54,6 +54,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     // Animation of the SuperPacmanPlayer
     private final int ANIMATION_DURATION = 8;
+    private final Animation[] PROTECTED_ANIMATIONS;
     private Animation[] animations;
     private Animation currentAnimation;
 
@@ -88,7 +89,18 @@ public class SuperPacmanPlayer extends Player implements Killable {
             }
         }
 
+        //Setup the animations for Pacman. Default: Down
+        Sprite [][] protectSprites = RPGSprite.extractSprites ("superpacman/pacman.protected", 4, 1, 1,
+                this , 64, 64, new Orientation [] { Orientation.DOWN ,
+                        Orientation.LEFT , Orientation.UP , Orientation.RIGHT });
+        for (Sprite[] sprite : sprites) {
+            for (Sprite value : sprite) {
+                value.setDepth(975);
+            }
+        }
+
         // Set the animations of the player
+        PROTECTED_ANIMATIONS = Animation.createAnimations (ANIMATION_DURATION /2, protectSprites);
         animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
         currentAnimation = animations[0];
 
@@ -199,11 +211,14 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     /** Method that set the current animation of the player */
     private void setAnimations() {
-        if (isDisplacementOccurs()) {
-            currentAnimation = animations[getOrientation().ordinal()];
-        }
-        else {
-            currentAnimation.reset();
+        if (protection) {
+            currentAnimation = PROTECTED_ANIMATIONS[getOrientation().ordinal()];
+        } else {
+            if (isDisplacementOccurs()) {
+                currentAnimation = animations[getOrientation().ordinal()];
+            } else {
+                currentAnimation.reset();
+            }
         }
     }
 
