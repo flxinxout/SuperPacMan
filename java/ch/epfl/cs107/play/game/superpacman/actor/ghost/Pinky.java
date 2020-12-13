@@ -20,13 +20,14 @@ import java.util.Queue;
  */
 public class Pinky extends Ghost {
 
-    // Minimum distance when he's afraid
-    private final int MIN_AFRAID_DISTANCE = 5;
-
-    // Max attempts allowed to escape
-    private final int MAX_RANDOM_ATTEMPT = 200;
+    //Constants
     private final int DEFAULT_SPEED = 20;
     private final int AFRAID_SPEED = 15;
+    // Minimum distance to its home when he's afraid
+    private final int MIN_AFRAID_DISTANCE = 5;
+    // Max attempts allowed to escape
+    private final int MAX_RANDOM_ATTEMPT = 200;
+
 
     /**
      * Default Pinky constructor

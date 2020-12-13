@@ -44,6 +44,7 @@ public abstract class Area implements Playable {
 	/// - start indicate if area already begins, paused indicate if we display the pause menu
 	private boolean started;
 	private boolean paused;
+	//TODO: MOVE IT TO SUPERPACMAN
 	private boolean ended;
 
 	/** @return (float): camera scale factor, assume it is the same in x and y direction */

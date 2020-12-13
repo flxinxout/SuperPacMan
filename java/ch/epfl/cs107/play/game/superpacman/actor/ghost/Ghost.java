@@ -18,33 +18,36 @@ import java.util.Collections;
  */
 public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
 
-    // Constants of the Ghosts
+    // Constants
     private final int GHOST_SCORE = 500;
-    private final float PROTECTION_DURATION = 2;
 
-    // Target's Attributes
+    // Target
     private SuperPacmanPlayer player;
     private DiscreteCoordinates targetPos;
 
-    // Animation duration in frame number
-    private final int ANIMATION_DURATION = 8;
-
-    // Attributes of the ghost
-    private final DiscreteCoordinates HOME;
-    private final SoundAcoustics DEATH_SOUND;
-
+    // Animations
+    private final int ANIMATION_DURATION = 8; // Animation duration in frame number
     private final Animation AFRAID_ANIMATION;
-    private final Animation PROTECTED_ANIMATION;
-
-    private boolean isAfraid;
     private Animation currentAnimation;
 
-    // Spawn protect (to avoid spawn kill)
-    private boolean protect;
-    private float timerProtection;
+    // Attributes
+    private final DiscreteCoordinates HOME;
+    private boolean isAfraid;
 
-    // Handler of the ghost
+    // Handler
     private final GhostHandler handler;
+
+    /* --------------- EXTENSIONS --------------- */
+
+    // Spawn protection (to avoid spawn kill)
+    private boolean protect;
+    private final float PROTECTION_DURATION = 2;
+    private float timerProtection;
+    private final Animation PROTECTED_ANIMATION;
+
+    // Sounds
+    private final SoundAcoustics DEATH_SOUND;
+
 
     /**
      * Default Ghost constructor
@@ -210,7 +213,7 @@ public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
         targetPos = getTargetPos();
     }
 
-    /** @NEED TO BE OVERRIDDEN
+    /** @Note: NEED TO BE OVERRIDDEN
      * @return (Animation[]): the animations accordingly to the villain
      */
     protected abstract Animation[] getAnimations();
