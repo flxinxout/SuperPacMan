@@ -5,17 +5,11 @@ import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Collections;
 import java.util.List;
 
 public abstract class Projectile extends MovableAreaEntity implements Interactor {
-
-    // Projectile's Animations
-    private Animation[] animations;
-    private Animation currentAnimation;
-
     // Handler of the projectile
     private ProjectileHandler handler;
 
@@ -28,9 +22,6 @@ public abstract class Projectile extends MovableAreaEntity implements Interactor
      */
     public Projectile(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
-
-        animations = getAnimations();
-        currentAnimation = animations[orientation.ordinal()];
 
         handler = new ProjectileHandler();
     }
@@ -70,14 +61,9 @@ public abstract class Projectile extends MovableAreaEntity implements Interactor
     /* --------------- Implements Interactor --------------- */
 
     @Override
-    public void draw(Canvas canvas) { currentAnimation.draw(canvas); }
-
-    @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
         move(getSpeed());
-
-        currentAnimation.update(deltaTime);
 
         if (Math.abs(getVelocity().x) < 0.1 && Math.abs(getVelocity().y) < 0.1) {
             getOwnerArea().unregisterActor(this);
@@ -108,12 +94,6 @@ public abstract class Projectile extends MovableAreaEntity implements Interactor
     }
 
     /* --------------- Abstract Methods --------------- */
-
-    /**
-     * @NEED TO BE OVERRIDDEN
-     * @return (Animation[]): the animations accordingly to the projectile
-     */
-    protected abstract Animation[] getAnimations();
 
     /**
      * @NEED TO BE OVERRIDDEN

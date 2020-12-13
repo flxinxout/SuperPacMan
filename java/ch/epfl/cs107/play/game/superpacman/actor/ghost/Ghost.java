@@ -60,25 +60,26 @@ public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
     public Ghost(Area area, Orientation orientation, DiscreteCoordinates home, int speed, int fieldOfView) {
         super(area, orientation, home, speed, fieldOfView);
 
-        this.HOME = home;
-        DEATH_SOUND = new SoundAcoustics("sounds/pacman/pacman_eatghost.wav", 0.5f, false, false, false, false);
-
         // Creation of the handler
         handler = new GhostHandler();
 
-        // Sets the afraid animation which is the same for all ghosts
+        // Set the animations
         AFRAID_ANIMATION = new Animation(ANIMATION_DURATION, Sprite.extractSprites("superpacman/ghost.afraid", 2, 1, 1, this, 16, 16));
-        PROTECTED_ANIMATION = new Animation(ANIMATION_DURATION, Sprite.extractSprites("superpacman/ghost.protect", 2, 1, 1, this, 16, 16));
         currentAnimation = getAnimations()[orientation.ordinal()];
 
-        // Sets some attributes of the ghost
+        // Set ghost attributes
         isAfraid = false;
-
-        // Default target position
+        this.HOME = home;
         targetPos = getTargetPos();
 
+        /* --------------- EXTENSIONS --------------- */
+
+        PROTECTED_ANIMATION = new Animation(ANIMATION_DURATION, Sprite.extractSprites("superpacman/ghost.protect", 2, 1, 1, this, 16, 16));
         protect = false;
         timerProtection = PROTECTION_DURATION;
+
+        DEATH_SOUND = new SoundAcoustics("sounds/pacman/pacman_eatghost.wav", 0.5f, false, false, false, false);
+
     }
 
     /**

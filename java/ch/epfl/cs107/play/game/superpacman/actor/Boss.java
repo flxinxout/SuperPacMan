@@ -116,7 +116,7 @@ public class Boss extends SuperPacmanEnnemy implements Interactor {
     }
 
     private void shoot() {
-        FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
+        Arrow fireBall = new Arrow(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
         getOwnerArea().registerActor(fireBall);
     }
     /* --------------- protected Methods -------------- */

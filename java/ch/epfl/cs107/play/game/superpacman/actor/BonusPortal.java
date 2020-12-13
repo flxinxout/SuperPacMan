@@ -8,6 +8,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 
+//TODO: can't we delete it?
 /**
  * Class that represents a portal. Behavior like a Door
  */

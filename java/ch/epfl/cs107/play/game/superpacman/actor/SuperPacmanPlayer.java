@@ -32,37 +32,37 @@ public class SuperPacmanPlayer extends Player implements Killable {
     // StatusGUI of the SuperPacmanPlayer
     private SuperPacmanPlayerStatusGUI status;
 
-    // Constants of the SuperPacmanPlayer
+    // Constants
     private final int DEFAULT_SPEED = 6;
     private final float INVINCIBLE_DURATION = 10;
-    private final float PROTECTION_DURATION = 2.5f;
     private final int MAXHP = 4;
     private final int START_HP = 1;
 
-    // Attributes of the SuperPacmanPlayer
+    // Attributes
     private int hp;
     private int score;
     private int speed;
+    private Orientation desiredOrientation;
 
     // Invincibility (when a bonus is eaten)
     private boolean invincible;
     private float timerInvincible;
 
-    // Spawn protection (to avoid spawn kill)
-    private boolean protection;
-    private float timerProtection;
-
-    // Animation of the SuperPacmanPlayer
-    private final int ANIMATION_DURATION = 8;
-    private final Animation[] PROTECTED_ANIMATIONS;
+    // Animations
+    private final int ANIMATION_DURATION = 8; // Animation duration in frame number
     private Animation[] animations;
     private Animation currentAnimation;
 
-    // Sounds of the SuperPacmanPlayer
-    private SoundAcoustics deathSound;
+    /* --------------- EXTENSIONS --------------- */
 
-    // Orientation of the player
-    private Orientation desiredOrientation;
+    // Spawn protection (to avoid spawn kill)
+    private final float PROTECTION_DURATION = 2.5f;
+    private boolean protection;
+    private float timerProtection;
+    private final Animation[] PROTECTED_ANIMATIONS;
+
+    // Sounds
+    private SoundAcoustics deathSound;
 
     /**
      * Default SuperPacmanPlayer Constructor
@@ -89,7 +89,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
             }
         }
 
-        //Setup the animations for Pacman. Default: Down
+        //Setup the animations for Pacman. Default orientation: Down
         Sprite [][] protectSprites = RPGSprite.extractSprites ("superpacman/pacman.protected", 4, 1, 1,
                 this , 64, 64, new Orientation [] { Orientation.DOWN ,
                         Orientation.LEFT , Orientation.UP , Orientation.RIGHT });
@@ -98,26 +98,27 @@ public class SuperPacmanPlayer extends Player implements Killable {
                 value.setDepth(975);
             }
         }
-
-        // Set the animations of the player
-        PROTECTED_ANIMATIONS = Animation.createAnimations (ANIMATION_DURATION /2, protectSprites);
         animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
         currentAnimation = animations[0];
 
-        // Set the sounds of the player
-        deathSound = new SoundAcoustics("sounds/pacman/pacman_death.wav", 0.50f, false,false,false, true);
-
-        // Initialization of player's attributes
+        // Attributes initialization
         hp = START_HP;
         score = 0;
         speed = DEFAULT_SPEED;
         invincible = false;
-        protection = false;
         timerInvincible = INVINCIBLE_DURATION;
-        timerProtection = PROTECTION_DURATION;
 
         // Initial orientation
         desiredOrientation = Orientation.RIGHT;
+
+        /* --------------- EXTENSIONS --------------- */
+
+        protection = false;
+        timerProtection = PROTECTION_DURATION;
+        PROTECTED_ANIMATIONS = Animation.createAnimations (ANIMATION_DURATION /2, protectSprites);
+
+        deathSound = new SoundAcoustics("sounds/pacman/pacman_death.wav", 0.50f, false,false,false, true);
+
     }
 
     /* --------------- External Methods --------------- */
@@ -236,7 +237,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
     public void update(float deltaTime) {
 
         if (getOwnerArea().getKeyboard().get(Keyboard.TAB).isPressed()) {
-            FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(),
+            Arrow fireBall = new Arrow(getOwnerArea(), getOrientation(),
                     getCurrentMainCellCoordinates().jump(getOrientation().toVector()).jump(getOrientation().toVector()));
             getOwnerArea().registerActor(fireBall);
         }
