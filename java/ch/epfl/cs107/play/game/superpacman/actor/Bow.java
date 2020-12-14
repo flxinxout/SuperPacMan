@@ -51,6 +51,13 @@ public class Bow extends AreaEntity implements Interactor {
 
     /* --------------- Private Methods --------------- */
 
+    private void refreshPlayerTargetting() {
+        if (player != null && player.getPosition().x != getCurrentMainCellCoordinates().x
+                && player.getPosition().y != getCurrentMainCellCoordinates().y) {
+            player = null;
+        }
+    }
+
     private void refreshShootTimer(float deltaTime) {
         if (shootTimer > 0) {
             shootTimer -= deltaTime;
@@ -104,6 +111,12 @@ public class Bow extends AreaEntity implements Interactor {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+
+        // Refresh player targeting
+        if (player != null && player.getPosition().x != getCurrentMainCellCoordinates().x
+                && player.getPosition().y != getCurrentMainCellCoordinates().y) {
+            player = null;
+        }
 
         // Orientate
         if (getNextOrientation() != getOrientation()) {

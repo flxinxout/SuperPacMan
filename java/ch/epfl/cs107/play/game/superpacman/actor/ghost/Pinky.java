@@ -56,10 +56,7 @@ public class Pinky extends Ghost {
             }
         }
 
-        // Sets the animations of the ghost
-        Animation[] animations = Animation.createAnimations (getAnimationDuration() /2, sprites);
-
-        return animations;
+        return Animation.createAnimations (getAnimationDuration() /2, sprites);
     }
 
     @Override

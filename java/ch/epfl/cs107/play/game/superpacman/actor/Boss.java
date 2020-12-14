@@ -18,24 +18,7 @@ import java.util.Queue;
 
 public class Boss extends Ghost implements Interactor {
 
-    // Handler of the Boss
-    private final BossHandler handler;
-
-    // Animation of the Boss
-    private final int ANIMATION_DURATION = 8;
-    private Animation[] animations;
-    private Animation currentAnimation;
-
-    // Field of view of Boss
-    private final int SPEED = 15;
     private final int FIELD_OF_VIEW = 10;
-
-    // Orientation of the Boss
-    private Orientation desiredOrientation;
-
-    // Target's Attributes
-    private SuperPacmanPlayer player;
-    private DiscreteCoordinates targetPos;
 
     /**
      * Default Boss constructor
@@ -46,80 +29,8 @@ public class Boss extends Ghost implements Interactor {
      */
     public Boss(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position, 15, 10);
-
-        // Initial orientation
-        desiredOrientation = Orientation.RIGHT;
-
-        // Creation of the handler
-        handler = new BossHandler();
-
-        // Default target position
-        targetPos = getTargetPos();
-
-        // Extracts the sprites of the ghost and sets the animations of the ghost
-        Sprite[][] sprites = RPGSprite.extractSprites ("zelda/flameskull", 3, 2f, 2f,
-                this, 32, 32, new Vector(-0.5f, -0.5f), new Orientation [] { Orientation.UP ,
-                        Orientation.LEFT , Orientation.DOWN , Orientation.RIGHT });
-        for (Sprite[] sprite : sprites) {
-            for (Sprite value : sprite) {
-                value.setDepth(950);
-            }
-        }
-        animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
-
     }
 
-    /* --------------- Implements Graphics -------------- */
-
-    @Override
-    public void update(float deltaTime) {
-
-        // Move if is possible
-        if (!isDisplacementOccurs()) {
-
-            desiredOrientation = getNextOrientation();
-
-            if (getOwnerArea().canEnterAreaCells(this,
-                    Collections.singletonList (getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
-                // Orientation of the Boss for the next move
-                orientate(desiredOrientation);
-            }
-
-            // Move of the Boss
-            move(SPEED);
-        }
-
-        // Set animations
-        setAnimations();
-        currentAnimation.update(deltaTime);
-
-        // If the ghost and his target position are very close, we update the target in turns of parameters of the game
-        if (targetPos != null && DiscreteCoordinates.distanceBetween(getCurrentMainCellCoordinates(), targetPos) < 0.1) {
-            targetPos = getTargetPos();
-        }
-
-        super.update(deltaTime);
-    }
-
-    @Override
-    public void draw(Canvas canvas) { currentAnimation.draw(canvas); }
-
-
-    /* --------------- private Methods -------------- */
-
-    /** Sets the current animation of the Ghost */
-    private void setAnimations() {
-        if (isDisplacementOccurs()) {
-            currentAnimation = animations[getOrientation().ordinal()];
-        } else {
-            currentAnimation.reset();
-        }
-    }
-
-    private void shoot() {
-        Arrow fireBall = new Arrow(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
-        getOwnerArea().registerActor(fireBall);
-    }
     /* --------------- protected Methods -------------- */
 
     @Override
@@ -140,70 +51,26 @@ public class Boss extends Ghost implements Interactor {
 
     @Override
     protected Animation[] getAnimations() {
-        return new Animation[0];
+        // Extracts the sprites of the ghost and sets the animations
+        Sprite[][] sprites = RPGSprite.extractSprites ("zelda/flameskull", 3, 2f, 2f,
+                this, 32, 32, new Vector(-0.5f, -0.5f), new Orientation [] { Orientation.UP ,
+                        Orientation.LEFT , Orientation.DOWN , Orientation.RIGHT });
+        for (Sprite[] sprite : sprites) {
+            for (Sprite value : sprite) {
+                value.setDepth(950);
+            }
+        }
+
+        return Animation.createAnimations (getAnimationDuration() /2, sprites);
     }
 
     /**@return (DiscreteCoordinates): the target's position */
     protected DiscreteCoordinates getTargetPos() {
-        if(player == null) {
+        if(getPlayer() == null ||
+                DiscreteCoordinates.distanceBetween(getPlayer().getCurrentCells().get(0), getCurrentMainCellCoordinates()) > FIELD_OF_VIEW) {
             return randomCell();
         } else {
-            return player.getCurrentCells().get((0));
-        }
-    }
-
-    /* --------------- Implements Interactable -------------- */
-
-    @Override
-    public boolean isCellInteractable() { return true; }
-
-    @Override
-    public boolean isViewInteractable() { return false; }
-
-    @Override
-    public boolean takeCellSpace() { return false; }
-
-    @Override
-    public void acceptInteraction(AreaInteractionVisitor v) { ((SuperPacmanInteractionVisitor)v).interactWith (this); }
-
-    /* --------------- Implements Interactor -------------- */
-
-    @Override
-    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
-
-    @Override
-    public List<DiscreteCoordinates> getFieldOfViewCells() {
-        List<DiscreteCoordinates> fieldOfView = new ArrayList<>();
-
-        // Add the coordinates that are in the field of view of the ghost
-        for (int y = -FIELD_OF_VIEW; y <= FIELD_OF_VIEW; y++) {
-            for (int x = -FIELD_OF_VIEW; x <= FIELD_OF_VIEW; x++) {
-                fieldOfView.add(new DiscreteCoordinates(getCurrentMainCellCoordinates().x + x, getCurrentMainCellCoordinates().y + y));
-            }
-        }
-
-        return fieldOfView;
-    }
-
-    @Override
-    public boolean wantsCellInteraction() { return false; }
-
-    @Override
-    public boolean wantsViewInteraction() { return true; }
-
-    @Override
-    public void interactWith(Interactable other) { other.acceptInteraction(handler); }
-
-
-    /**
-     * Interaction handler for a Boss
-     */
-    private class BossHandler implements SuperPacmanInteractionVisitor {
-
-        @Override
-        public void interactWith(SuperPacmanPlayer pacman) {
-            player = pacman;
-            targetPos = getTargetPos();
+            return getPlayer().getCurrentCells().get((0));
         }
     }
 }
