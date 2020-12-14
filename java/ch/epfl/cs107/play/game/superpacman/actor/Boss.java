@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -15,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 
-public class Boss extends SuperPacmanEnnemy implements Interactor {
+public class Boss extends Ghost implements Interactor {
 
     // Handler of the Boss
     private final BossHandler handler;
@@ -135,6 +136,11 @@ public class Boss extends SuperPacmanEnnemy implements Interactor {
         }
 
         return path.poll();
+    }
+
+    @Override
+    protected Animation[] getAnimations() {
+        return new Animation[0];
     }
 
     /**@return (DiscreteCoordinates): the target's position */

@@ -210,7 +210,9 @@ public class SuperPacmanPlayer extends Player implements Killable {
         }
     }
 
-    /** Method that set the current animation of the player */
+    /**
+     * Sets the current animation of the player
+     */
     private void setAnimations() {
         if (protection) {
             currentAnimation = PROTECTED_ANIMATIONS[getOrientation().ordinal()];

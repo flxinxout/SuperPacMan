@@ -2,6 +2,7 @@ package ch.epfl.cs107.play.game.superpacman.area;
 
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.superpacman.actor.BonusPortal;
+import ch.epfl.cs107.play.game.superpacman.actor.Bow;
 import ch.epfl.cs107.play.game.superpacman.actor.Gate;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Key;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -34,6 +35,9 @@ public class Level2 extends SuperPacmanArea{
         // Registration of actors in the level
         BonusPortal bonusPortal = new BonusPortal("superpacman/BonusLevel", Logic.TRUE, this, Orientation.DOWN, new DiscreteCoordinates(23,26));
         registerActor(bonusPortal);
+
+        Bow bow = new Bow(this, Orientation.LEFT, new DiscreteCoordinates(22, 24));
+        registerActor(bow);
 
         Key key1 = new Key(this, new DiscreteCoordinates(3, 16));
         registerActor(key1);

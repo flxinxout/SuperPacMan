@@ -59,7 +59,7 @@ public class SuperPacman extends RPG  {
 
     /** Initialization of the game */
     private void startGame() {
-        int areaIndex = 1;
+        int areaIndex = 2;
 
         createAreas();
         SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas[areaIndex], true);

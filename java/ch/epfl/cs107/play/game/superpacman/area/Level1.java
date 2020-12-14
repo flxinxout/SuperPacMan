@@ -32,9 +32,6 @@ public class Level1 extends SuperPacmanArea{
 
         // Registration of actors in the level
 
-        Boss darkLord = new Boss(this, Orientation.DOWN, new DiscreteCoordinates(11, 3));
-        registerActor(darkLord);
-
         Door door = new Door("superpacman/Level2", new DiscreteCoordinates(15, 29), Logic.TRUE, this,
                 Orientation.DOWN, new DiscreteCoordinates(14, 0), new DiscreteCoordinates(15, 0));
         registerActor(door);

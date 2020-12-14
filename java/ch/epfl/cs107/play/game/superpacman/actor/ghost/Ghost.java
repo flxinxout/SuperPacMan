@@ -5,18 +5,20 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.superpacman.actor.Killable;
-import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanEnnemy;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.RandomGenerator;
 import ch.epfl.cs107.play.window.Canvas;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Class that represents ghosts in the SuperPacman game
  */
-public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
+public abstract class Ghost extends MovableAreaEntity implements Killable, Interactor {
 
     // Constants
     private final int GHOST_SCORE = 500;
@@ -32,6 +34,8 @@ public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
 
     // Attributes
     private final DiscreteCoordinates HOME;
+    private final int FIELD_OF_VIEW;
+    private int speed;
     private boolean isAfraid;
 
     // Handler
@@ -58,7 +62,7 @@ public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
      * @param fieldOfView (int): field of view of the ghost. Strictly greater than 0.
      */
     public Ghost(Area area, Orientation orientation, DiscreteCoordinates home, int speed, int fieldOfView) {
-        super(area, orientation, home, speed, fieldOfView);
+        super(area, orientation, home);
 
         // Creation of the handler
         handler = new GhostHandler();
@@ -70,6 +74,8 @@ public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
         // Set ghost attributes
         isAfraid = false;
         this.HOME = home;
+        this.FIELD_OF_VIEW = fieldOfView > 0 ? fieldOfView : 5;
+        this.speed = speed > 0 ? speed : 1;
         targetPos = getTargetPos();
 
         /* --------------- EXTENSIONS --------------- */
@@ -151,6 +157,20 @@ public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
     public void interactWith(Interactable other) { other.acceptInteraction(handler); }
 
     @Override
+    public List<DiscreteCoordinates> getFieldOfViewCells() {
+        List<DiscreteCoordinates> fieldOfViewList = new ArrayList<>();
+
+        // Add the coordinates that are in the field of view of the ghost
+        for (int y = -FIELD_OF_VIEW; y <= FIELD_OF_VIEW; y++) {
+            for (int x = -FIELD_OF_VIEW; x <= FIELD_OF_VIEW; x++) {
+                fieldOfViewList.add(new DiscreteCoordinates(getCurrentMainCellCoordinates().x + x, getCurrentMainCellCoordinates().y + y));
+            }
+        }
+
+        return fieldOfViewList;
+    }
+
+    @Override
     public boolean wantsViewInteraction() { return true; }
 
     @Override
@@ -158,6 +178,12 @@ public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
 
 
     /* --------------- Implements Interactable --------------- */
+
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
+
+    @Override
+    public boolean takeCellSpace() { return false; }
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) { ((SuperPacmanInteractionVisitor)v).interactWith (this); }
@@ -209,25 +235,80 @@ public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
 
     /* --------------- Protected Methods --------------- */
 
-    /** Called when the ghosts become scared or stop being scared */
+    /**
+     * @return (Orientation): the next orientation following a specific algorithm
+     */
+    protected abstract Orientation getNextOrientation();
+
+    /**
+     * Choose a random cell in a specific radius around another cell
+     * @param centerPos (DiscreteCoordinates): the center cell
+     * @param radius    (int): the radius allowed
+     * @return (DiscreteCoordinates): the cell
+     */
+    protected DiscreteCoordinates randomCell(DiscreteCoordinates centerPos, int radius) {
+        int randomX, randomY;
+        DiscreteCoordinates randomCoordinates;
+
+        // Generate a random coordinate in the current area until this coordinate will be smaller that the allowed radius of the ghost
+        do {
+            randomX = RandomGenerator.getInstance().nextInt(getOwnerArea().getWidth());
+            randomY = RandomGenerator.getInstance().nextInt(getOwnerArea().getHeight());
+            randomCoordinates = new DiscreteCoordinates(randomX, randomY);
+        } while (DiscreteCoordinates.distanceBetween(centerPos, randomCoordinates) > radius);
+
+        return randomCoordinates;
+    }
+
+    /**
+     * @return (DiscreteCoordinates): a random cell in an entire map
+     */
+    protected DiscreteCoordinates randomCell() {
+        int width = getOwnerArea().getWidth();
+        int height = getOwnerArea().getHeight();
+
+        DiscreteCoordinates center = new DiscreteCoordinates(width/2, height/2);
+        int radius = (int) (Math.sqrt(width * width + height * height)/2 + 1);
+
+        return randomCell(center, radius);
+    }
+
+    /**
+     * Called when the ghosts become scared or stop being scared
+     */
     protected void onScareChange() {
         targetPos = getTargetPos();
     }
 
-    /** @Note: NEED TO BE OVERRIDDEN
-     * @return (Animation[]): the animations accordingly to the villain
+    /**
+     * @return (Animation[]): the animations of the entity
      */
     protected abstract Animation[] getAnimations();
 
+    /**
+     * @return ennemy's speed
+     */
+    protected int getSpeed() { return speed; }
+
+    /**
+     * Sets the speed
+     * @param speed (int): the new speed
+     */
+    protected void setSpeed(int speed) { this.speed = speed; }
+
     /* --------------- Public Methods --------------- */
 
-    /** Scares ghosts */
+    /**
+     * Scares ghosts
+     */
     public void scare() {
         isAfraid = true;
         onScareChange();
     }
 
-    /** unScares ghosts */
+    /**
+     * Unscares ghosts
+     */
     public void unScare() {
         isAfraid = false;
         onScareChange();
@@ -235,7 +316,9 @@ public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
 
     /* --------------- Getters --------------- */
 
-    /**@return (DiscreteCoordinates): the HOME */
+    /**
+     * @return (DiscreteCoordinates): the HOME
+     */
     protected DiscreteCoordinates getHOME() { return HOME; }
 
     /** NEED TO BE OVERRIDDEN
@@ -243,10 +326,14 @@ public abstract class Ghost extends SuperPacmanEnnemy implements Killable {
      */
     protected abstract DiscreteCoordinates getTargetPos();
 
-    /** @return the animation duration of ghosts */
+    /**
+     * @return the animation duration of ghosts
+     */
     protected int getAnimationDuration() { return ANIMATION_DURATION; }
 
-    /** @return if ghosts are afraid */
+    /**
+     * @return if ghosts are afraid
+     */
     protected boolean isAfraid() { return isAfraid; }
 
     /** @return if this ghost is protected */
