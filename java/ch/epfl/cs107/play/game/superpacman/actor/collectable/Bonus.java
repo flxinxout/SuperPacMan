@@ -35,18 +35,11 @@ public class Bonus extends CollectableAreaEntity {
             sprite.setDepth(950);
         }
 
-        currentAnimation = new Animation(ANIMATION_DURATION, sprites); }
+        currentAnimation = new Animation(ANIMATION_DURATION, sprites);
+    }
+
 
     /* -------------- Implements Interactable ---------------- */
-
-    /** WE DECIDED TO DEFINE THEM HERE BECAUSE IT CAN CHANGE FOR SOME INTERACTABLE */
-    @Override
-    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
-
-    @Override
-    public boolean isViewInteractable() {
-        return false;
-    }
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {

@@ -21,6 +21,9 @@ public class Boss extends Ghost implements Interactor {
     private final int FIELD_OF_VIEW = 10;
     private DiscreteCoordinates lastCell;
 
+    // Represents the number of life of the boss. When it's 0, the SuperPacmanPlayer win
+    public static int BOSS_LIFE = 4;
+
     /**
      * Default Boss constructor
      *
@@ -38,7 +41,13 @@ public class Boss extends Ghost implements Interactor {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+        // Set the correct animation
+        setAnimations(deltaTime);
+
+        // If the player is not null
         if(getPlayer() != null) {
+
+            // For each cell that the boss left, spawn fire in this cell
             for (DiscreteCoordinates cell : getLeftCells()) {
                 if(cell != lastCell) {
                     lastCell = cell;
@@ -82,7 +91,7 @@ public class Boss extends Ghost implements Interactor {
         return Animation.createAnimations (getAnimationDuration() /2, sprites);
     }
 
-    /**@return (DiscreteCoordinates): the target's position */
+    /** @return (DiscreteCoordinates): the target's position */
     protected DiscreteCoordinates getTargetPos() {
         if(getPlayer() == null ||
                 DiscreteCoordinates.distanceBetween(getPlayer().getCurrentCells().get(0), getCurrentMainCellCoordinates()) > FIELD_OF_VIEW) {
@@ -91,6 +100,44 @@ public class Boss extends Ghost implements Interactor {
             return getPlayer().getCurrentCells().get((0));
         }
     }
+
+
+    /* --------------- External Methods -------------- */
+
+    //TODO: set differents animations
+    /**
+     * Method that sets the correct animation for the boss
+     * @param deltaTime the deltaTime for the update
+     */
+    private void setAnimations(float deltaTime) {
+        switch (BOSS_LIFE) {
+
+            case 4:
+                System.out.println("4");
+                break;
+
+            case 3:
+                System.out.println("3");
+                break;
+
+            case 2:
+                System.out.println("2");
+                break;
+
+            case 1:
+                System.out.println("1");
+                break;
+
+            default:
+                break;
+
+        }
+
+        currentAnimation.update(deltaTime);
+
+    }
+
+    /* -------------- Implements Interactable ---------------- */
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {

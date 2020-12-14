@@ -6,6 +6,9 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.handler.RPGInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Class that represents an entity in an area that can be collected by an actor
  */
@@ -47,7 +50,13 @@ public abstract class CollectableAreaEntity extends AreaEntity implements Collec
     }
 
     @Override
+    public boolean isViewInteractable() { return false; }
+
+    @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((RPGInteractionVisitor)v).interactWith(this);
     }
+
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 }

@@ -37,17 +37,9 @@ public class Cherry extends CollectableReward {
         super(area, Orientation.DOWN, position, new SoundAcoustics("sounds/pacman/pacman_eatfruit.wav", 0.35f, false,false,false, false));
 
         this.sprite = new Sprite("superpacman/cherry", 1, 1, this,
-                null, Vector.ZERO, 1.0f, 950); }
-
-    /* -------------- Implements Interactable ---------------- */
-
-    @Override
-    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
-
-    @Override
-    public boolean isViewInteractable() {
-        return false;
+                null, Vector.ZERO, 1.0f, 950);
     }
+
 
     /* -------------- Implements Graphics ---------------- */
 

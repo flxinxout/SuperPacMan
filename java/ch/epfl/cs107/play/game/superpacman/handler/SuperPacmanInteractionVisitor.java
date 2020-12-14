@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.game.superpacman.actor.*;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.CollectableReward;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
+import ch.epfl.cs107.play.game.superpacman.actor.collectable.LifeBoss;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 
 /**
@@ -31,4 +32,6 @@ public interface SuperPacmanInteractionVisitor extends RPGInteractionVisitor {
     default void interactWith(Boss boss) { }
 
     default void interactWith(Bow bow) { }
+
+    default void interactWith(LifeBoss lifeBoss) { }
 }

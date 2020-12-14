@@ -30,7 +30,8 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     // Animations
     private final int ANIMATION_DURATION = 8; // Animation duration in frame number
     private final Animation AFRAID_ANIMATION;
-    private Animation currentAnimation;
+    //TODO MIS EN PROTECTED POUR LE BOSS
+    protected Animation currentAnimation;
 
     // Attributes
     private final DiscreteCoordinates HOME;
@@ -212,7 +213,8 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
                 currentAnimation.reset();
             }
         }
-            currentAnimation.update(deltaTime);
+
+        currentAnimation.update(deltaTime);
     }
 
     /** Method that set the protect of the ghost when he's killed */

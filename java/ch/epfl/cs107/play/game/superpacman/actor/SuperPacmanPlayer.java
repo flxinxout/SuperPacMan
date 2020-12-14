@@ -10,6 +10,7 @@ import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.CollectableReward;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
+import ch.epfl.cs107.play.game.superpacman.actor.collectable.LifeBoss;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
@@ -429,6 +430,15 @@ public class SuperPacmanPlayer extends Player implements Killable {
         public void interactWith(Boss boss) {
             if (!protection && !invincible) {
                 onDeath();
+            }
+        }
+
+        @Override
+        public void interactWith(LifeBoss lifeBoss) {
+            Boss.BOSS_LIFE--;
+            if(Boss.BOSS_LIFE == 0) {
+                SuperPacmanArea owner = (SuperPacmanArea) getOwnerArea();
+                owner.win();
             }
         }
     }

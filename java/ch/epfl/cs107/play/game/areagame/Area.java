@@ -361,9 +361,7 @@ public abstract class Area implements Playable {
 	}
 
 	@Override
-	public void end() {
-		ended = true;
-	}
+	public void end() { ended = true; }
 
 	/** @return (Window): the window of the area */
 	public Window getWindow() { return window; }

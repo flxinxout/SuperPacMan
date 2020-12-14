@@ -41,16 +41,6 @@ public class Diamond extends CollectableReward {
         sprite.draw(canvas);
     }
 
-    /* -------------- Implements Interactable ---------------- */
-
-    @Override
-    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
-
-    @Override
-    public boolean isViewInteractable() {
-        return false;
-    }
-
     /* -------------- Implements Collectable ---------------- */
 
     @Override

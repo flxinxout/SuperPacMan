@@ -32,7 +32,6 @@ public abstract class SuperPacmanArea extends Area implements Logic {
     private SuperPacmanMenu[] pauseGUI;
     private SuperPacmanMenu gameOverGUI;
     private SuperPacmanMenu winGUI;
-    private int playerScore;
     private boolean won;
     private int desiredGUI = 0;
 
@@ -131,6 +130,12 @@ public abstract class SuperPacmanArea extends Area implements Logic {
         end();
     }
 
+    /** Method for the victory when the player get all the boss' life in the BossLevel */
+    public void win() {
+        won = true;
+        end();
+    }
+
     /** Increase diamond that has been collected */
     public void addDiamond() {
         diamondsNumber++;
@@ -145,10 +150,10 @@ public abstract class SuperPacmanArea extends Area implements Logic {
             isCompleted = true;
 
             // If there are 0 diamond in the last level, then the player wins
-            if (this instanceof Level2) {
+            /*if (this instanceof Level2) {
                 won = true;
                 end();
-            }
+            }*/
         }
     }
 
