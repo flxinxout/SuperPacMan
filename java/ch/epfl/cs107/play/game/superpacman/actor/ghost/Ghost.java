@@ -111,7 +111,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
                     Collections.singletonList(getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
                 orientate(desiredOrientation);
             }
-            move(getSpeed());
+            move(speed);
         }
 
         super.update(deltaTime);
@@ -284,11 +284,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
      * @return (Animation[]): the animations of the entity
      */
     protected abstract Animation[] getAnimations();
-
-    /**
-     * @return ennemy's speed
-     */
-    protected int getSpeed() { return speed; }
 
     /**
      * Sets the speed

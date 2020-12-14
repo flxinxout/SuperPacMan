@@ -54,6 +54,7 @@ public class SuperPacman extends RPG  {
         addArea(new Level0());
         addArea(new Level1());
         addArea(new Level2());
+        addArea(new BossLevel());
         addArea(new BonusLevel());
     }
 
@@ -62,7 +63,7 @@ public class SuperPacman extends RPG  {
         int areaIndex = 2;
 
         createAreas();
-        SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas[areaIndex], true);
+        SuperPacmanArea area = (SuperPacmanArea) setCurrentArea("superpacman/BossLevel", true);
         initPlayer(new SuperPacmanPlayer(area, area.getSpawnLocation()));
     }
 }

@@ -13,7 +13,7 @@ import ch.epfl.cs107.play.window.Canvas;
 public class Arrow extends Projectile {
 
     // Constants
-    private final int SPEED = 4;
+    private final int SPEED = 6;
 
     // Attributes
     private Sprite[] sprites;

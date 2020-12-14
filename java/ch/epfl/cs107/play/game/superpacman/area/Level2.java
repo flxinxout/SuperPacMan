@@ -2,6 +2,7 @@ package ch.epfl.cs107.play.game.superpacman.area;
 
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.superpacman.actor.BonusPortal;
+import ch.epfl.cs107.play.game.superpacman.actor.Boss;
 import ch.epfl.cs107.play.game.superpacman.actor.Bow;
 import ch.epfl.cs107.play.game.superpacman.actor.Gate;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Key;
@@ -38,6 +39,9 @@ public class Level2 extends SuperPacmanArea{
 
         Bow bow = new Bow(this, Orientation.LEFT, new DiscreteCoordinates(22, 24));
         registerActor(bow);
+
+        Boss boss = new Boss(this, Orientation.LEFT, new DiscreteCoordinates(26, 16));
+        registerActor(boss);
 
         Key key1 = new Key(this, new DiscreteCoordinates(3, 16));
         registerActor(key1);

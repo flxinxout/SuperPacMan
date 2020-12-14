@@ -19,6 +19,7 @@ import java.util.Queue;
 public class Boss extends Ghost implements Interactor {
 
     private final int FIELD_OF_VIEW = 10;
+    private DiscreteCoordinates lastCell;
 
     /**
      * Default Boss constructor
@@ -29,6 +30,23 @@ public class Boss extends Ghost implements Interactor {
      */
     public Boss(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position, 15, 10);
+
+        lastCell = null;
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
+        if(getPlayer() != null) {
+            for (DiscreteCoordinates cell : getLeftCells()) {
+                if(cell != lastCell) {
+                    lastCell = cell;
+                    Fire fire = new Fire(getOwnerArea(), Orientation.UP, cell);
+                    getOwnerArea().registerActor(fire);
+                }
+            }
+        }
     }
 
     /* --------------- protected Methods -------------- */
@@ -72,5 +90,10 @@ public class Boss extends Ghost implements Interactor {
         } else {
             return getPlayer().getCurrentCells().get((0));
         }
+    }
+
+    @Override
+    public void acceptInteraction(AreaInteractionVisitor v) {
+        ((SuperPacmanInteractionVisitor)v).interactWith (this);
     }
 }

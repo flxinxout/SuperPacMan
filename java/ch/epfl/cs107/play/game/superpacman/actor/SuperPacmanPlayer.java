@@ -413,7 +413,23 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
         @Override
         public void interactWith(Projectile projectile) {
-            onDeath();
+            if (!protection && !invincible) {
+                onDeath();
+            }
+        }
+
+        @Override
+        public void interactWith(Fire fire) {
+            if (!protection && !invincible) {
+                onDeath();
+            }
+        }
+
+        @Override
+        public void interactWith(Boss boss) {
+            if (!protection && !invincible) {
+                onDeath();
+            }
         }
     }
 }
