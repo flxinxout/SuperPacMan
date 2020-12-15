@@ -1,11 +1,11 @@
-package ch.epfl.cs107.play.game.superpacman.area;
+package ch.epfl.cs107.play.game.superpacman.area.SuperPacman;
 
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.superpacman.actor.BonusPortal;
-import ch.epfl.cs107.play.game.superpacman.actor.Boss;
-import ch.epfl.cs107.play.game.superpacman.actor.Bow;
 import ch.epfl.cs107.play.game.superpacman.actor.Gate;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Key;
+import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.And;
 import ch.epfl.cs107.play.signal.logic.Logic;
@@ -13,7 +13,7 @@ import ch.epfl.cs107.play.signal.logic.Logic;
 /**
  * Level 2 of the game
  */
-public class Level2 extends SuperPacmanArea{
+public class Level2 extends SuperPacmanArea {
 
     // The spawn position in the level
     private final DiscreteCoordinates PLAYER_SPAWN_POSITION = new DiscreteCoordinates(15, 29);
@@ -34,14 +34,6 @@ public class Level2 extends SuperPacmanArea{
         super.createArea();
 
         // Registration of actors in the level
-        BonusPortal bonusPortal = new BonusPortal("superpacman/BonusLevel", Logic.TRUE, this, Orientation.DOWN, new DiscreteCoordinates(23,26));
-        registerActor(bonusPortal);
-
-        Bow bow = new Bow(this, Orientation.LEFT, new DiscreteCoordinates(22, 24));
-        registerActor(bow);
-
-        Boss boss = new Boss(this, Orientation.LEFT, new DiscreteCoordinates(26, 16));
-        registerActor(boss);
 
         Key key1 = new Key(this, new DiscreteCoordinates(3, 16));
         registerActor(key1);
@@ -96,6 +88,15 @@ public class Level2 extends SuperPacmanArea{
 
         Gate gate14 = new Gate(this, Orientation.RIGHT, new DiscreteCoordinates(15,3), this);
         registerActor(gate14);
+
+        /* --------------- EXTENSIONS --------------- */
+
+        BonusPortal bonusPortal = new BonusPortal("superpacman/BonusLevel", Logic.TRUE, this, Orientation.DOWN, new DiscreteCoordinates(23,26));
+        registerActor(bonusPortal);
+
+        Door door = new Door("superpacman/BossLevel", new DiscreteCoordinates(1, 9), Logic.TRUE, this,
+                Orientation.DOWN, new DiscreteCoordinates(14, 3), new DiscreteCoordinates(15, 3));
+        registerActor(door);
     }
 
     @Override

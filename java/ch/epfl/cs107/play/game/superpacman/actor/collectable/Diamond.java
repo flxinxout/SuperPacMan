@@ -28,7 +28,7 @@ public class Diamond extends CollectableReward {
      * @param position (DiscreteCoordinates): the position of the diamond in the specific area. Not null
      */
     public Diamond(Area area, DiscreteCoordinates position) {
-        super(area, Orientation.DOWN, position, new SoundAcoustics("sounds/pacman/pacman_chomp.wav", 0.20f, false,false,false, false));
+        super(area, Orientation.DOWN, position, new SoundAcoustics("sounds/pacman/pacman_chomp.wav", 0.15f, false,false,false, false));
 
         this.sprite = new Sprite("superpacman/diamond", 1, 1, this,
                                 null, Vector.ZERO, 1.0f, 950);

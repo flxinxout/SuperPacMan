@@ -154,6 +154,13 @@ public class Wall extends AreaEntity {
 				sprite = new RPGSprite("superpacman/wall", 1, 1, this, new RegionOfInterest(0, 14*64, 64, 64));
 			}
 		}
+
+		/* --------------- EXTENSIONS --------------- */
+
+		//Alone cube (no neighborhood)
+		if (!neighborhood[0][0] && !neighborhood[0][1] && !neighborhood[0][2] && !neighborhood[1][0] && !neighborhood[1][2] && !neighborhood[2][0] && !neighborhood[2][1] && !neighborhood[2][2]) {
+			sprite = new RPGSprite("superpacman/wall2", 1, 1, this, new RegionOfInterest(0, 46*64, 64, 64));
+		}
 	}
 
 	@Override

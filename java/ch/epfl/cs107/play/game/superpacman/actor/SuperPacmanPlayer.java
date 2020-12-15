@@ -10,7 +10,7 @@ import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.CollectableReward;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
-import ch.epfl.cs107.play.game.superpacman.actor.collectable.LifeBoss;
+import ch.epfl.cs107.play.game.superpacman.actor.collectable.BossLife;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
@@ -35,7 +35,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     // Constants
     private final int DEFAULT_SPEED = 6;
-    private final float INVINCIBLE_DURATION = 10;
+    private final float INVINCIBLE_DURATION = 300;
     private final int MAXHP = 4;
     private final int START_HP = 1;
 
@@ -106,7 +106,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
         hp = START_HP;
         score = 0;
         speed = DEFAULT_SPEED;
-        invincible = false;
+        invincible = true;
         timerInvincible = INVINCIBLE_DURATION;
 
         // Initial orientation
@@ -125,7 +125,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
     /* --------------- External Methods --------------- */
 
     /**
-     * Method that increase the score of the player
+     * Increase the score of the player
      * @param amount (int): the amount increased
      */
     public void addScore(int amount) {
@@ -136,7 +136,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
     }
 
     /**
-     * Method that add 1 health point to the player.
+     * Add 1 health point to the player.
      * If he already has the maximum number of HP, add 250 of score
      */
     public void addHP() {
@@ -147,7 +147,9 @@ public class SuperPacmanPlayer extends Player implements Killable {
         }
     }
 
-    /** Method that set the invincibility state of the player */
+    /**
+     * Set the invincibility state of the player
+     */
     private void invincible() {
         invincible = true;
 
@@ -156,7 +158,9 @@ public class SuperPacmanPlayer extends Player implements Killable {
         ownerArea.scareGhosts();
     }
 
-    /** Method that set the protection of the player when he's killed*/
+    /**
+     * [extension] Set the protection of the player when he's killed
+     */
     private void protect() {
         protection = true;
     }
@@ -178,7 +182,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
     }
 
     /**
-     * Method called in update to update the protection state of the player
+     * [extension] Method called in update to update the protection state of the player
      * @param deltaTime (float): the delta time of the update
      */
     private void refreshProtection(float deltaTime) {
@@ -239,12 +243,6 @@ public class SuperPacmanPlayer extends Player implements Killable {
     @Override
     public void update(float deltaTime) {
 
-        if (getOwnerArea().getKeyboard().get(Keyboard.TAB).isPressed()) {
-            Arrow fireBall = new Arrow(getOwnerArea(), getOrientation(),
-                    getCurrentMainCellCoordinates().jump(getOrientation().toVector()).jump(getOrientation().toVector()));
-            getOwnerArea().registerActor(fireBall);
-        }
-
         //Check the desired orientation
         computeDesiredOrientation();
 
@@ -265,14 +263,20 @@ public class SuperPacmanPlayer extends Player implements Killable {
         setAnimations();
         currentAnimation.update(deltaTime);
 
-        // Pause the game if space is pressed
-        if (getOwnerArea().getKeyboard().get(Keyboard.SPACE).isPressed()) {
-            getOwnerArea().suspend();
-        }
-
         // Check invincibility state
         if (invincible) {
             refreshInvincibility(deltaTime);
+        }
+
+        /* -------------- EXTENSIONS --------------- */
+
+        // Increase the speed and make invincible (of INVINCIBLE_DURATION seconds) if the area is completed
+        SuperPacmanArea owner = toSuperPacmanArea(getOwnerArea());
+        if (owner.isOn()) {
+            invincible();
+            speed = 9;
+        } else {
+            speed = DEFAULT_SPEED;
         }
 
         // Check the protection state
@@ -280,13 +284,9 @@ public class SuperPacmanPlayer extends Player implements Killable {
             refreshProtection(deltaTime);
         }
 
-        // Increase the speed and make invincible if the area is completed
-        SuperPacmanArea owner = toSuperPacmanArea(getOwnerArea());
-        if (owner.isOn()) {
-            invincible();
-            speed = 9;
-        } else {
-            speed = DEFAULT_SPEED;
+        // Pause the game if space is pressed
+        if (getOwnerArea().getKeyboard().get(Keyboard.SPACE).isPressed()) {
+            getOwnerArea().suspend();
         }
     }
 
@@ -333,11 +333,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     @Override
     public void onDeath() {
-        //Play the death sound
-        deathSound.shouldBeStarted();
-        deathSound.bip(getOwnerArea().getWindow());
 
-        // Decrease the life
         hp--;
 
         // If the hp are 0 it's game over
@@ -354,6 +350,12 @@ public class SuperPacmanPlayer extends Player implements Killable {
             getOwnerArea().enterAreaCells(this, getCurrentCells());
             resetMotion();
         }
+
+        /* --------------- EXTENSIONS --------------- */
+
+        //Play the death sound
+        deathSound.shouldBeStarted();
+        deathSound.bip(getOwnerArea().getWindow());
     }
 
     /* --------------- Getters --------------- */
@@ -373,7 +375,9 @@ public class SuperPacmanPlayer extends Player implements Killable {
     private class SuperPacmanPlayerHandler implements SuperPacmanInteractionVisitor {
 
         @Override
-        public void interactWith(Door door) { setIsPassingADoor(door); }
+        public void interactWith(Door door) {
+            setIsPassingADoor(door);
+        }
 
         @Override
         public void interactWith(CollectableAreaEntity collectable) {
@@ -393,12 +397,6 @@ public class SuperPacmanPlayer extends Player implements Killable {
         }
 
         @Override
-        public void interactWith(Heart heart) {
-            interactWith((CollectableAreaEntity) heart);
-            addHP();
-        }
-
-        @Override
         public void interactWith(Ghost ghost) {
             if (invincible) {
                 if (!ghost.isProtected()) {
@@ -411,6 +409,8 @@ public class SuperPacmanPlayer extends Player implements Killable {
                 }
             }
         }
+
+        /* --------------- EXTENSIONS --------------- */
 
         @Override
         public void interactWith(Projectile projectile) {
@@ -434,12 +434,15 @@ public class SuperPacmanPlayer extends Player implements Killable {
         }
 
         @Override
-        public void interactWith(LifeBoss lifeBoss) {
-            Boss.BOSS_LIFE--;
-            if(Boss.BOSS_LIFE == 0) {
-                SuperPacmanArea owner = (SuperPacmanArea) getOwnerArea();
-                owner.win();
-            }
+        public void interactWith(BossLife bossLife) {
+            interactWith((CollectableAreaEntity) bossLife);
+            bossLife.getBoss().loseHP();
+        }
+
+        @Override
+        public void interactWith(Heart heart) {
+            interactWith((CollectableAreaEntity) heart);
+            addHP();
         }
     }
 }

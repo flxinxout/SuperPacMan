@@ -11,7 +11,7 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.awt.*;
 
 /**
- * Represent the status Graphic Interface of the different GUIs of the game
+ * [EXTENSION] Represent an interactive GUI of the game
  */
 public class SuperPacmanMenu implements Graphics {
 
@@ -20,10 +20,10 @@ public class SuperPacmanMenu implements Graphics {
     private SuperPacmanMenuType type;
 
     /**
-     * Default constructor of the GUI
+     * Default constructor of the SuperPacmanMenu
      *
      * @param imageName (String): the image name for the resource path. Not null
-     * @param type      (SuperPacmanMenuType): the type of GUI. Not null
+     * @param type      (SuperPacmanMenuType): the type of Menu. Not null
      */
     public SuperPacmanMenu(String imageName, SuperPacmanMenuType type) {
         this.imageName = imageName;

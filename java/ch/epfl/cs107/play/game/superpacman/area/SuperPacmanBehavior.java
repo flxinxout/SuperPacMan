@@ -7,11 +7,8 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.superpacman.actor.Boss;
 import ch.epfl.cs107.play.game.superpacman.actor.Bow;
-import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
-import ch.epfl.cs107.play.game.superpacman.actor.collectable.Cherry;
-import ch.epfl.cs107.play.game.superpacman.actor.collectable.Diamond;
+import ch.epfl.cs107.play.game.superpacman.actor.collectable.*;
 import ch.epfl.cs107.play.game.superpacman.actor.Wall;
-import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Blinky;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Inky;
@@ -126,18 +123,9 @@ public class SuperPacmanBehavior extends AreaBehavior {
                         area.registerActor(bow);
                         break;
 
-                    case FREE_WITH_BOSS:
-                        Boss boss = new Boss(area, Orientation.UP, new DiscreteCoordinates(x, y));
-                        area.registerActor(boss);
-                        break;
-
                     case FREE_WITH_LIFE:
                         Heart heart = new Heart(area, Orientation.UP, new DiscreteCoordinates(x, y));
                         area.registerActor(heart);
-                        break;
-
-                    case FREE_WITH_BOSS_LIFE:
-
                         break;
 
                     default:
@@ -301,12 +289,10 @@ public class SuperPacmanBehavior extends AreaBehavior {
         FREE_WITH_PINKY ( -157237) , // pink
         FREE_WITH_INKY ( -16724737) , // cyan
         FREE_WITH_BOW ( -14046643) , // green
-        FREE_WITH_BOSS (-5024747) , // sort of brown
         FREE_WITH_CHERRY ( -36752) , // light red
         FREE_WITH_BONUS ( -16478723) , // light blue
         FREE_EMPTY ( -6118750) , // sort of gray
-        FREE_WITH_LIFE (-256) , // sort of yellow
-        FREE_WITH_BOSS_LIFE (-7326519) ; // sort of purple
+        FREE_WITH_LIFE (-256) ; // sort of yellow
 
         final int type;
 

@@ -1,12 +1,13 @@
-package ch.epfl.cs107.play.game.superpacman.area;
+package ch.epfl.cs107.play.game.superpacman.area.SuperPacman;
 
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
+import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 /**
- * Bonus level of the game
+ * [EXTENSION] Bonus level of the game
  */
 public class BonusLevel extends SuperPacmanArea {
 
@@ -28,6 +29,7 @@ public class BonusLevel extends SuperPacmanArea {
         super.createArea();
 
         // Registration of actors in the level
+
         Door door = new Door("superpacman/Level2", new DiscreteCoordinates(15, 29), Logic.TRUE, this,
                 Orientation.DOWN, new DiscreteCoordinates(9, 0), new DiscreteCoordinates(10, 0));
         registerActor(door);
@@ -37,5 +39,4 @@ public class BonusLevel extends SuperPacmanArea {
     public DiscreteCoordinates getSpawnLocation() {
         return PLAYER_SPAWN_POSITION;
     }
-
 }

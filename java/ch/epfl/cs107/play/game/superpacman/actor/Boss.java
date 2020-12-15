@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.game.superpacman.actor.collectable.BossLife;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
@@ -22,7 +23,9 @@ public class Boss extends Ghost implements Interactor {
     private DiscreteCoordinates lastCell;
 
     // Represents the number of life of the boss. When it's 0, the SuperPacmanPlayer win
-    public static int BOSS_LIFE = 4;
+    private final int START_LIFE = 4;
+    private int hp;
+
 
     /**
      * Default Boss constructor
@@ -30,21 +33,43 @@ public class Boss extends Ghost implements Interactor {
      * @param area        (Area): owner area. Not null
      * @param orientation (Orientation): initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): initial position of the entity in the Area. Not null
+     * @param livesPosition (DiscreteCoordinate[]): positions of the boss' lives, at least of length START_LIFE. Not null
      */
-    public Boss(Area area, Orientation orientation, DiscreteCoordinates position) {
-        super(area, orientation, position, 15, 10);
+    public Boss(Area area, Orientation orientation, DiscreteCoordinates position, DiscreteCoordinates[] livesPosition) {
+        super(area, orientation, position, 8, 10);
+
+        //Check if there's enough lives positions and register them.
+        if(livesPosition.length >= START_LIFE) {
+            for (int i = 0; i < START_LIFE; i++) {
+                if (livesPosition[i] != null) {
+                    BossLife life = new BossLife(getOwnerArea(), livesPosition[i], this);
+                    getOwnerArea().registerActor(life);
+                }
+            }
+        }
 
         lastCell = null;
+        this.hp = START_LIFE;
+    }
+
+    public void loseHP() {
+        if(hp > 0) {
+            hp--;
+            setSpeed(1.5 * getSpeed());
+        }
+
+        if (hp <= 0) {
+            SuperPacmanArea owner = (SuperPacmanArea) getOwnerArea();
+            owner.win();
+        }
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        // Set the correct animation
         setAnimations(deltaTime);
 
-        // If the player is not null
         if(getPlayer() != null) {
 
             // For each cell that the boss left, spawn fire in this cell
@@ -106,11 +131,11 @@ public class Boss extends Ghost implements Interactor {
 
     //TODO: set differents animations
     /**
-     * Method that sets the correct animation for the boss
-     * @param deltaTime the deltaTime for the update
+     * Set the correct animation for the boss
+     * @param deltaTime the deltaTime of the update
      */
     private void setAnimations(float deltaTime) {
-        switch (BOSS_LIFE) {
+        switch (hp) {
 
             case 4:
                 System.out.println("4");
@@ -130,7 +155,6 @@ public class Boss extends Ghost implements Interactor {
 
             default:
                 break;
-
         }
 
         currentAnimation.update(deltaTime);
@@ -142,5 +166,11 @@ public class Boss extends Ghost implements Interactor {
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((SuperPacmanInteractionVisitor)v).interactWith (this);
+    }
+
+    /* -------------- Getters ---------------- */
+
+    public int getHp() {
+        return hp;
     }
 }

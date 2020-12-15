@@ -339,6 +339,8 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     /** @return the score given on death */
     public int getScore() { return GHOST_SCORE; }
 
+    protected int getSpeed() { return speed;}
+
     /** @return the target of the ghost */
     protected SuperPacmanPlayer getPlayer() { return player; }
 
