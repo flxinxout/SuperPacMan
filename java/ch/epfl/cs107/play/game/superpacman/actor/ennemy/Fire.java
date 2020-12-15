@@ -13,13 +13,20 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * [EXTENSION] Fire is an immobile entity which kills the player if he steps on it
+ */
 public class Fire extends AreaEntity {
+
+    // Constants
+    private final float LIFE_DURATION = 5f;
+
+    // Attributes
+    private float lifeTimer;
+
     // Animations
     private final int ANIMATION_DURATION = 8; // Animation duration in frame number
     private Animation animation;
-
-    private final float LIFE_DURATION = 5f;
-    private float lifeTimer;
 
     /**
      * Default Fire constructor
@@ -36,6 +43,8 @@ public class Fire extends AreaEntity {
         Sprite[] sprites = Sprite.extractSprites("superpacman/fire", 7, 1, 1, this, 16, 16);
         animation = new Animation(ANIMATION_DURATION/2, sprites);
     }
+
+    /* --------------- Extends AreaEntity --------------- */
 
     @Override
     public void update(float deltaTime) {

@@ -8,7 +8,7 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 /**
- * Arrows are specific projectiles shot by Bows
+ * [EXTENSION] Arrows are specific projectiles shot by Bows
  */
 public class Arrow extends Projectile {
 

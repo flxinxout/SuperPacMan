@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Queue;
 
 /**
- * Class that represents the behavior of the SuperPacman game
+ * SuperPacmanBehaviors are the behaviors of some SuperPacmanAreas
  */
 public class SuperPacmanBehavior extends AreaBehavior {
 
@@ -40,11 +40,10 @@ public class SuperPacmanBehavior extends AreaBehavior {
     public SuperPacmanBehavior(Window window, String name){
         super(window, name);
 
-        // Set the height and the width
+        // Create all cells of the grid
         int height = getHeight();
         int width = getWidth();
 
-        // Create all cells of the grid
         SuperPacmanCellType color;
         for(int y = 0; y < height; y++) {
             for (int x = 0; x < width ; x++) {
@@ -68,7 +67,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
     /* --------------- Protected Methods --------------- */
 
     /**
-     * Registers all actors in an area
+     * Register all actors in an area
      * @param area (Area): the area where actors will be registered
      */
     protected void registerActors(SuperPacmanArea area) {
@@ -134,7 +133,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
         }
     }
 
-    /* --------------- External Methods --------------- */
+    /* --------------- Private Methods --------------- */
 
     /**
      * Computes the graph edges of a cell
@@ -170,7 +169,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
     }
 
     /**
-     * Computes the wall neighborhood of a cell
+     * Computes the walls neighborhood of a cell
      * @param cell (SuperPacmanCell): the cell
      * @return (boolean[][]): 2D boolean array of the neighborhood of the cell (true = there's a wall)
      */
@@ -201,14 +200,18 @@ public class SuperPacmanBehavior extends AreaBehavior {
         return neighborhood;
     }
 
-    /** Scares the ghosts */
+    /**
+     * Scares the ghosts
+     */
     public void scareGhosts() {
         for (Ghost ghost: ghosts) {
             ghost.scare();
         }
     }
 
-    /** Stops scaring the ghosts */
+    /**
+     * Stops scaring the ghosts
+     */
     public void unScareGhosts() {
         for (Ghost ghost: ghosts) {
             ghost.unScare();
@@ -217,12 +220,16 @@ public class SuperPacmanBehavior extends AreaBehavior {
 
     /* --------------- Getters --------------- */
 
-    /** Calls shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) from its graph */
+    /**
+     * Call shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) from its graph
+     */
     public Queue<Orientation> shortestPath(DiscreteCoordinates from, DiscreteCoordinates to) {
         return graph.shortestPath(from, to);
     }
 
-    /** Calls setSignal(DiscreteCoordinates coordinates, Logic signal) from its graph */
+    /**
+     * Call setSignal(DiscreteCoordinates coordinates, Logic signal) from its graph
+     */
     public void setSignal(DiscreteCoordinates coordinates, Logic signal) {
         graph.setSignal(coordinates, signal);
     }
@@ -278,7 +285,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
     }
 
     /**
-     * Enum that represent all possible types of cells in the game
+     * Enum that represent all possible types of cells in the SuperPacman game
      */
     public enum SuperPacmanCellType {
         NONE (0) , // never used as real content
@@ -300,9 +307,9 @@ public class SuperPacmanBehavior extends AreaBehavior {
         }
 
         /**
-         * A method that returns the type of cell based on a number assigned to it in the enum
+         * Give the type of cell based on the number assigned to it in the enum
          * @param type (int): number assigned on a cell in the enum
-         * @return (SuperPacmanCellType): the type of the cell
+         * @return (SuperPacmanCellType)
          */
         public static SuperPacmanCellType toType(int type){
             for(SuperPacmanCellType ict : SuperPacmanCellType.values()){

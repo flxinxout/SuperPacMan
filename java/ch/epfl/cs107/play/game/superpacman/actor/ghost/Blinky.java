@@ -9,8 +9,8 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RandomGenerator;
 
 /**
- * Type of ghost in the SuperPacman game
- * Move randomly accross the map
+ * Blinky is a ghost which moves randomly through the map.
+ * It doesn't target the player when he's close
  */
 public class Blinky extends Ghost {
 
@@ -19,10 +19,10 @@ public class Blinky extends Ghost {
      *
      * @param area        (Area): owner area. Not null
      * @param orientation (Orientation): initial orientation of the entity. Not null
-     * @param home        (Coordinate): initial and home position of the ghost. Not null
+     * @param position    (Coordinate): initial position of the entity. Not null
      */
-    public Blinky(Area area, Orientation orientation, DiscreteCoordinates home) {
-        super(area, orientation, home);
+    public Blinky(Area area, Orientation orientation, DiscreteCoordinates position) {
+        super(area, orientation, position);
     }
 
 

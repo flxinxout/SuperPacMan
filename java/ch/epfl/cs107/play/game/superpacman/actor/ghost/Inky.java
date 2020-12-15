@@ -11,8 +11,8 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import java.util.Queue;
 
 /**
- * Type of ghost in the SuperPacman game
- * Ghost that follows the SuperPacmanPlayer depending on his condition
+ * Inky is a ghost which moves in a specific radius around its home.
+ * It starts targeting the player when he's close
  */
 public class Inky extends Ghost {
 
@@ -22,7 +22,7 @@ public class Inky extends Ghost {
     private final int DEFAULT_SPEED = 20;
     private final int AFRAID_SPEED = 15;
 
-    // Represents the distance to which he obeys depending on his condition
+    // Represents the distance to which it obeys depending on his condition
     private int maxDistance;
 
     /**
@@ -44,7 +44,7 @@ public class Inky extends Ghost {
     @Override
     protected Animation[] getAnimations() {
 
-        // Extracts the sprites of the ghost and sets the animations of the ghost
+        // Extracts the sprites of the ghost and sets the animations
         Sprite[][] sprites = RPGSprite.extractSprites ("superpacman/ghost.inky", 2, 1.f, 1.f,
                 this , 16, 16, new Orientation [] { Orientation.UP ,
                         Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
@@ -60,11 +60,11 @@ public class Inky extends Ghost {
     @Override
     public Orientation getNextOrientation() {
 
-        // Gets the area where is the ghost and the path between the ghost and the SuperPacmanPlayer
+        // Gets the area where is the ghost and the path between the ghost and the target positiom
         SuperPacmanArea area = (SuperPacmanArea) getOwnerArea();
         Queue<Orientation> path = area.shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
 
-        // While the path is null or empty (for example if the ghost has not a target now), generate another path
+        // While the path is null or empty, generate another path
         while (path == null || path.isEmpty()) {
             path = area.shortestPath(getCurrentMainCellCoordinates(), randomCell());
         }
@@ -74,6 +74,7 @@ public class Inky extends Ghost {
 
     @Override
     protected void onScareChange() {
+        //Set the speed and the max distance
         if (!isAfraid()) {
             maxDistance = MAX_DISTANCE_WHEN_SCARED;
             setSpeed(AFRAID_SPEED);
@@ -81,6 +82,7 @@ public class Inky extends Ghost {
             maxDistance = MAX_DISTANCE_WHEN_NOT_SCARED;
             setSpeed(DEFAULT_SPEED);
         }
+
         super.onScareChange();
     }
 

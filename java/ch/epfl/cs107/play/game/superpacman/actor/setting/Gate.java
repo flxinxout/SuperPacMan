@@ -15,14 +15,12 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Gate in the SuperPacman game
- * Used to block the way. Can be deactivated by a signal
+ * Gates are used to block a way. Can be deactivated by a signal
  */
 public class Gate extends AreaEntity {
 
-    // Signals conditioning the gate
-    private Logic signal;
-    private DiscreteCoordinates position;
+    // Attributes
+    private Logic signal; // Signal conditioning the gate
     private Sprite sprite;
 
     /**
@@ -35,11 +33,10 @@ public class Gate extends AreaEntity {
      */
     public Gate(Area area, Orientation orientation, DiscreteCoordinates position, Logic signal) {
         super(area, orientation, position);
-        this.position = position;
         this.signal = signal;
 
         //To choose between the horizontal sprite or the vertical one
-        int m = setOrientation(orientation);
+        int m = setSpriteOrientation(orientation);
 
         //Deactivate the nodes at the position of the gate
         SuperPacmanArea ownerArea = (SuperPacmanArea) area;
@@ -66,11 +63,7 @@ public class Gate extends AreaEntity {
     }
 
     @Override
-    public void acceptInteraction(AreaInteractionVisitor v) {
-
-    }
-
-    /* -------------- Implements Graphics and Interactable -------------- */
+    public void acceptInteraction(AreaInteractionVisitor v) { }
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
@@ -82,16 +75,24 @@ public class Gate extends AreaEntity {
         }
     }
 
-    /* -------------- External Methods -------------- */
+    /* -------------- Private Methods -------------- */
 
-    private int setOrientation(Orientation orientation) {
+    /**
+     * Gives the region of interest of the sprite depending on the orientation of the gate
+     * @param orientation (Orientation): orientation of the gate
+     * @return (int)
+     */
+    private int setSpriteOrientation(Orientation orientation) {
         int m = 0;
         if (orientation == Orientation.DOWN || orientation == Orientation.UP) { m = 0; }
         else if (orientation == Orientation.RIGHT || orientation == Orientation.LEFT) { m = 64; }
         return m;
     }
 
-    /** @return true := if the signal is on, false := is the signal is off */
+    /**
+     * Getter for the opening of the gate (true := signal is on, false := signal is off)
+     * @return (boolean)
+     */
     private boolean isOpen() {
         return signal.isOn();
     }

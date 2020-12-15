@@ -14,7 +14,7 @@ import ch.epfl.cs107.play.math.Vector;
 import java.util.Queue;
 
 /**
- * [extension] End boss of the SuperPacman game
+ * [EXTENSION] End boss of the SuperPacman game
  */
 public class Boss extends Ghost implements Interactor {
 
@@ -55,7 +55,7 @@ public class Boss extends Ghost implements Interactor {
     }
 
     /**
-     * Make the boss lose a health point and set its new speed
+     * Make the boss lose a hp and set its new speed
      */
     public void loseHP() {
         if(hp > 0) {

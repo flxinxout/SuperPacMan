@@ -5,6 +5,8 @@ package ch.epfl.cs107.play.game.superpacman.actor;
  */
 public interface Killable {
 
-    /** Called when it dies */
+    /**
+     * Called when it dies
+     */
     void onDeath();
 }

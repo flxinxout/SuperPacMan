@@ -14,7 +14,7 @@ import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.actor.setting.Wall;
 
 /**
- * Interface that represents the different interaction of the SuperPacmamPlayer
+ * Interface that represents the different possible interactions of the SuperPacman game
  */
 public interface SuperPacmanInteractionVisitor extends RPGInteractionVisitor {
 
@@ -28,15 +28,11 @@ public interface SuperPacmanInteractionVisitor extends RPGInteractionVisitor {
 
     default void interactWith(CollectableReward collectableReward) { }
 
-    default void interactWith(Wall wall) { }
-
     default void interactWith(Projectile projectile) { }
 
     default void interactWith(Fire fire) { }
 
     default void interactWith(Boss boss) { }
-
-    default void interactWith(Bow bow) { }
 
     default void interactWith(BossLife lifeBoss) { }
 }

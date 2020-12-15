@@ -2,7 +2,7 @@ package ch.epfl.cs107.play.game.superpacman.area.SuperPacman;
 
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
-import ch.epfl.cs107.play.game.superpacman.actor.setting.BonusPortal;
+import ch.epfl.cs107.play.game.rpg.actor.DoorGraphics;
 import ch.epfl.cs107.play.game.superpacman.actor.setting.Gate;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Key;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
@@ -91,12 +91,13 @@ public class Level2 extends SuperPacmanArea {
 
         /* --------------- EXTENSIONS --------------- */
 
-        BonusPortal bonusPortal = new BonusPortal("superpacman/BonusLevel", Logic.TRUE, this, Orientation.DOWN, new DiscreteCoordinates(23,26));
-        registerActor(bonusPortal);
+        DoorGraphics bonusDoor = new DoorGraphics("superpacman/BonusLevel", new DiscreteCoordinates(9, 18),
+                Logic.TRUE, this, Orientation.DOWN, new DiscreteCoordinates(23,26));
+        registerActor(bonusDoor);
 
-        Door door = new Door("superpacman/BossLevel", new DiscreteCoordinates(1, 9), Logic.TRUE, this,
-                Orientation.DOWN, new DiscreteCoordinates(14, 3), new DiscreteCoordinates(15, 3));
-        registerActor(door);
+        Door bossDoor = new Door("superpacman/BossLevel", new DiscreteCoordinates(1, 9), Logic.TRUE,
+                this, Orientation.DOWN, new DiscreteCoordinates(14, 3), new DiscreteCoordinates(15, 3));
+        registerActor(bossDoor);
     }
 
     @Override

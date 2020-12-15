@@ -16,12 +16,18 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Ghosts are ennemies in the SuperPacman game
+ * Ghosts are movable ennemies in the SuperPacman game
  */
 public abstract class Ghost extends MovableAreaEntity implements Killable, Interactor {
 
     // Constants
     private final int GHOST_SCORE = 500;
+
+    // Attributes
+    private final DiscreteCoordinates HOME;
+    private final int FIELD_OF_VIEW;
+    private int speed;
+    private boolean isAfraid;
 
     // Target
     private SuperPacmanPlayer player;
@@ -31,12 +37,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     private final int ANIMATION_DURATION = 8; // Animation duration in frame number
     private final Animation AFRAID_ANIMATION;
     private Animation currentAnimation;
-
-    // Attributes
-    private final DiscreteCoordinates HOME;
-    private final int FIELD_OF_VIEW;
-    private int speed;
-    private boolean isAfraid;
 
     // Handler
     private final GhostHandler handler;
@@ -52,9 +52,19 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     // Sounds
     private final SoundAcoustics DEATH_SOUND;
 
-
     /**
      * Default Ghost constructor
+     *
+     * @param area        (Area): owner area. Not null
+     * @param orientation (Orientation): initial orientation of the entity. Not null
+     * @param home        (Coordinate): initial and HOME position of the ghost. Not null
+     */
+    public Ghost(Area area, Orientation orientation, DiscreteCoordinates home) {
+        this(area, orientation, home, 15, 5);
+    }
+
+    /**
+     * Complementary Ghost constructor
      *
      * @param area        (Area): owner area. Not null
      * @param orientation (Orientation): initial orientation of the entity. Not null
@@ -85,17 +95,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
         DEATH_SOUND = new SoundAcoustics("sounds/pacman/pacman_eatghost.wav", 0.5f, false, false, false, false);
 
-    }
-
-    /**
-     * Default Ghost constructor
-     *
-     * @param area        (Area): owner area. Not null
-     * @param orientation (Orientation): initial orientation of the entity. Not null
-     * @param home        (Coordinate): initial and HOME position of the ghost. Not null
-     */
-    public Ghost(Area area, Orientation orientation, DiscreteCoordinates home) {
-        this(area, orientation, home, 15, 5);
     }
 
     /* --------------- Implements Graphics --------------- */

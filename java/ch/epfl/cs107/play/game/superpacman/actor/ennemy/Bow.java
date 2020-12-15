@@ -12,15 +12,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * [EXTENSION] Bows are immobile ennemies which shoots arrow in a straight line
+ */
 public class Bow extends AreaEntity implements Interactor {
+
+    // Constants
+    private final float SHOOT_RATE = 1.5f;
 
     // Attributes
     private boolean isShooting;
     private SuperPacmanPlayer player;
     private float shootTimer;
-
-    // Constants
-    private final float SHOOT_RATE = 1.5f;
 
     // Animations
     private final int ANIMATION_DURATION = 2; // Animation duration in frame number
@@ -32,6 +35,7 @@ public class Bow extends AreaEntity implements Interactor {
 
     /**
      * Default Bow constructor
+     *
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
@@ -39,9 +43,12 @@ public class Bow extends AreaEntity implements Interactor {
     public Bow(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
+        //Shooting
         isShooting = false;
         shootTimer = 0f;
 
+
+        //Extract sprites and set animations
         Sprite[][] sprites = Sprite.extractSprites("superpacman/bow", 4, 1.f, 1.f, this, 27, 27,
                 new Orientation [] { Orientation.DOWN , Orientation.LEFT , Orientation.UP , Orientation.RIGHT });
         animations = Animation.createAnimations(ANIMATION_DURATION, sprites, false);
@@ -59,6 +66,10 @@ public class Bow extends AreaEntity implements Interactor {
         }
     }
 
+    /**
+     * Method called in update to refresh the shoot timer
+     * @param deltaTime (float): the delta time of the update. Not null
+     */
     private void refreshShootTimer(float deltaTime) {
         if (shootTimer > 0) {
             shootTimer -= deltaTime;
@@ -67,6 +78,9 @@ public class Bow extends AreaEntity implements Interactor {
         }
     }
 
+    /**
+     * Start the shootTimer and register an arrow right in front of the bow
+     */
     private void shoot() {
         shootTimer = SHOOT_RATE;
 
@@ -77,7 +91,8 @@ public class Bow extends AreaEntity implements Interactor {
     }
 
     /**
-     * @return (Orientation): the next orientation following a specific algorithm
+     * Getter for the next orientation
+     * @return (Orientation)
      */
     private Orientation getNextOrientation() {
         if (player != null) {
@@ -168,7 +183,6 @@ public class Bow extends AreaEntity implements Interactor {
     }
 
     /* --------------- Implements Interactor --------------- */
-
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {

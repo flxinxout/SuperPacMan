@@ -25,16 +25,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Class that represent the SuperPacmanPlayer in the game
+ * SuperPacmanPlayer is the main player of the game
  */
-
 public class SuperPacmanPlayer extends Player implements Killable {
-
-    // Handler of the SuperPacmanPlayer
-    private SuperPacmanPlayerHandler handler;
-
-    // StatusGUI of the SuperPacmanPlayer
-    private SuperPacmanPlayerStatusGUI status;
 
     // Constants
     private final int DEFAULT_SPEED = 6;
@@ -57,6 +50,12 @@ public class SuperPacmanPlayer extends Player implements Killable {
     private Animation[] animations;
     private Animation currentAnimation;
 
+    // Handler of the SuperPacmanPlayer
+    private SuperPacmanPlayerHandler handler;
+
+    // StatusGUI of the SuperPacmanPlayer
+    private SuperPacmanPlayerStatusGUI status;
+
     /* --------------- EXTENSIONS --------------- */
 
     // Spawn protection (to avoid spawn kill)
@@ -77,13 +76,13 @@ public class SuperPacmanPlayer extends Player implements Killable {
     public SuperPacmanPlayer(Area owner, DiscreteCoordinates coordinates) {
         super(owner, Orientation.RIGHT, coordinates);
 
-        // Creation of the handler
+        // Create the handler
         handler = new SuperPacmanPlayerHandler();
 
-        // Create the status in turns of the current SuperPacmanPlayer
+        // Create the status
         status = new SuperPacmanPlayerStatusGUI(this);
 
-        //Setup the animations for Pacman. Default: Down
+        //Setup the animations for Pacman
         Sprite [][] sprites = RPGSprite.extractSprites ("superpacman/pacman", 4, 1, 1,
                 this , 64, 64, new Orientation [] { Orientation.DOWN ,
                         Orientation.LEFT , Orientation.UP , Orientation.RIGHT });
@@ -92,18 +91,8 @@ public class SuperPacmanPlayer extends Player implements Killable {
                 value.setDepth(975);
             }
         }
-
-        //Setup the animations for Pacman. Default orientation: Down
-        Sprite [][] protectSprites = RPGSprite.extractSprites ("superpacman/pacman.protected", 4, 1, 1,
-                this , 64, 64, new Orientation [] { Orientation.DOWN ,
-                        Orientation.LEFT , Orientation.UP , Orientation.RIGHT });
-        for (Sprite[] sprite : sprites) {
-            for (Sprite value : sprite) {
-                value.setDepth(975);
-            }
-        }
         animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
-        currentAnimation = animations[0];
+        currentAnimation = animations[getOrientation().ordinal()];
 
         // Attributes initialization
         hp = START_HP;
@@ -119,17 +108,26 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
         protection = false;
         timerProtection = PROTECTION_DURATION;
+
+        Sprite [][] protectSprites = RPGSprite.extractSprites ("superpacman/pacman.protected", 4, 1, 1,
+                this , 64, 64, new Orientation [] { Orientation.DOWN ,
+                        Orientation.LEFT , Orientation.UP , Orientation.RIGHT });
+        for (Sprite[] sprite : sprites) {
+            for (Sprite value : sprite) {
+                value.setDepth(975);
+            }
+        }
         PROTECTED_ANIMATIONS = Animation.createAnimations (ANIMATION_DURATION /2, protectSprites);
 
         deathSound = new SoundAcoustics("sounds/pacman/pacman_death.wav", 0.50f, false,false,false, true);
 
     }
 
-    /* --------------- External Methods --------------- */
+    /* --------------- Public Methods --------------- */
 
     /**
-     * Increase the score of the player
-     * @param amount (int): the amount increased
+     * Increase the score of a specific amount
+     * @param amount (int)
      */
     public void addScore(int amount) {
         score += amount;
@@ -140,7 +138,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     /**
      * Add 1 health point to the player.
-     * If he already has the maximum number of HP, add 250 of score
+     * If he already has the maximum number of hp, add 250 of score
      */
     public void addHP() {
         if(hp < MAXHP) {
@@ -150,22 +148,18 @@ public class SuperPacmanPlayer extends Player implements Killable {
         }
     }
 
+    /* --------------- Private Methods --------------- */
+
     /**
-     * Set the invincibility state of the player
+     * Set the invincibility state of the player and scare the ghosts
      */
     private void invincible() {
         invincible = true;
 
+        //TODO: documenter: ici plutôt que update de SuperPacman
         SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
         // Scare all ghost in the area
         ownerArea.scareGhosts();
-    }
-
-    /**
-     * [extension] Set the protection of the player when he's killed
-     */
-    private void protect() {
-        protection = true;
     }
 
     /**
@@ -185,22 +179,10 @@ public class SuperPacmanPlayer extends Player implements Killable {
     }
 
     /**
-     * [extension] Method called in update to update the protection state of the player
-     * @param deltaTime (float): the delta time of the update
+     * Compute the desired orientation if a key is pressed
      */
-    private void refreshProtection(float deltaTime) {
-        if (timerProtection > 0) {
-            timerProtection -= deltaTime;
-        } else {
-            protection = false;
-            timerProtection = PROTECTION_DURATION;
-        }
-    }
+    private void desiredOrientation() {
 
-    /** Method that compute the desired orientation if a key is pressed */
-    private void computeDesiredOrientation() {
-
-        // Get the keyboard of the gamer
         Keyboard keyboard = getOwnerArea().getKeyboard();
 
         // Check if this key is pressed and set the orientation of the player
@@ -219,7 +201,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
     }
 
     /**
-     * Sets the current animation of the player
+     * Set the current animation of the player
      */
     private void setAnimations() {
         if (protection) {
@@ -236,27 +218,47 @@ public class SuperPacmanPlayer extends Player implements Killable {
     /**
      * Method to cast an Area in a SuperPacmanArea
      * @param area (Area): the area to cast
-     * @return (SuperPacmanArea): the SuperPacmanArea of the game
+     * @return (SuperPacmanArea)
      */
-    //TODO: DISGUSTING!!!!!!!!!
+    //TODO: MOVE IT TO STATIC IN AREA
     private SuperPacmanArea toSuperPacmanArea(Area area) { return (SuperPacmanArea) area; }
 
-    /* -------------- Implements Graphics --------------- */
+    /* --------------- EXTENSIONS --------------- */
+
+    /**
+     * [extension] Start the protection of the player
+     */
+    private void protect() {
+        protection = true;
+    }
+
+    /**
+     * [extension] Method called in update to update the protection state of the player
+     * @param deltaTime (float): the delta time of the update
+     */
+    private void refreshProtection(float deltaTime) {
+        if (timerProtection > 0) {
+            timerProtection -= deltaTime;
+        } else {
+            protection = false;
+            timerProtection = PROTECTION_DURATION;
+        }
+    }
+
+    /* -------------- Extends Player --------------- */
 
     @Override
     public void update(float deltaTime) {
 
         //Check the desired orientation
-        computeDesiredOrientation();
+        desiredOrientation();
 
         // Move if is possible
         if (!isDisplacementOccurs()) {
             if (getOwnerArea().canEnterAreaCells(this,
                     Collections.singletonList (getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
-                // Orientation of the player for the next move
                 orientate(desiredOrientation);
             }
-            // Move of the player
             move(speed);
         }
 
@@ -346,8 +348,8 @@ public class SuperPacmanPlayer extends Player implements Killable {
             return;
         } else {
 
-            // else, we set a protection to avoid spawn kill and we spawn it at its spawn location
-            protect();
+            // else, respawn and [extension] set the protection
+            protect(); // [extension]
             getOwnerArea().leaveAreaCells(this, getEnteredCells());
             setCurrentPosition(toSuperPacmanArea(getOwnerArea()).getSpawnLocation().toVector());
             getOwnerArea().enterAreaCells(this, getCurrentCells());
@@ -363,13 +365,22 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     /* --------------- Getters --------------- */
 
-    /**@return (int): the life of the player */
+    /**
+     * Getter for the hp
+     * @return (int)
+     */
     public int getHp() { return hp; }
 
-    /**@return (int): the max life of the player */
+    /**
+     * Getter for the max hp
+     * @return (int)
+     */
     public int getMAXHP() { return MAXHP; }
 
-    /**@return (int): the score of the player */
+    /**
+     * Getter for the score
+     * @return (int)
+     */
     public int getScore() { return score; }
 
     /**
