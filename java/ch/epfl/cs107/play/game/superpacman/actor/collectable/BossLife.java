@@ -14,7 +14,7 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 /**
- * [extension] A BossLife represents a health point of a boss
+ * [EXTENSION] A BossLife represents a health point of a boss
  */
 public class BossLife extends CollectableAreaEntity {
 

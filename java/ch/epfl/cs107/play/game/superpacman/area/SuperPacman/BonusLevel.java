@@ -11,8 +11,7 @@ import ch.epfl.cs107.play.signal.logic.Logic;
  */
 public class BonusLevel extends SuperPacmanArea {
 
-    // The spawn position in the level
-    private final DiscreteCoordinates PLAYER_SPAWN_POSITION = new DiscreteCoordinates(9, 19);
+    private final DiscreteCoordinates PLAYER_SPAWN_POSITION = new DiscreteCoordinates(9, 18);
 
 
     /* --------------- Implements Playable --------------- */

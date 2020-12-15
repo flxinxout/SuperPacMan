@@ -10,7 +10,6 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
  */
 public class BossLevel extends SuperPacmanArea {
 
-    // The spawn position in the level
     private final DiscreteCoordinates PLAYER_SPAWN_POSITION = new DiscreteCoordinates(1, 9);
 
 
