@@ -186,20 +186,19 @@ public abstract class Area implements Playable {
 		return mouseCoordinate;
 	}
 
+	//TODO [extension] TOO ??
 	/** @return (boolean): true if the method begin already called once. You can use resume() instead */
 	public final boolean isStarted() {
 		return started;
 	}
 
-	/** @return (boolean): true if the method begin already called once. You can use resume() instead */
+	/** @return [extension] (boolean): true if the method begin already called once. You can use resume() instead */
 	public final boolean isPaused() {
 		return paused;
 	}
 
-	/** @return (boolean): true if the method begin already called once. You can use resume() instead */
-	public final boolean hasEnded() {
-		return ended;
-	}
+	/** @return [extension] (boolean): true if the method begin already called once. You can use resume() instead */
+	public final boolean hasEnded() { return ended; }
 
 	/**
 	 * If possible make the given interactable entity leave the given area cells
@@ -258,7 +257,9 @@ public abstract class Area implements Playable {
 		interactablesToLeave = new HashMap<>();
 		viewCenter = Vector.ZERO;
 
-		// Initialization of the boolean for the pause
+		/**
+		 * [extension] Initialization of the boolean for the pause in the Pacman game
+		 */
 		started = true;
 		paused = false;
 		ended = false;
@@ -280,6 +281,7 @@ public abstract class Area implements Playable {
 
 	@Override
 	public void update(float deltaTime) {
+
 		if (!paused && !ended) {
 			purgeRegistration();
 
@@ -297,9 +299,10 @@ public abstract class Area implements Playable {
 					areaBehavior.viewInteractionOf(interactor);
 				}
 			}
-		}
-		else {
+		} else {
 			if (getKeyboard().get(Keyboard.SPACE).isPressed()) {
+
+				// If the space is pressed, then the game resume
 				resume(window, fileSystem);
 			}
 		}
@@ -356,9 +359,7 @@ public abstract class Area implements Playable {
 	}
 
 	/** Suspend method: Can be overridden, called before resume other */
-	public void suspend(){
-		paused = true;
-	}
+	public void suspend(){ paused = true; }
 
 	@Override
 	public void end() { ended = true; }

@@ -26,7 +26,7 @@ public class Fire extends AreaEntity {
 
     // Animations
     private final int ANIMATION_DURATION = 8; // Animation duration in frame number
-    private Animation animation;
+    private final Animation animation;
 
     /**
      * Default Fire constructor
@@ -64,9 +64,7 @@ public class Fire extends AreaEntity {
     }
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
+    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
 
     @Override
     public boolean takeCellSpace() {

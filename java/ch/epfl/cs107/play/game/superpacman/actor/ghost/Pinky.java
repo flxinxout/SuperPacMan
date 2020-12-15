@@ -90,7 +90,7 @@ public class Pinky extends Ghost {
     }
 
 
-     //TODO: In the PDF it is written to increase Inky's speed when he's afraid,we decided to do it with Pinky too because, as he runs away when he's scaredit seems more logic
+    /** @NOTE In the PDF it is written to increase Inky's speed when he's afraid, we decided to do it with Pinky too because, as he runs away when he's scaredit seems more logic */
     @Override
     protected void onScareChange() {
         //Set the speed

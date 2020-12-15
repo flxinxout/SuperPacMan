@@ -21,7 +21,8 @@ public class BossLife extends CollectableAreaEntity {
     //The boss attached to it
     private Boss boss;
 
-    private final static int ANIMATION_DURATION = 8;     // Animation duration in frame number
+    // Animation duration in frame number and the Animation of the collectable
+    private final int ANIMATION_DURATION = 8;
     private Animation currentAnimation;
 
     /**
@@ -40,6 +41,7 @@ public class BossLife extends CollectableAreaEntity {
         for (Sprite sprite: sprites) {
             sprite.setDepth(950);
         }
+
         currentAnimation = new Animation(ANIMATION_DURATION/2, sprites);
     }
 

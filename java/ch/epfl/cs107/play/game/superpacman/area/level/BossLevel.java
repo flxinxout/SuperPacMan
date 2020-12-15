@@ -1,4 +1,4 @@
-package ch.epfl.cs107.play.game.superpacman.area.SuperPacman;
+package ch.epfl.cs107.play.game.superpacman.area.level;
 
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Boss;

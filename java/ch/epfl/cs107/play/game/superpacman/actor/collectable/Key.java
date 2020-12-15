@@ -31,6 +31,8 @@ public class Key extends CollectableAreaEntity implements Logic {
         super(area, Orientation.DOWN, position, new SoundAcoustics("sounds/pacman/transactionOK.wav", 0.35f, false,false,false, false));
 
         sprite = new Sprite("superpacman/key", 1, 1, this);
+
+        // At the beginning, the key is not collected
         isCollected = false;
     }
 

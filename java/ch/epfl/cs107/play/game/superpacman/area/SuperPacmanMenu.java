@@ -45,7 +45,6 @@ public class SuperPacmanMenu implements Graphics {
         image.draw(canvas);
     }
 
-    //TODO: check if it stays an inner enum or not
     /**
      * Enum that represent all possible types of menus in the game
      */

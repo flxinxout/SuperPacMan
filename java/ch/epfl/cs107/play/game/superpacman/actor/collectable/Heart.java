@@ -13,7 +13,7 @@ import ch.epfl.cs107.play.window.Canvas;
  */
 public class Heart extends CollectableAreaEntity {
 
-    private final static int ANIMATION_DURATION = 8;     // Animation duration in frame number
+    private final int ANIMATION_DURATION = 8; // Animation duration in frame number
     private Animation currentAnimation;
 
     /**
@@ -31,6 +31,7 @@ public class Heart extends CollectableAreaEntity {
         for (Sprite sprite: sprites) {
             sprite.setDepth(950);
         }
+
         currentAnimation = new Animation(ANIMATION_DURATION, sprites);
     }
 

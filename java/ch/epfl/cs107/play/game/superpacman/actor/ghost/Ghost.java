@@ -244,7 +244,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
     /**
      * Getter for the next orientation. NEED TO BE REDEFINED
-     * @return (Orientation)
+     * @return (Orientation): the orientation of the entity
      */
     protected abstract Orientation getNextOrientation();
 
@@ -288,9 +288,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
         return randomCell(center, radius);
     }
 
-    /**
-     * Called when the ghosts become scared or stop being scared
-     */
+    /** Called when the ghosts become scared or stop being scared */
     protected void onScareChange() {
         targetPos = getTargetPos();
     }
@@ -303,17 +301,13 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
     /* --------------- Public Methods --------------- */
 
-    /**
-     * Scare ghosts
-     */
+    /** Scare ghosts */
     public void scare() {
         isAfraid = true;
         onScareChange();
     }
 
-    /**
-     * Unscare ghosts
-     */
+    /** Unscare ghosts */
     public void unScare() {
         isAfraid = false;
         onScareChange();

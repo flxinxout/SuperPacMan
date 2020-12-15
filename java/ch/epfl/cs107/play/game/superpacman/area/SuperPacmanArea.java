@@ -25,6 +25,7 @@ public abstract class SuperPacmanArea extends Area implements Logic {
 
     // Behavior of the area
     private SuperPacmanBehavior behavior;
+
     /* --------------- EXTENSIONS --------------- */
 
     // Pause and end mechanics and menu to display.

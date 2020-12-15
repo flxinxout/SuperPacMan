@@ -3,7 +3,7 @@ package ch.epfl.cs107.play.game.superpacman;
 import ch.epfl.cs107.play.game.rpg.RPG;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.game.superpacman.area.*;
-import ch.epfl.cs107.play.game.superpacman.area.SuperPacman.*;
+import ch.epfl.cs107.play.game.superpacman.area.level.*;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.window.Window;
 

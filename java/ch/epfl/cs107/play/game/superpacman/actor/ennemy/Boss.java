@@ -18,10 +18,10 @@ import java.util.Queue;
  */
 public class Boss extends Ghost implements Interactor {
 
-    //Constants
+    // Constants
     private final int START_LIFE = 4;
     private final int FIELD_OF_VIEW = 12;
-    private final int[] SPEEDS = {12, 10, 8, 6}; //Each entry of the array corresponds to a phase
+    private final int[] SPEEDS = {12, 10, 8, 6}; // Each entry of the array corresponds to a phase
 
     // Attributes
     private DiscreteCoordinates lastCell; // Corresponds to the last cell filled with fire
@@ -54,9 +54,7 @@ public class Boss extends Ghost implements Interactor {
         this.hp = START_LIFE;
     }
 
-    /**
-     * Make the boss lose a hp and set its new speed
-     */
+    /** Make the boss lose a hp and set its new speed */
     public void loseHP() {
         if(hp > 0) {
             hp--;
