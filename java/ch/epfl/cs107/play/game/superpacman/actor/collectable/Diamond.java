@@ -9,21 +9,20 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
- * Diamond Item in the SuperPacman game
- * Increases the player's score of 10 when collected
+ * Diamond item increases the player's score of 10 when collected
  */
 public class Diamond extends CollectableReward {
 
-    // Diamond's Attributes
-    private Sprite sprite;
+    // Constants
     private final int REWARD = 10;
+
+    // Attributes
+    private Sprite sprite;
 
     /**
      * Default Diamond Constructor
+     *
      * @param area     (Area): the area where is the diamond. Not null
      * @param position (DiscreteCoordinates): the position of the diamond in the specific area. Not null
      */

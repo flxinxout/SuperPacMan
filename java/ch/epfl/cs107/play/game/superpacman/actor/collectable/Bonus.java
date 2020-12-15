@@ -8,18 +8,14 @@ import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
- * Bonus Item in the SuperPacman game
- * Gives invincibility to SuperPacmanPlayer
+ * Bonus item gives invincibility to the player when collected
  */
 public class Bonus extends CollectableAreaEntity {
 
-    // Animation duration in frame number
-    private final static int ANIMATION_DURATION = 8;
+    private final static int ANIMATION_DURATION = 8; // Animation duration in frame number
     private Animation currentAnimation;
+
     /**
      * Default Bonus Constructor
      *
@@ -34,7 +30,6 @@ public class Bonus extends CollectableAreaEntity {
         for (Sprite sprite: sprites) {
             sprite.setDepth(950);
         }
-
         currentAnimation = new Animation(ANIMATION_DURATION, sprites);
     }
 

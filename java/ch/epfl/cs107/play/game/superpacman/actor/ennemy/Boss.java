@@ -1,4 +1,4 @@
-package ch.epfl.cs107.play.game.superpacman.actor;
+package ch.epfl.cs107.play.game.superpacman.actor.ennemy;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
@@ -10,16 +10,11 @@ import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
-import ch.epfl.cs107.play.window.Canvas;
 
-import javax.naming.InitialContext;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Queue;
 
 /**
- * [extension] End boss in the SuperPacman game
+ * [extension] End boss of the SuperPacman game
  */
 public class Boss extends Ghost implements Interactor {
 
@@ -30,8 +25,6 @@ public class Boss extends Ghost implements Interactor {
 
     // Attributes
     private DiscreteCoordinates lastCell; // Corresponds to the last cell filled with fire
-
-    // Represents the number of life of the boss. When it's 0, the SuperPacmanPlayer win
     private int hp;
 
 

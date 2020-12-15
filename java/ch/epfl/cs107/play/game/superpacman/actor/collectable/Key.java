@@ -13,17 +13,17 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Key Item in the SuperPacman game
- * Used to unlock a gate
+ * Key item is used to unlock a gate. Behaves like a Signal
  */
 public class Key extends CollectableAreaEntity implements Logic {
 
-    // Key's Attributes
+    // Attributes
     private Sprite sprite;
     private boolean isCollected;
 
     /**
      * Default Key Constructor
+     *
      * @param area     (Area): the area where is the bonus. Not null
      * @param position (DiscreteCoordinates): the position of the bonus in the specific area. Not null
      */

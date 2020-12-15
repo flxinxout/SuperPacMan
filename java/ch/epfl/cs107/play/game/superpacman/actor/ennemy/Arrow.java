@@ -1,4 +1,4 @@
-package ch.epfl.cs107.play.game.superpacman.actor;
+package ch.epfl.cs107.play.game.superpacman.actor.ennemy;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
@@ -8,7 +8,7 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 /**
- * Class that represents a Arrow in the game
+ * Arrows are specific projectiles shot by Bows
  */
 public class Arrow extends Projectile {
 

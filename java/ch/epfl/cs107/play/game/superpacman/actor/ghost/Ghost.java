@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Ghosts (ennemies) in the SuperPacman game
+ * Ghosts are ennemies in the SuperPacman game
  */
 public abstract class Ghost extends MovableAreaEntity implements Killable, Interactor {
 
@@ -341,18 +341,27 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     protected int getAnimationDuration() { return ANIMATION_DURATION; }
 
     /**
-     * Getter for if the ghosts are afraid
+     * Getter for the ghosts' fear
      * @return (boolean)
      */
     protected boolean isAfraid() { return isAfraid; }
 
-    /** @return if this ghost is protected */
+    /**
+     * Getter for the ghost's protection
+     * @return (boolean)
+     */
     public boolean isProtected() { return protect; }
 
-    /** @return the score given on death */
+    /**
+     * Getter for the score given by the ghost on death
+     * @return (int)
+     */
     public int getScore() { return GHOST_SCORE; }
 
-    /** @return the target of the ghost */
+    /**
+     * Getter for the player which is targeted by this ghost
+     * @return (SuperPacmanPlayer)
+     */
     protected SuperPacmanPlayer getPlayer() { return player; }
 
 

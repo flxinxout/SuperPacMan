@@ -7,26 +7,21 @@ import ch.epfl.cs107.play.game.areagame.actor.CollectableAreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.superpacman.actor.Boss;
-import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
+import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Boss;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
- * Class that represents a life of the Boss in the pacman game
+ * [extension] A BossLife represents a health point of a boss
  */
 public class BossLife extends CollectableAreaEntity {
 
     //The boss attached to it
     private Boss boss;
 
-    // Animation duration in frame number
-    private final static int ANIMATION_DURATION = 8;
+    private final static int ANIMATION_DURATION = 8;     // Animation duration in frame number
     private Animation currentAnimation;
 
     /**
@@ -45,12 +40,15 @@ public class BossLife extends CollectableAreaEntity {
         for (Sprite sprite: sprites) {
             sprite.setDepth(950);
         }
-
         currentAnimation = new Animation(ANIMATION_DURATION/2, sprites);
     }
 
     /* -------------- Getters ---------------- */
 
+    /**
+     * Getter for the attached boss
+     * @return (Boss)
+     */
     public Boss getBoss() {
         return boss;
     }

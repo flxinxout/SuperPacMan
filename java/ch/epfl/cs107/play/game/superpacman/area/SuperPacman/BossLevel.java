@@ -1,7 +1,7 @@
 package ch.epfl.cs107.play.game.superpacman.area.SuperPacman;
 
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.superpacman.actor.Boss;
+import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Boss;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 

@@ -10,9 +10,10 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 //TODO: DO WE KEEP IT?
 /**
- * Class that represents a collectable entity that increases the player's score when it is collected
+ * A CollectableRweard represents a collectable entity that increases the player's score when it is collected
  */
 public abstract class CollectableReward extends CollectableAreaEntity {
+
     /**
      * Default constructor of a collectable reward area entity
      *

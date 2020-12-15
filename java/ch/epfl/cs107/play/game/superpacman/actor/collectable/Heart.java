@@ -8,18 +8,14 @@ import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
- * Heart Item in the SuperPacman game
- * Gives one HP when collected
+ * Heart item gives one HP when collected
  */
 public class Heart extends CollectableAreaEntity {
 
-    // Animation duration in frame number
-    private final static int ANIMATION_DURATION = 8;
+    private final static int ANIMATION_DURATION = 8;     // Animation duration in frame number
     private Animation currentAnimation;
+
     /**
      * Default Heart constructor
      *
@@ -35,7 +31,6 @@ public class Heart extends CollectableAreaEntity {
         for (Sprite sprite: sprites) {
             sprite.setDepth(950);
         }
-
         currentAnimation = new Animation(ANIMATION_DURATION, sprites);
     }
 

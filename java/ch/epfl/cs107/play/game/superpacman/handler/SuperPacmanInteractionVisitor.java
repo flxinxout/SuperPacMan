@@ -6,7 +6,12 @@ import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.CollectableReward;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.BossLife;
+import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Boss;
+import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Bow;
+import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Fire;
+import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Projectile;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
+import ch.epfl.cs107.play.game.superpacman.actor.setting.Wall;
 
 /**
  * Interface that represents the different interaction of the SuperPacmamPlayer
