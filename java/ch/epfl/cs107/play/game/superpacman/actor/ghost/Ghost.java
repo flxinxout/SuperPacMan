@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Class that represents ghosts in the SuperPacman game
+ * Ghosts (ennemies) in the SuperPacman game
  */
 public abstract class Ghost extends MovableAreaEntity implements Killable, Interactor {
 
@@ -30,8 +30,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     // Animations
     private final int ANIMATION_DURATION = 8; // Animation duration in frame number
     private final Animation AFRAID_ANIMATION;
-    //TODO MIS EN PROTECTED POUR LE BOSS
-    protected Animation currentAnimation;
+    private Animation currentAnimation;
 
     // Attributes
     private final DiscreteCoordinates HOME;
@@ -56,6 +55,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
     /**
      * Default Ghost constructor
+     *
      * @param area        (Area): owner area. Not null
      * @param orientation (Orientation): initial orientation of the entity. Not null
      * @param home        (Coordinate): initial and HOME position of the ghost. Not null
@@ -65,14 +65,12 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     public Ghost(Area area, Orientation orientation, DiscreteCoordinates home, int speed, int fieldOfView) {
         super(area, orientation, home);
 
-        // Creation of the handler
         handler = new GhostHandler();
 
         // Set the animations
         AFRAID_ANIMATION = new Animation(ANIMATION_DURATION, Sprite.extractSprites("superpacman/ghost.afraid", 2, 1, 1, this, 16, 16));
         currentAnimation = getAnimations()[orientation.ordinal()];
 
-        // Set ghost attributes
         isAfraid = false;
         this.HOME = home;
         this.FIELD_OF_VIEW = fieldOfView > 0 ? fieldOfView : 5;
@@ -91,12 +89,13 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
     /**
      * Default Ghost constructor
+     *
      * @param area        (Area): owner area. Not null
      * @param orientation (Orientation): initial orientation of the entity. Not null
      * @param home        (Coordinate): initial and HOME position of the ghost. Not null
      */
     public Ghost(Area area, Orientation orientation, DiscreteCoordinates home) {
-        this(area, orientation, home, 20, 5);
+        this(area, orientation, home, 15, 5);
     }
 
     /* --------------- Implements Graphics --------------- */
@@ -105,6 +104,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     public void update(float deltaTime) {
         setAnimations(deltaTime);
 
+        // Move and orientate if possible
         if (!isDisplacementOccurs() && !protect) {
             Orientation desiredOrientation = getNextOrientation();
 
@@ -117,12 +117,14 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
         super.update(deltaTime);
 
-        // If the ghost and his target position are very close, we update the target in turns of parameters of the game
+        // If the ghost and his target position are very close, we update the target
         if (targetPos != null && DiscreteCoordinates.distanceBetween(getCurrentMainCellCoordinates(), targetPos) < 0.1) {
             targetPos = getTargetPos();
         }
 
-        // Check the protect state
+
+        /* --------------- EXTENSIONS --------------- */
+
         if (protect) {
             refreshProtection(deltaTime);
         }
@@ -138,8 +140,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
     @Override
     public void onDeath() {
-        DEATH_SOUND.shouldBeStarted();
-        DEATH_SOUND.bip(getOwnerArea().getWindow());
 
         // We spawn the ghost at its spawn location
         getOwnerArea().leaveAreaCells(this, getEnteredCells());
@@ -147,9 +147,14 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
         getOwnerArea().enterAreaCells(this, Collections.singletonList(HOME));
         resetMotion();
 
+        /* --------------- EXTENSIONS --------------- */
+
         protect();
         player = null;
         targetPos = getTargetPos();
+
+        DEATH_SOUND.shouldBeStarted();
+        DEATH_SOUND.bip(getOwnerArea().getWindow());
     }
 
     /* --------------- Implements Interactor --------------- */
@@ -161,7 +166,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     public List<DiscreteCoordinates> getFieldOfViewCells() {
         List<DiscreteCoordinates> fieldOfViewList = new ArrayList<>();
 
-        // Add the coordinates that are in the field of view of the ghost
         for (int y = -FIELD_OF_VIEW; y <= FIELD_OF_VIEW; y++) {
             for (int x = -FIELD_OF_VIEW; x <= FIELD_OF_VIEW; x++) {
                 fieldOfViewList.add(new DiscreteCoordinates(getCurrentMainCellCoordinates().x + x, getCurrentMainCellCoordinates().y + y));
@@ -198,7 +202,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     /* --------------- External Methods --------------- */
 
     /**
-     * Sets the current animation of the Ghost
+     * Set the current animation of the Ghost
      * @param deltaTime (float): the delta time of the update. Not null
      */
     private void setAnimations(float deltaTime) {
@@ -217,13 +221,15 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
         currentAnimation.update(deltaTime);
     }
 
-    /** Method that set the protect of the ghost when he's killed */
+    /**
+     * [extension] Set the protection of the ghost when he's killed
+     */
     private void protect() {
         protect = true;
     }
 
     /**
-     * Method called in update to refresh the protect state of the ghost
+     * [extension] Method called in update to refresh the protection state of the ghost
      * @param deltaTime (float): the delta time of the update. Not null
      */
     private void refreshProtection(float deltaTime) {
@@ -238,15 +244,22 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     /* --------------- Protected Methods --------------- */
 
     /**
-     * @return (Orientation): the next orientation following a specific algorithm
+     * Getter for the next orientation. NEED TO BE REDEFINED
+     * @return (Orientation)
      */
     protected abstract Orientation getNextOrientation();
+
+    /**
+     * Getter for the animations. NEED TO BE REDEFINED
+     * @return (Animation[]): the animations of the entity
+     */
+    protected abstract Animation[] getAnimations();
 
     /**
      * Choose a random cell in a specific radius around another cell
      * @param centerPos (DiscreteCoordinates): the center cell
      * @param radius    (int): the radius allowed
-     * @return (DiscreteCoordinates): the cell
+     * @return (DiscreteCoordinates)
      */
     protected DiscreteCoordinates randomCell(DiscreteCoordinates centerPos, int radius) {
         int randomX, randomY;
@@ -263,7 +276,8 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     }
 
     /**
-     * @return (DiscreteCoordinates): a random cell in an entire map
+     * Choose a random cell in an entire map
+     * @return (DiscreteCoordinates)
      */
     protected DiscreteCoordinates randomCell() {
         int width = getOwnerArea().getWidth();
@@ -283,20 +297,15 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     }
 
     /**
-     * @return (Animation[]): the animations of the entity
-     */
-    protected abstract Animation[] getAnimations();
-
-    /**
-     * Sets the speed
-     * @param speed (int): the new speed
+     * Sets the speed with new value
+     * @param speed (int): the new speed. Not null
      */
     protected void setSpeed(int speed) { this.speed = speed; }
 
     /* --------------- Public Methods --------------- */
 
     /**
-     * Scares ghosts
+     * Scare ghosts
      */
     public void scare() {
         isAfraid = true;
@@ -304,7 +313,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     }
 
     /**
-     * Unscares ghosts
+     * Unscare ghosts
      */
     public void unScare() {
         isAfraid = false;
@@ -314,22 +323,26 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     /* --------------- Getters --------------- */
 
     /**
-     * @return (DiscreteCoordinates): the HOME
+     * Getter for the home
+     * @return (DiscreteCoordinates)
      */
     protected DiscreteCoordinates getHOME() { return HOME; }
 
-    /** NEED TO BE OVERRIDDEN
-     * @return the target accordingly to the circumstances
+    /**
+     * Getter for the target position. NEED TO BE OVERRIDDEN
+     * @return (DiscreteCoordinates)
      */
     protected abstract DiscreteCoordinates getTargetPos();
 
     /**
-     * @return the animation duration of ghosts
+     * Getter for the animation duration
+     * @return (int)
      */
     protected int getAnimationDuration() { return ANIMATION_DURATION; }
 
     /**
-     * @return if ghosts are afraid
+     * Getter for if the ghosts are afraid
+     * @return (boolean)
      */
     protected boolean isAfraid() { return isAfraid; }
 
@@ -338,8 +351,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
     /** @return the score given on death */
     public int getScore() { return GHOST_SCORE; }
-
-    protected int getSpeed() { return speed;}
 
     /** @return the target of the ghost */
     protected SuperPacmanPlayer getPlayer() { return player; }

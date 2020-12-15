@@ -22,6 +22,7 @@ public abstract class AreaEntity extends Entity implements Interactable {
 
     /**
      * Default AreaEntity constructor
+     *
      * @param area (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position (DiscreteCoordinate): Initial position of the entity in the Area. Not null
