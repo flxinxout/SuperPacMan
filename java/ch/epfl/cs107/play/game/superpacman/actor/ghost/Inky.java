@@ -18,7 +18,6 @@ import java.util.Queue;
 public class Inky extends Ghost {
 
     // Constants
-    private final int FIELD_OF_VIEW = 5;
     private final int MAX_DISTANCE_WHEN_SCARED = 5;
     private final int MAX_DISTANCE_WHEN_NOT_SCARED = 10;
     private final int DEFAULT_SPEED = 20;

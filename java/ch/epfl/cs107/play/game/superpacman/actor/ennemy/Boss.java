@@ -61,7 +61,7 @@ public class Boss extends Ghost implements Interactor {
         }
 
         if (hp <= 0) {
-            SuperPacmanArea.toSuperPacmanArea(getOwnerArea()).win();;
+            SuperPacmanArea.toSuperPacmanArea(getOwnerArea()).win();
         }
     }
 

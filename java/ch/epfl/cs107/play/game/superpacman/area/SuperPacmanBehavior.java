@@ -26,10 +26,10 @@ import java.util.Queue;
 public class SuperPacmanBehavior extends AreaBehavior {
 
     // Graph associated to the area
-    private AreaGraph graph = new AreaGraph();
+    private final AreaGraph graph = new AreaGraph();
 
     // List of ghosts in the area
-    private List<Ghost> ghosts = new ArrayList<>();
+    private final List<Ghost> ghosts = new ArrayList<>();
 
     /**
      * Default SuperPacmanBehavior Constructor
@@ -241,7 +241,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
     */
     public class SuperPacmanCell extends AreaBehavior.Cell {
 
-        private SuperPacmanCellType type;
+        private final SuperPacmanCellType type;
 
         /**
          * Default SuperPacmanCell Constructor

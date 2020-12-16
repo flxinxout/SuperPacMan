@@ -15,7 +15,6 @@ import ch.epfl.cs107.play.game.superpacman.actor.collectable.BossLife;
 import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Arrow;
 import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Boss;
 import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Fire;
-import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Projectile;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;

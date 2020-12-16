@@ -16,7 +16,7 @@ import java.awt.Color;
 public class SuperPacmanPlayerStatusGUI implements Graphics {
 
     // The player assigned
-    private SuperPacmanPlayer player;
+    private final SuperPacmanPlayer player;
 
     /**
      * Default SuperPacmanPlayerStatusGUI constructor

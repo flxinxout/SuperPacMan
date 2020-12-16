@@ -34,5 +34,16 @@ afin de maximiser votre score
 
 * Les clés ouvrant les barrières permettant de passer au niveau suivant se trouvent dans la partie inférieure.
 * Cette partie est elle-même verrouillée par des barrières s'ouvrant avec les deux clés de la partie supérieure.
+* Cette aire comporte un téléporteur pour aller dans un niveau bonus.
+
 
 #### Niveau Bonus
+* Niveau avec des arcs et des fantômes
+* Il sert principalement a récolter beaucoup de points
+* Possède une gate pour retourner au niveau 2
+
+#### Niveau 3
+* Niveau finale du jeu avec un boss à l'intérieur qui suit le pacman
+* Sa vitesse est d'autant plus rapide que le pacman récupère des vies du boss ; qui sont représentés par des orbes
+* Le jeu est gagné par le pacman s'il arrive à récupérer toutes les vies du boss
+* Le niveau ne possède pas de fantôme mais uniquement des arcs

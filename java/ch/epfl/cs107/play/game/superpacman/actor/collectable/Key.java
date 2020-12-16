@@ -9,16 +9,13 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Key item is used to unlock a gate. Behaves like a Signal
  */
 public class Key extends CollectableAreaEntity implements Logic {
 
     // Attributes
-    private Sprite sprite;
+    private final Sprite sprite;
     private boolean isCollected;
 
     /**

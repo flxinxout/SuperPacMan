@@ -18,7 +18,7 @@ public class Diamond extends CollectableReward {
     private final int REWARD = 10;
 
     // Attributes
-    private Sprite sprite;
+    private final Sprite sprite;
 
     /**
      * Default Diamond Constructor

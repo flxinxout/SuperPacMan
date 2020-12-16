@@ -58,9 +58,4 @@ public class Blinky extends Ghost {
     protected void onScareChange() {
         super.onScareChange();
     }
-
-    @Override
-    protected int getSpeed() {
-        return 0;
-    }
 }

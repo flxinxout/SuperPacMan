@@ -20,8 +20,8 @@ import java.util.List;
 public class Gate extends AreaEntity {
 
     // Attributes
-    private Logic signal; // Signal conditioning the gate
-    private Sprite sprite;
+    private final Logic signal; // Signal conditioning the gate
+    private final Sprite sprite;
 
     /**
      * Default Gate constructor
