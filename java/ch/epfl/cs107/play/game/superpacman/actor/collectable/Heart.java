@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
@@ -13,8 +14,7 @@ import ch.epfl.cs107.play.window.Canvas;
  */
 public class Heart extends CollectableAreaEntity {
 
-    private final int ANIMATION_DURATION = 8; // Animation duration in frame number
-    private Animation currentAnimation;
+    private final Animation animation;
 
     /**
      * Default Heart constructor
@@ -32,7 +32,7 @@ public class Heart extends CollectableAreaEntity {
             sprite.setDepth(950);
         }
 
-        currentAnimation = new Animation(ANIMATION_DURATION, sprites);
+        animation = new Animation(SuperPacman.getDefaultAnimationDuration(), sprites);
     }
 
     /* -------------- Implements Interactable ---------------- */
@@ -45,11 +45,11 @@ public class Heart extends CollectableAreaEntity {
     /* -------------- Implements Graphics ---------------- */
 
     @Override
-    public void draw(Canvas canvas) { currentAnimation.draw(canvas); }
+    public void draw(Canvas canvas) { animation.draw(canvas); }
 
     @Override
     public void update(float deltaTime) {
-        currentAnimation.update(deltaTime);
+        animation.update(deltaTime);
     }
 
 }

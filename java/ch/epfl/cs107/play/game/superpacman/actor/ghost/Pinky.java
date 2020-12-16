@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Animation;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
@@ -47,13 +48,13 @@ public class Pinky extends Ghost {
         Sprite[][] sprites = RPGSprite.extractSprites ("superpacman/ghost.pinky", 2, 1.f, 1.f,
                 this , 16, 16, new Orientation [] { Orientation.UP ,
                         Orientation.RIGHT , Orientation.DOWN , Orientation.LEFT });
-        for (int i = 0; i < sprites.length; i++) {
-            for (int j = 0; j < sprites[i].length; j++) {
-                sprites[i][j].setDepth(950);
+        for (Sprite[] sprite : sprites) {
+            for (Sprite value : sprite) {
+                value.setDepth(950);
             }
         }
 
-        return Animation.createAnimations (getAnimationDuration() /2, sprites);
+        return Animation.createAnimations (SuperPacman.getDefaultAnimationDuration(), sprites);
     }
 
     @Override

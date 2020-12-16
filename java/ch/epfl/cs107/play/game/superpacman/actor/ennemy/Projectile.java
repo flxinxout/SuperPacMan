@@ -33,7 +33,9 @@ public abstract class Projectile extends MovableAreaEntity {
         super.update(deltaTime);
         move(getSpeed());
 
-        if (Math.abs(getVelocity().x) < 0.1 && Math.abs(getVelocity().y) < 0.1) getOwnerArea().unregisterActor(this);
+        if (Math.abs(getVelocity().x) < 0.1 && Math.abs(getVelocity().y) < 0.1) {
+            getOwnerArea().unregisterActor(this);
+        }
     }
 
     @Override

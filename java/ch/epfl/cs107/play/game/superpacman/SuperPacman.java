@@ -15,6 +15,7 @@ public class SuperPacman extends RPG  {
     // Array with all titles of the different areas
     private final String[] areas = {"superpacman/Level0", "superpacman/Level1", "superpacman/Level2", "superpacman/BonusLevel", "superpacman/BossLevel"};
 
+    private final static int DEFAULT_ANIMATION_DURATION = 4;
 
     /* ----------- Implements Playable ------------- */
 
@@ -70,5 +71,13 @@ public class SuperPacman extends RPG  {
         createAreas();
         SuperPacmanArea area = (SuperPacmanArea) setCurrentArea(areas[areaIndex], true);
         initPlayer(new SuperPacmanPlayer(area, area.getSpawnLocation()));
+    }
+
+    /**
+     * Getter for the default animation duration
+     * @return (int)
+     */
+    public static int getDefaultAnimationDuration() {
+        return DEFAULT_ANIMATION_DURATION;
     }
 }

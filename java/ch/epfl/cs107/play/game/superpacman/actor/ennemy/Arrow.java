@@ -16,8 +16,7 @@ public class Arrow extends Projectile {
     private final int SPEED = 6;
 
     // Attributes
-    private Sprite[] sprites;
-    private Sprite currentSprite;
+    private final Sprite sprite;
 
     /**
      * Default Arrow constructor
@@ -29,15 +28,16 @@ public class Arrow extends Projectile {
     public Arrow(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
 
-        sprites = Sprite.extractSprites("superpacman/arrow", 4, 1.25f, 1.25f, this, new Vector(-0.19f, -0.25f), 32, 32);
-        currentSprite = sprites[orientation.ordinal()];
+        // Choose a sprite depending on the orientation
+        Sprite[] sprites = Sprite.extractSprites("superpacman/arrow", 4, 1.25f, 1.25f, this, new Vector(-0.19f, -0.25f), 32, 32);
+        sprite = sprites[orientation.ordinal()];
     }
 
     /* --------------- Extends Projectile --------------- */
 
     @Override
     public void draw(Canvas canvas) {
-        currentSprite.draw(canvas);
+        sprite.draw(canvas);
     }
 
     @Override

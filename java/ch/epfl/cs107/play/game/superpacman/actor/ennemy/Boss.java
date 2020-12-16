@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.BossLife;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
@@ -101,7 +102,7 @@ public class Boss extends Ghost implements Interactor {
             }
         }
 
-        return Animation.createAnimations (getAnimationDuration() /2, sprites);
+        return Animation.createAnimations (SuperPacman.getDefaultAnimationDuration(), sprites);
     }
 
     @Override

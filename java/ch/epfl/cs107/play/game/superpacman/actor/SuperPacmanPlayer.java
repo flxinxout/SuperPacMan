@@ -7,6 +7,7 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.rpg.actor.Door;
 import ch.epfl.cs107.play.game.rpg.actor.Player;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
+import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.CollectableReward;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
@@ -46,15 +47,14 @@ public class SuperPacmanPlayer extends Player implements Killable {
     private float timerInvincible;
 
     // Animations
-    private final int ANIMATION_DURATION = 8; // Animation duration in frame number
-    private Animation[] animations;
+    private final Animation[] animations;
     private Animation currentAnimation;
 
     // Handler of the SuperPacmanPlayer
-    private SuperPacmanPlayerHandler handler;
+    private final SuperPacmanPlayerHandler handler;
 
     // StatusGUI of the SuperPacmanPlayer
-    private SuperPacmanPlayerStatusGUI status;
+    private final SuperPacmanPlayerStatusGUI status;
 
     /* --------------- EXTENSIONS --------------- */
 
@@ -65,7 +65,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
     private final Animation[] PROTECTED_ANIMATIONS;
 
     // Sounds
-    private SoundAcoustics deathSound;
+    private final SoundAcoustics deathSound;
 
     /**
      * Default SuperPacmanPlayer Constructor
@@ -83,6 +83,8 @@ public class SuperPacmanPlayer extends Player implements Killable {
         status = new SuperPacmanPlayerStatusGUI(this);
 
         //Setup the animations for Pacman
+        int animationDuration = SuperPacman.getDefaultAnimationDuration();
+
         Sprite [][] sprites = RPGSprite.extractSprites ("superpacman/pacman", 4, 1, 1,
                 this , 64, 64, new Orientation [] { Orientation.DOWN ,
                         Orientation.LEFT , Orientation.UP , Orientation.RIGHT });
@@ -91,7 +93,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
                 value.setDepth(975);
             }
         }
-        animations = Animation.createAnimations (ANIMATION_DURATION /2, sprites);
+        animations = Animation.createAnimations (animationDuration, sprites);
         currentAnimation = animations[getOrientation().ordinal()];
 
         // Attributes initialization
@@ -117,7 +119,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
                 value.setDepth(975);
             }
         }
-        PROTECTED_ANIMATIONS = Animation.createAnimations (ANIMATION_DURATION /2, protectSprites);
+        PROTECTED_ANIMATIONS = Animation.createAnimations (animationDuration, protectSprites);
 
         deathSound = new SoundAcoustics("sounds/pacman/pacman_death.wav", 0.50f, false,false,false, true);
 

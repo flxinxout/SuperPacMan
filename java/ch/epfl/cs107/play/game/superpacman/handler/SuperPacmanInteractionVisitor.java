@@ -11,7 +11,6 @@ import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Bow;
 import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Fire;
 import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Projectile;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
-import ch.epfl.cs107.play.game.superpacman.actor.setting.Wall;
 
 /**
  * Interface that represents the different possible interactions of the SuperPacman game
@@ -28,6 +27,8 @@ public interface SuperPacmanInteractionVisitor extends RPGInteractionVisitor {
 
     default void interactWith(CollectableReward collectableReward) { }
 
+    /* --------------- EXTENSIONS --------------- */
+
     default void interactWith(Projectile projectile) { }
 
     default void interactWith(Fire fire) { }
@@ -35,4 +36,7 @@ public interface SuperPacmanInteractionVisitor extends RPGInteractionVisitor {
     default void interactWith(Boss boss) { }
 
     default void interactWith(BossLife lifeBoss) { }
+
+    default void interactWith(Bow bow) { }
+
 }

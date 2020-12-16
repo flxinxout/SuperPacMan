@@ -7,6 +7,7 @@ import ch.epfl.cs107.play.game.areagame.actor.CollectableAreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Boss;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -19,11 +20,10 @@ import ch.epfl.cs107.play.window.Canvas;
 public class BossLife extends CollectableAreaEntity {
 
     //The boss attached to it
-    private Boss boss;
+    private final Boss boss;
 
     // Animation duration in frame number and the Animation of the collectable
-    private final int ANIMATION_DURATION = 8;
-    private Animation currentAnimation;
+    private final Animation animation;
 
     /**
      * Default BossLife constructor
@@ -42,7 +42,7 @@ public class BossLife extends CollectableAreaEntity {
             sprite.setDepth(950);
         }
 
-        currentAnimation = new Animation(ANIMATION_DURATION/2, sprites);
+        animation = new Animation(SuperPacman.getDefaultAnimationDuration(), sprites);
     }
 
     /* -------------- Getters ---------------- */
@@ -63,8 +63,8 @@ public class BossLife extends CollectableAreaEntity {
     /* -------------- Implements Graphics ---------------- */
 
     @Override
-    public void draw(Canvas canvas) { currentAnimation.draw(canvas); }
+    public void draw(Canvas canvas) { animation.draw(canvas); }
 
     @Override
-    public void update(float deltaTime) { currentAnimation.update(deltaTime); }
+    public void update(float deltaTime) { animation.update(deltaTime); }
 }

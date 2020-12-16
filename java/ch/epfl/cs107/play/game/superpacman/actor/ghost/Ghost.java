@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.Killable;
 import ch.epfl.cs107.play.game.superpacman.actor.SuperPacmanPlayer;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
@@ -34,7 +35,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     private DiscreteCoordinates targetPos;
 
     // Animations
-    private final int ANIMATION_DURATION = 8; // Animation duration in frame number
     private final Animation AFRAID_ANIMATION;
     private Animation currentAnimation;
 
@@ -78,7 +78,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
         handler = new GhostHandler();
 
         // Set the animations
-        AFRAID_ANIMATION = new Animation(ANIMATION_DURATION, Sprite.extractSprites("superpacman/ghost.afraid", 2, 1, 1, this, 16, 16));
+        AFRAID_ANIMATION = new Animation(SuperPacman.getDefaultAnimationDuration(), Sprite.extractSprites("superpacman/ghost.afraid", 2, 1, 1, this, 16, 16));
         currentAnimation = getAnimations()[orientation.ordinal()];
 
         isAfraid = false;
@@ -89,7 +89,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
         /* --------------- EXTENSIONS --------------- */
 
-        PROTECTED_ANIMATION = new Animation(ANIMATION_DURATION, Sprite.extractSprites("superpacman/ghost.protect", 2, 1, 1, this, 16, 16));
+        PROTECTED_ANIMATION = new Animation(SuperPacman.getDefaultAnimationDuration(), Sprite.extractSprites("superpacman/ghost.protect", 2, 1, 1, this, 16, 16));
         protect = false;
         timerProtection = PROTECTION_DURATION;
 
@@ -326,12 +326,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
      * @return (DiscreteCoordinates)
      */
     protected abstract DiscreteCoordinates getTargetPos();
-
-    /**
-     * Getter for the animation duration
-     * @return (int)
-     */
-    protected int getAnimationDuration() { return ANIMATION_DURATION; }
 
     /**
      * Getter for the ghosts' fear

@@ -17,7 +17,7 @@ public class Cherry extends CollectableReward {
     private final int REWARD = 200;
 
     // Attributes
-    private Sprite sprite;
+    private final Sprite sprite;
 
     /**
      * Default Cherry constructor
@@ -25,6 +25,7 @@ public class Cherry extends CollectableReward {
      * @param position (DiscreteCoordinates): the position of the cherry in the specific area. Not null
      */
     public Cherry(Area area, DiscreteCoordinates position) {
+        //TODO: même raison que getspeed() dans Boss, pk pas un getSound() abstract dans Collectable
         super(area, Orientation.DOWN, position, new SoundAcoustics("sounds/pacman/pacman_eatfruit.wav", 0.35f, false,false,false, false));
 
         this.sprite = new Sprite("superpacman/cherry", 1, 1, this,

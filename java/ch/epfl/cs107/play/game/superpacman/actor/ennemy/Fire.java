@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
@@ -25,7 +26,6 @@ public class Fire extends AreaEntity {
     private float lifeTimer;
 
     // Animations
-    private final int ANIMATION_DURATION = 8; // Animation duration in frame number
     private final Animation animation;
 
     /**
@@ -41,7 +41,7 @@ public class Fire extends AreaEntity {
         this.lifeTimer = LIFE_DURATION;
 
         Sprite[] sprites = Sprite.extractSprites("superpacman/fire", 7, 1, 1, this, 16, 16);
-        animation = new Animation(ANIMATION_DURATION/2, sprites);
+        animation = new Animation(SuperPacman.getDefaultAnimationDuration(), sprites);
     }
 
     /* --------------- Extends AreaEntity --------------- */

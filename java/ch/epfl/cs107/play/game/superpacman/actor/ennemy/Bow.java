@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-//TODO Y'A TJR LE MESSAGE DANS LA CONSOLE AVEC LE FAIT QU'ON EXPLICITE PAS L'INTERACTION ENTRE LE BOW ET LE PACMAN
 /**
  * [EXTENSION] Bows are immobile ennemies which shoots arrow in a straight line
  */
@@ -60,14 +59,6 @@ public class Bow extends AreaEntity implements Interactor {
 
     /* --------------- Private Methods --------------- */
 
-    //TODO DO WE KEEP IT USESELL ??
-    private void refreshPlayerTargetting() {
-        if (player != null && player.getPosition().x != getCurrentMainCellCoordinates().x
-                && player.getPosition().y != getCurrentMainCellCoordinates().y) {
-            player = null;
-        }
-    }
-
     /**
      * Method called in update to refresh the shoot timer
      * @param deltaTime (float): the delta time of the update. Not null
@@ -80,7 +71,9 @@ public class Bow extends AreaEntity implements Interactor {
         }
     }
 
-    /** Start the shootTimer and register an arrow right in front of the bow */
+    /**
+     * Start the shootTimer and register an arrow right in front of the bow
+     */
     private void shoot() {
         shootTimer = SHOOT_RATE;
 
@@ -90,7 +83,10 @@ public class Bow extends AreaEntity implements Interactor {
         }
     }
 
-    /** @return (Orientation): Getter for the next orientation */
+    /**
+     * Getter for the next orientation
+     * @return (Orientation)
+     */
     private Orientation getNextOrientation() {
         if (player != null) {
             if (player.getPosition().x < getCurrentMainCellCoordinates().x) {
@@ -172,7 +168,6 @@ public class Bow extends AreaEntity implements Interactor {
         return false;
     }
 
-    //TODO LE TRUC EST EN GRIS FONCE ?
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((SuperPacmanInteractionVisitor)v).interactWith (this );
@@ -215,6 +210,7 @@ public class Bow extends AreaEntity implements Interactor {
      * Interaction handler for a Bow
      */
     private class BowHandler implements SuperPacmanInteractionVisitor {
+
         @Override
         public void interactWith(SuperPacmanPlayer pacman) {
             player = pacman;
