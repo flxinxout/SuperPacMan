@@ -39,8 +39,7 @@ public class Gate extends AreaEntity {
         int m = setSpriteOrientation(orientation);
 
         //Deactivate the nodes at the position of the gate
-        SuperPacmanArea ownerArea = (SuperPacmanArea) area;
-        ownerArea.setSignal(position, signal);
+        SuperPacmanArea.toSuperPacmanArea(area).setSignal(position, signal);
 
         this.sprite = new Sprite("superpacman/gate", 1, 1, this, new RegionOfInterest(0, m, 64, 64));
     }

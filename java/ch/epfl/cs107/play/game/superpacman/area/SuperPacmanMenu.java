@@ -13,18 +13,15 @@ import ch.epfl.cs107.play.window.Canvas;
 public class SuperPacmanMenu implements Graphics {
 
     // Attributes
-    private String imageName;
-    private SuperPacmanMenuType type;
+    private final String imageName;
 
     /**
      * Default constructor of the SuperPacmanMenu
      *
      * @param imageName (String): the image name for the resource path. Not null
-     * @param type      (SuperPacmanMenuType): the type of Menu. Not null
      */
-    public SuperPacmanMenu(String imageName, SuperPacmanMenuType type) {
+    public SuperPacmanMenu(String imageName) {
         this.imageName = imageName;
-        this.type = type;
     }
 
     /* -------------- Implements Graphics --------------- */
@@ -43,14 +40,5 @@ public class SuperPacmanMenu implements Graphics {
         image.setDepth(999);
 
         image.draw(canvas);
-    }
-
-    /**
-     * Enum that represent all possible types of menus in the game
-     */
-    public enum SuperPacmanMenuType {
-        PAUSE,
-        GAMEOVER,
-        WIN;
     }
 }

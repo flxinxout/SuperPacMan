@@ -6,10 +6,7 @@ import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.CollectableReward;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.BossLife;
-import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Boss;
-import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Bow;
-import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Fire;
-import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Projectile;
+import ch.epfl.cs107.play.game.superpacman.actor.ennemy.*;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
 
 /**
@@ -31,12 +28,13 @@ public interface SuperPacmanInteractionVisitor extends RPGInteractionVisitor {
 
     default void interactWith(Projectile projectile) { }
 
+    default void interactWith(Arrow arrow) { }
+
+    default void interactWith(Bow bow) { }
+
     default void interactWith(Fire fire) { }
 
     default void interactWith(Boss boss) { }
 
     default void interactWith(BossLife lifeBoss) { }
-
-    default void interactWith(Bow bow) { }
-
 }

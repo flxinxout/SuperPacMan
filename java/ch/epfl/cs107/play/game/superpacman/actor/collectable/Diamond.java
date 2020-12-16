@@ -45,9 +45,7 @@ public class Diamond extends CollectableReward {
     @Override
     public void onCollect() {
         super.onCollect();
-        //TODO: DISGUSTING CAST, TRY TO DO BETTER WITH DIAMOND COUNT
-        SuperPacmanArea area = (SuperPacmanArea) getOwnerArea();
-        area.removeDiamond();
+        SuperPacmanArea.toSuperPacmanArea(getOwnerArea()).removeDiamond();
     }
 
     /* -------------- Extends CollectableReward ---------------- */

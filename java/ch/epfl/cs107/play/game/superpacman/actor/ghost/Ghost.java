@@ -23,11 +23,11 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
     // Constants
     private final int GHOST_SCORE = 500;
+    private final int DEFAULT_FIELD_OF_VIEW = 5;
+    private final int DEFAULT_SPEED = 18;
 
     // Attributes
     private final DiscreteCoordinates HOME;
-    private final int FIELD_OF_VIEW;
-    private int speed;
     private boolean isAfraid;
 
     // Target
@@ -60,19 +60,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
      * @param home        (Coordinate): initial and HOME position of the ghost. Not null
      */
     public Ghost(Area area, Orientation orientation, DiscreteCoordinates home) {
-        this(area, orientation, home, 15, 5);
-    }
-
-    /**
-     * Complementary Ghost constructor
-     *
-     * @param area        (Area): owner area. Not null
-     * @param orientation (Orientation): initial orientation of the entity. Not null
-     * @param home        (Coordinate): initial and HOME position of the ghost. Not null
-     * @param speed       (int): initial speed of the ghost. Strictly greater than 0.
-     * @param fieldOfView (int): field of view of the ghost. Strictly greater than 0.
-     */
-    public Ghost(Area area, Orientation orientation, DiscreteCoordinates home, int speed, int fieldOfView) {
         super(area, orientation, home);
 
         handler = new GhostHandler();
@@ -83,8 +70,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
         isAfraid = false;
         this.HOME = home;
-        this.FIELD_OF_VIEW = fieldOfView > 0 ? fieldOfView : 5;
-        this.speed = speed > 0 ? speed : 1;
         targetPos = getTargetPos();
 
         /* --------------- EXTENSIONS --------------- */
@@ -111,7 +96,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
                     Collections.singletonList(getCurrentMainCellCoordinates().jump(desiredOrientation.toVector())))) {
                 orientate(desiredOrientation);
             }
-            move(speed);
+            move(getSpeed());
         }
 
         super.update(deltaTime);
@@ -165,8 +150,8 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     public List<DiscreteCoordinates> getFieldOfViewCells() {
         List<DiscreteCoordinates> fieldOfViewList = new ArrayList<>();
 
-        for (int y = -FIELD_OF_VIEW; y <= FIELD_OF_VIEW; y++) {
-            for (int x = -FIELD_OF_VIEW; x <= FIELD_OF_VIEW; x++) {
+        for (int y = -getFieldOfView(); y <= getFieldOfView(); y++) {
+            for (int x = -getFieldOfView(); x <= getFieldOfView(); x++) {
                 fieldOfViewList.add(new DiscreteCoordinates(getCurrentMainCellCoordinates().x + x, getCurrentMainCellCoordinates().y + y));
             }
         }
@@ -293,12 +278,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
         targetPos = getTargetPos();
     }
 
-    /**
-     * Sets the speed with new value
-     * @param speed (int): the new speed. Not null
-     */
-    protected void setSpeed(int speed) { this.speed = speed; }
-
     /* --------------- Public Methods --------------- */
 
     /** Scare ghosts */
@@ -316,16 +295,32 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     /* --------------- Getters --------------- */
 
     /**
-     * Getter for the home
-     * @return (DiscreteCoordinates)
-     */
-    protected DiscreteCoordinates getHOME() { return HOME; }
-
-    /**
      * Getter for the target position. NEED TO BE OVERRIDDEN
      * @return (DiscreteCoordinates)
      */
     protected abstract DiscreteCoordinates getTargetPos();
+
+    /**
+     * Getter for the speed. NEED TO BE OVERRIDDEN
+     * @return (DiscreteCoordinates)
+     */
+    protected int getSpeed() {
+        return DEFAULT_SPEED;
+    }
+
+    /**
+     * Getter for the field of view. Can be overridden
+     * @return (DiscreteCoordinates)
+     */
+    protected int getFieldOfView() {
+        return DEFAULT_FIELD_OF_VIEW;
+    }
+
+    /**
+     * Getter for the home
+     * @return (DiscreteCoordinates)
+     */
+    protected DiscreteCoordinates getHOME() { return HOME; }
 
     /**
      * Getter for the ghosts' fear

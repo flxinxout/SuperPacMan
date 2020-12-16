@@ -38,8 +38,7 @@ public class Boss extends Ghost implements Interactor {
      * @param livesPosition (DiscreteCoordinate[]): positions of the boss' lives, at least of length START_LIFE. Not null
      */
     public Boss(Area area, Orientation orientation, DiscreteCoordinates position, DiscreteCoordinates[] livesPosition) {
-        //TODO: PAS PROPRE PSK ON REFERENCE PAS LES CONSTANTES --> d'où getSpeed() abstract
-        super(area, orientation, position, 12, 12);
+        super(area, orientation, position);
 
         //Check if there's enough lives positions and register them.
         if(livesPosition.length >= START_LIFE) {
@@ -59,16 +58,10 @@ public class Boss extends Ghost implements Interactor {
     public void loseHP() {
         if(hp > 0) {
             hp--;
-
-            //Set the speed of the new phase
-            if (START_LIFE - hp < SPEEDS.length) {
-                setSpeed(SPEEDS[START_LIFE - hp]);
-            }
         }
 
         if (hp <= 0) {
-            SuperPacmanArea owner = (SuperPacmanArea) getOwnerArea();
-            owner.win();
+            SuperPacmanArea.toSuperPacmanArea(getOwnerArea()).win();;
         }
     }
 
@@ -78,7 +71,7 @@ public class Boss extends Ghost implements Interactor {
     protected Orientation getNextOrientation() {
 
         // Gets the area where is the ghost and the path between the ghost and the SuperPacmanPlayer
-        SuperPacmanArea area = (SuperPacmanArea) getOwnerArea();
+        SuperPacmanArea area = SuperPacmanArea.toSuperPacmanArea(getOwnerArea());
         Queue<Orientation> path = area.shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
 
         // While the path is null or empty (for example if the ghost has not a target now), generate an other path
@@ -113,6 +106,22 @@ public class Boss extends Ghost implements Interactor {
         } else {
             return getPlayer().getCurrentCells().get((0));
         }
+    }
+
+    @Override
+    protected int getSpeed() {
+        //Set the speed of the new phase
+        if (START_LIFE - hp < SPEEDS.length) {
+            return SPEEDS[START_LIFE - hp];
+        }
+        else {
+            return 0;
+        }
+    }
+
+    @Override
+    protected int getFieldOfView() {
+        return FIELD_OF_VIEW;
     }
 
     @Override

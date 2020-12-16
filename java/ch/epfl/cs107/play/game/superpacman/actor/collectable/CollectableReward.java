@@ -8,7 +8,6 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-//TODO: DO WE KEEP IT?
 /**
  * A CollectableRweard represents a collectable entity that increases the player's score when it is collected
  */

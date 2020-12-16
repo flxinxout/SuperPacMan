@@ -18,6 +18,7 @@ import java.util.Queue;
 public class Inky extends Ghost {
 
     // Constants
+    private final int FIELD_OF_VIEW = 5;
     private final int MAX_DISTANCE_WHEN_SCARED = 5;
     private final int MAX_DISTANCE_WHEN_NOT_SCARED = 10;
     private final int DEFAULT_SPEED = 20;
@@ -62,7 +63,7 @@ public class Inky extends Ghost {
     public Orientation getNextOrientation() {
 
         // Gets the area where is the ghost and the path between the ghost and the target positiom
-        SuperPacmanArea area = (SuperPacmanArea) getOwnerArea();
+        SuperPacmanArea area = SuperPacmanArea.toSuperPacmanArea(getOwnerArea());
         Queue<Orientation> path = area.shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
 
         // While the path is null or empty, generate another path
@@ -75,13 +76,11 @@ public class Inky extends Ghost {
 
     @Override
     protected void onScareChange() {
-        //Set the speed and the max distance
+        //Set the max distance
         if (!isAfraid()) {
             maxDistance = MAX_DISTANCE_WHEN_SCARED;
-            setSpeed(AFRAID_SPEED);
         } else {
             maxDistance = MAX_DISTANCE_WHEN_NOT_SCARED;
-            setSpeed(DEFAULT_SPEED);
         }
 
         super.onScareChange();
@@ -97,6 +96,15 @@ public class Inky extends Ghost {
             } else {
                 return getPlayer().getCurrentCells().get((0));
             }
+        }
+    }
+
+    @Override
+    protected int getSpeed() {
+        if (!isAfraid()) {
+            return AFRAID_SPEED;
+        } else {
+            return DEFAULT_SPEED;
         }
     }
 }

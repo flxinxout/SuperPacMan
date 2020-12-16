@@ -1,4 +1,5 @@
-#Conceptions
+Giovanni Ranieri et Dylan Vairoli
+#SuperPacman conception
 ###0a. Contenu
 1. Modifications du code donné
 2. Classes et interfaces ajoutées (extensions incluses)
@@ -8,7 +9,7 @@
 ###0b. Pour une meilleure lisibilité du document
 * Les extensions seront précédées par *[extension]*
 * Les classes, classes abstraites, interfaces et énumérations seront respectivement précédées 
-par *(class)*, *(abstract class)*, *(interface)*, and *(enum)*.
+par *(class)*, *(abstract class)*, *(interface)*, et *(enum)*.
 
 ##1. Modifications du code de départ
 ##### *(abstract class)* Area
@@ -21,10 +22,9 @@ Modification de *update()*, *suspend()* et *end()* en conséquence
 ***
 
 ##2. Classes, paquetages et interfaces ajoutés (explication des extensions incluses)
-***
 
 #### *(main class)* SuperPacman
-* Classe principale du jeu SuperPacman.
+**Classe principale du jeu SuperPacman.**
 ###
 *path: ch.epfl.cs107.play.game.superpacman.**SuperPacman.java*** 
 
@@ -33,17 +33,9 @@ Modification de *update()*, *suspend()* et *end()* en conséquence
 ###2.0. *(package)* areagame.actor
 ##
 
-#### *(interface)* Collectable
-* *Implementée par CollectableAreaEntity* 
-* Représente la relation "se comporte comme un objet collectible"
-* Dans un paquetage général (non spécifique à SuperPacman) car elle est utile à tout type de jeu sur grille.
-###
-*path: ch.epfl.cs107.play.game.areagame.actor.**Collectable.java*** 
-##
-
 #### *(abstract class)* CollectableAreaEntity
 **Super-classe de tous les objets collectibles**  
-* Abstraite car elle a pour but d'être instantiée uniquement par l'intermédiaire de ses sous-classes.
+* Abstraite car elle a pour but d'être instanciée uniquement par l'intermédiaire de ses sous-classes.
 * Dans un paquetage général (non spécifique à SuperPacman) car elle est utile à tout type de jeu sur grille.
 ###
 *path: ch.epfl.cs107.play.game.areagame.actor.**CollectableAreaEntity.java*** 
@@ -55,7 +47,7 @@ Ce paquetage regroupant les acteurs de SuperPacman permet de mieux structurer le
 ##
 
 #### *(interface)* Killable
-* *Implementée par Ghost et SuperPacmanPlayer* 
+*Implementée par Ghost et SuperPacmanPlayer* 
 * Représente la relation "se comporte comme une entité pouvant être tuée".
 * Ajout personnel pour mieux organiser le projet. Dans l'idée d'ajouter d'autres entités tuables
 ###
@@ -63,10 +55,10 @@ Ce paquetage regroupant les acteurs de SuperPacman permet de mieux structurer le
 ##
 
 #### *(class)* SuperPacmanPlayer
-* Classe du joueur principal
+**Classe du joueur principal**
 * *[extension]* Protection animée à sa réapparition.
 * *[extension]* Son à sa mort.
-* Contient une sous-classe *(class)* **SuperPacmanPlayerHandler** gérant les interactions du joueur.
+* Contient une sous-classe **SuperPacmanPlayerHandler** gérant les interactions du joueur.
 ###
 *path: ch.epfl.cs107.play.game.superpacman.actor.**SuperPacmanPlayer.java***  
 ##
@@ -83,11 +75,14 @@ par des acteurs.
 
 ###2.1.1. *(package)* collectable
 Ce paquetage permet de mieux structurer le projet. Il contient les classes considérées comme des objets collectibles
-***
+##
 
 ####2.1.1.1. *(abstract class)* CollectableReward
-* Super-classe des Collectable rapportant du score  
-* Abstraite car elle a pour but d'être instantiée uniquement par l'intermédiaire de ses sous-classes ayant un reward attribué.
+**Super-classe des Collectable rapportant du score**
+* Étendue par: *Cherry* et *Diamond*
+* Abstraite car elle a pour but d'être instanciée uniquement par l'intermédiaire de ses sous-classes
+* Créée afin d'éviter la duplication de code. Bien que seuls 2 CollectableReward sont définis dans notre projet,
+il est facilement imaginable d'en avoir une dizaine dans un jeu plus complet
 ###
 *path: ch.epfl.cs107.play.game.superpacman.actor.collectable.**CollectableReward.java***  
 ##
@@ -123,7 +118,9 @@ Ce paquetage permet de mieux structurer le projet. Il contient les classes consi
 ##
 
 ####2.1.1.7. *[extension]* *(class)* BossLife
-* Représente une vie d'un boss. Quand tous les BossLife sont récuperées, le jeu se finit
+* Représente une vie d'un boss. Quand toutes les BossLife sont récuperées, le jeu se finit
+* Nous avons choisi de ne pas l'enregistrer au travers d'une image de behavior car il aurait été impossible
+de correctement l'associer au boss correspondant.
 ###
 *path: ch.epfl.cs107.play.game.superpacman.actor.collectable.**BossLife.java***    
 
@@ -131,12 +128,13 @@ Ce paquetage permet de mieux structurer le projet. Il contient les classes consi
 
 ###2.1.2. *[extension]* *(package)* ennemy
 Ce paquetage regroupant les ennemis autre que les fantômes permet de mieux structurer le projet.
-***
+##
 
 ####2.1.2.1 *[extension]* *(abstract class)* Projectile
-**Super-classe de tous les projectiles**  
+**Super-classe de tous les projectiles** 
+* Étendue par: *Arrow* 
 * Représente une entité se déplaçant à vitesse constante selon une trajectoire rectiligne
-* Abstraite car elle a pour but d'être instantiée uniquement par l'intermédiaire de ses sous-classes.
+* Abstraite car elle a pour but d'être instanciée uniquement par l'intermédiaire de ses sous-classes.
 ###
 *path: ch.epfl.cs107.play.game.superpacman.actor.ennemy.**Projectile.java***  
 ##
@@ -151,6 +149,7 @@ Ce paquetage regroupant les ennemis autre que les fantômes permet de mieux stru
 * Représente un arc qui tire une flèche sur le joueur s'il est dans son champ de vision
 * Son champ de vision est une croix (Sa ligne ainsi que sa colonne entières)
 * La flèche est tirée à la fin de l'animation pour laisser du temps au joueur de prévoir le tir et pour plus de réalisme.
+* Contient une sous-classe **BowHandler** gérant les interactions des arcs.
 * Nous avons recréé son animation en s'inspirant grandement de l'oeuvre de Michael H.  
 link: <https://www.artstation.com/artwork/9eAJzy>
 ###
@@ -167,10 +166,12 @@ link: <https://www.artstation.com/artwork/9eAJzy>
 
 ####2.1.2.5 *[extension]* *(class)* Boss
 * Représente le boss final du jeu, lorsque le joueur récupère toutes ses vies, le jeu se finit.
-* Nous avons choisi de le faire étendre Ghost car il partage beaucoup de comportements avec ces-derniers, bien qu'il ne  
-soit pas à proprement parler un fantôme.
 * Il laisse une traînée de feu sur chaque case qu'il a quittée.
 * Sa vitesse augmente à chaque vie collectée par le joueur
+* Nous avons choisi de le faire étendre Ghost car il partage beaucoup de comportements avec ces-derniers, bien qu'il ne
+soit pas à proprement parler un fantôme.
+* Nous avons choisi de ne pas l'enregistrer au travers d'une image de behavior car il est censé y en avoir au maximum 
+un par aire
 ###
 *path: ch.epfl.cs107.play.game.superpacman.actor.ennemy.**Boss.java***  
 
@@ -178,11 +179,13 @@ soit pas à proprement parler un fantôme.
 
 ###2.1.3. *(package)* ghost
 Ce paquetage permet de définir des méthodes protégées entre les fantômes inaccessibles par les autres acteurs.
-***
+##
 
 ####2.1.3.1 *(abstract class)* Ghost
 **Super-classe de tous les fantômes**  
-* Abstraite car elle a pour but d'être instantiée uniquement par l'intermédiaire de ses sous-classes.
+* Étendue par: *Blinky*, *Inky*, *Pinky*, *[extension] Boss*
+* Abstraite car elle a pour but d'être instanciée uniquement par l'intermédiaire de ses sous-classes.
+* Contient une sous-classe **GhostHandler** gérant les interactions des fantômes.
 * *[extension]* Protection animée à leur réapparition.
 * *[extension]* Son à leur mort.
 ###
@@ -211,11 +214,11 @@ Ce paquetage permet de définir des méthodes protégées entre les fantômes in
 * *[extension]* S'il est effrayé, sa vitesse augmente également. (--> fuite plus efficace)
 ###
 *path: ch.epfl.cs107.play.game.superpacman.actor.ghost.**Pinky.java***
-##
+***
 
 ###2.1.4. *(package)* setting
 Ce paquetage regroupant les décors du jeu permet de mieux structurer le projet.
-***
+##
 
 #####2.1.4.1 *(class)* Gate
 * Barrière bloquant le passage du joueur. Destinée à être ouverte avec un signal. (clé ou aire)
@@ -234,9 +237,11 @@ Ce paquetage regroupant les décors du jeu permet de mieux structurer le projet.
 
 ###2.2. *(package)* area
 Ce paquetage regroupant les classes liées aux aires du jeu SuperPacman permet de mieux structurer le projet.
+##
 
 #### *(class)* SuperPacmanArea
 * Classe gérant les aires du jeu SuperPacman.
+* Ajout d'une fonction statique utilitaire (toSuperPacmanArea(Area area)) afin de faciliter les nombreux casts
 * *[extension]* Fonctionnalités de pause et de fin de jeu (victoire et défaite) et leurs menus associés
 ###
 *path: ch.epfl.cs107.play.game.superpacman.area.**SuperPacmanArea.java***
@@ -244,74 +249,101 @@ Ce paquetage regroupant les classes liées aux aires du jeu SuperPacman permet d
 
 #### *(class)* SuperPacmanBehavior
 * Classe gérant la grille et le comportement d'une aire du jeu SuperPacman.
+* Contient une énumeration *(enum)* SuperPacmanCellType qui liste les différents types de cellules 
+ainsi que la couleur leur étant associée
+* *[extension]* Ajout de nouveaux types dans *(enum)* SuperPacmanCellType correspondants 
+aux acteurs ajoutés par nos soins
 ###
 *path: ch.epfl.cs107.play.game.superpacman.area.**SuperPacmanBehavior.java***
 ##
 
 #### *[extension]* *(class)* SuperPacmanMenu
-* Classe gérant le menu du jeu.
+* Représente un menu de SuperPacman.
+* Utilisé pour la pause, la victoire et la défaite du jeu.
 ###
 *path: ch.epfl.cs107.play.game.superpacman.area.**SuperPacmanMenu.java***
+
 ***
 
-####2.2.1 *(package)* level
-Ce paquetage permet de mieux structurer le projet.
-***
+####2.2.1. *(package)* level
+Ce paquetage regroupant les différentes aires de SuperPacman permet de mieux structurer le projet.
+##
 
-#####2.2.1.1 *[extension]* *(class)* BonusPortal
-*path: ch.epfl.cs107.play.game.superpacman.area.level.**BonusPortal.java*** 
-**Porte permettant d'accéder au niveau bonus**
-* Se comporte comme une porte possédant un sprite et ayant pour destination le niveau bonus
-####   
-***
-
-#####2.2.1.2 *[extension]* *(class)* BossLevel
-*path: ch.epfl.cs107.play.game.superpacman.area.level.**BossLevel.java*** 
-**Niveau bonus**
-* Possède beaucoup de cherries et fantômes. On peut revenir dans le level2 par une gate.
-####   
-***
-
-#####2.2.1.3 *(class)* Level0
-*path: ch.epfl.cs107.play.game.superpacman.area.level.**Level0.java*** 
+#####2.2.1.1. *(class)* Level0
 * Niveau 0 du jeu.
-####   
-***
+###
+*path: ch.epfl.cs107.play.game.superpacman.area.level.**Level0.java*** 
+##
 
-#####2.2.1.4 *(class)* Level1
+#####2.2.1.2. *(class)* Level1
+* Niveau 1 du jeu
+###
 *path: ch.epfl.cs107.play.game.superpacman.area.level.**Level1.java*** 
-* Niveau 1 du jeu.
-####   
-***
+##
 
-#####2.2.1.5 *(class)* Level2
+#####2.2.1.3. *(class)* Level2
+* Niveau 2 du jeu
+###
 *path: ch.epfl.cs107.play.game.superpacman.area.level.**Level2.java*** 
-* Niveau 2 du jeu.
-####   
-***
+##
 
+#####2.2.1.4. *[extension]* *(class)* BonusLevel
+* Niveau bonus du jeu
+* Créé pour avoir un moyen d'obtenir beaucoup de score en prenant toutefois un risque: aucun bonus ne s'y trouve 
+(invincibilité impossible)
+* On y entre dans le niveau 2 et il nous ramène dans le niveau 2.
+###
+*path: ch.epfl.cs107.play.game.superpacman.area.level.**BonusLevel.java*** 
+##
+
+#####2.2.1.5. *[extension]* *(class)* BossLevel
+* Niveau final du jeu
+* Il contient un boss ainsi que de nombreux arcs. Il est conçu pour être difficile.
+* Si on collecte toutes les vies du boss, le jeu se termine.
+###
+*path: ch.epfl.cs107.play.game.superpacman.area.level.**BossLevel.java*** 
+##
+
+#####2.2.1.6. *[extension]* *(class)* Level0Copy, Level1Copy, Level2Copy
+* Copie des niveaux du jeu avec l'ajout de notre item *Heart*
+###
+*path 0: ch.epfl.cs107.play.game.superpacman.area.level.**Level0Copy.java***  
+*path 1: ch.epfl.cs107.play.game.superpacman.area.level.**Level1Copy.java***   
+*path 2: ch.epfl.cs107.play.game.superpacman.area.level.**Level2Copy.java***    
+##
+
+***
 ###2.3. *(package)* handler
-Ce paquetage permet de mieux structurer le projet. 
+Ce paquetage comprenant le gestionnaire d'interaction de SuperPacman permet de mieux structurer le projet. 
+##
 
 #### *(interface)* SuperPacmanInteractionVisitor
+* *Implémentée par tous les handlers des Interactor du jeu*
+* Interface donnant une définition (vide) par défaut à toutes les interactions possibles du jeu.
+###
 *path: ch.epfl.cs107.play.game.superpacman.handler.**SuperPacmanInteractionVisitor.java*** 
-* Interface qui represente les differentes interactions possible du jeu
-####
+
+***
 ***
 
-
-
 ##3. Modification des consignes apportées par l'énoncé
-
-###3.1 (Consigne: modifier vitesse inky quand est effrayé)
- * Notre projet: modifier vitesse PINKY quand effrayé car c'est plus logique puisqu'il fuit).
  
-###3.2 (Consigne: scare/unscare ghosts dans le update du jeu)
- * Notre projet: scare dans "invincible" et unscare dans "refreshinvincibility" du joueur. Economise de la mémoire)
+### (Consigne: vérifier l'effraiement des fantômes dans le update de SuperPacman)
+ * Notre projet: effrayer dans "invincible()" de SuperPacmanPlayer et arrêter d'effrayer dans 
+ "refreshinvincibility()" de SuperPacmanPlayer.  
+ Nous avons décidé de procéder ainsi afin d'éviter de répéter la vérification à chaque frame mais seulement quand l'état
+ du fantôme est susceptible de changer.  
+ Le schéma pour modifier l'état des fantômes est le suivant:  
+ -> **SuperPacmanPlayer** getOwnerArea().scareGhosts()/unscareGhosts()  
+ -> **SuperPacmanArea** behavior.scareGhosts/unScareGhosts()  
+ -> **SuperPacmanBehavior** possède une liste de tous les fantômes et donc change leur état un à un 
+
+***
+***
 
 ##4. Liste de toutes les extensions
 
-##### 4a. Acteurs
+##### 4.1. Acteurs
 * *(abstract class)* Projectile
 * *(class)* Fire
 * *(class)* Heart
@@ -321,21 +353,18 @@ Ce paquetage permet de mieux structurer le projet.
 * *(class)* Arrow
 * *(class)* Bow
 
-##### 4b. Aires et objets liés
+##### 4.2. Aires et objets liés
 * *(class)* BossLevel
 * *(class)* BonusLevel
 * *(class)* SuperPacmanMenu
 
-##### 4c. Autres fonctionnalités
+##### 4.3. Autres fonctionnalités
 * Divers sons
     * Mort du pacman
     * Mort des fantômes
-    * Collecte des *(class)* Collectable
+    * Collecte des Collectable
     
-* Temps d'invincibilité à la réapparition du joueur
-    (accompagné d'une animation)
-* Temps d'invincibilité à la réapparition des fantômes
-    (accompagné d'une animation)
-* Augmentation de la vitesse du joueur quand tous les diamants 
-d'une aire sont ramassés
+* Temps d'invincibilité à la réapparition du joueur (accompagné d'une animation)
+* Temps d'invincibilité à la réapparition des fantômes (accompagné d'une animation)
+* Augmentation de la vitesse du joueur quand tous les diamants d'une aire sont ramassés
     

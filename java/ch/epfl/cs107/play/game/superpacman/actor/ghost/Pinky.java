@@ -61,7 +61,7 @@ public class Pinky extends Ghost {
     public Orientation getNextOrientation() {
 
         // Gets the area where is the ghost and the path between the ghost and the target position
-        SuperPacmanArea area = (SuperPacmanArea) getOwnerArea();
+        SuperPacmanArea area = SuperPacmanArea.toSuperPacmanArea(getOwnerArea());
         Queue<Orientation> path = area.shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
 
         // While the path is null or empty, generate an other path
@@ -90,17 +90,14 @@ public class Pinky extends Ghost {
         }
     }
 
-
-    /** @NOTE In the PDF it is written to increase Inky's speed when he's afraid, we decided to do it with Pinky too because, as he runs away when he's scaredit seems more logic */
     @Override
-    protected void onScareChange() {
+    protected int getSpeed() {
         //Set the speed
         if (!isAfraid()) {
-            setSpeed(AFRAID_SPEED);
+            return AFRAID_SPEED;
         } else {
-            setSpeed(DEFAULT_SPEED);
+            return DEFAULT_SPEED;
         }
-        super.onScareChange();
     }
 
     /* --------------- External Methods --------------- */

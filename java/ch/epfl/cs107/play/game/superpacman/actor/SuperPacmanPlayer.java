@@ -12,6 +12,7 @@ import ch.epfl.cs107.play.game.superpacman.actor.collectable.Bonus;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.CollectableReward;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.Heart;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.BossLife;
+import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Arrow;
 import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Boss;
 import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Fire;
 import ch.epfl.cs107.play.game.superpacman.actor.ennemy.Projectile;
@@ -32,7 +33,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     // Constants
     private final int DEFAULT_SPEED = 6;
-    private final float INVINCIBLE_DURATION = 300;
+    private final float INVINCIBLE_DURATION = 10;
     private final int MAXHP = 4;
     private final int START_HP = 1;
 
@@ -100,7 +101,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
         hp = START_HP;
         score = 0;
         speed = DEFAULT_SPEED;
-        invincible = true;
+        invincible = false;
         timerInvincible = INVINCIBLE_DURATION;
 
         // Initial orientation
@@ -158,10 +159,8 @@ public class SuperPacmanPlayer extends Player implements Killable {
     private void invincible() {
         invincible = true;
 
-        //TODO: documenter: ici plutôt que update de SuperPacman
-        SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
         // Scare all ghost in the area
-        ownerArea.scareGhosts();
+        SuperPacmanArea.toSuperPacmanArea(getOwnerArea()).scareGhosts();
     }
 
     /**
@@ -174,8 +173,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
             } else {
                 invincible = false;
 
-                SuperPacmanArea ownerArea = (SuperPacmanArea) getOwnerArea();
-                ownerArea.unScareGhosts();
+                SuperPacmanArea.toSuperPacmanArea(getOwnerArea()).unScareGhosts();
                 timerInvincible = INVINCIBLE_DURATION;
             }
     }
@@ -216,14 +214,6 @@ public class SuperPacmanPlayer extends Player implements Killable {
             }
         }
     }
-
-    /**
-     * Method to cast an Area in a SuperPacmanArea
-     * @param area (Area): the area to cast
-     * @return (SuperPacmanArea)
-     */
-    //TODO: MOVE IT TO STATIC IN AREA
-    private SuperPacmanArea toSuperPacmanArea(Area area) { return (SuperPacmanArea) area; }
 
     /* --------------- EXTENSIONS --------------- */
 
@@ -278,7 +268,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
         /* -------------- EXTENSIONS --------------- */
 
         // Increase the speed and make invincible (of INVINCIBLE_DURATION seconds) if the area is completed
-        SuperPacmanArea owner = toSuperPacmanArea(getOwnerArea());
+        SuperPacmanArea owner = SuperPacmanArea.toSuperPacmanArea(getOwnerArea());
         if (owner.isOn()) {
             invincible();
             speed = 9;
@@ -345,15 +335,14 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
         // If the hp are 0 it's game over
         if(hp <= 0) {
-            SuperPacmanArea owner = (SuperPacmanArea) getOwnerArea();
-            owner.gameOver();
+            SuperPacmanArea.toSuperPacmanArea(getOwnerArea()).gameOver();
             return;
         } else {
 
             // else, respawn and [extension] set the protection
             protect(); // [extension]
             getOwnerArea().leaveAreaCells(this, getEnteredCells());
-            setCurrentPosition(toSuperPacmanArea(getOwnerArea()).getSpawnLocation().toVector());
+            setCurrentPosition(SuperPacmanArea.toSuperPacmanArea(getOwnerArea()).getSpawnLocation().toVector());
             getOwnerArea().enterAreaCells(this, getCurrentCells());
             resetMotion();
         }
@@ -429,7 +418,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
         /* --------------- EXTENSIONS --------------- */
 
         @Override
-        public void interactWith(Projectile projectile) {
+        public void interactWith(Arrow arrow) {
             if (!protection && !invincible) {
                 onDeath();
             }

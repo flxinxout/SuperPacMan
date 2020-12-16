@@ -28,7 +28,7 @@ public class SuperPacmanBehavior extends AreaBehavior {
     // Graph associated to the area
     private AreaGraph graph = new AreaGraph();
 
-    // List of ghosts in the game
+    // List of ghosts in the area
     private List<Ghost> ghosts = new ArrayList<>();
 
     /**
@@ -116,6 +116,8 @@ public class SuperPacmanBehavior extends AreaBehavior {
                         ghosts.add(pinky);
                         break;
 
+                    /* --------------- EXTENSIONS--------------- */
+
                     case FREE_WITH_BOW:
                         Bow bow = new Bow(area, Orientation.UP, new DiscreteCoordinates(x, y));
                         area.registerActor(bow);
@@ -144,7 +146,6 @@ public class SuperPacmanBehavior extends AreaBehavior {
     private boolean[] computeGraphEdges(int x, int y) {
         boolean[] graphEdges = new boolean[4];
 
-        //TODO: multiple casts and weird method
         if (x > 0) {
             SuperPacmanCell leftCell = (SuperPacmanCell) getCell(x - 1, y);
             graphEdges[0] = (leftCell.type != SuperPacmanCellType.WALL);
@@ -294,11 +295,14 @@ public class SuperPacmanBehavior extends AreaBehavior {
         FREE_WITH_BLINKY ( -65536) , // red
         FREE_WITH_PINKY ( -157237) , // pink
         FREE_WITH_INKY ( -16724737) , // cyan
-        FREE_WITH_BOW ( -14046643) , // green [extensions]
         FREE_WITH_CHERRY ( -36752) , // light red
         FREE_WITH_BONUS ( -16478723) , // light blue
         FREE_EMPTY ( -6118750) , // sort of gray
-        FREE_WITH_LIFE (-256) ; // sort of yellow [extensions]
+
+        /* --------------- EXTENSIONS --------------- */
+
+        FREE_WITH_LIFE (-256) , // sort of yellow [extensions]
+        FREE_WITH_BOW ( -14046643) ; // green [extensions]
 
         final int type;
 

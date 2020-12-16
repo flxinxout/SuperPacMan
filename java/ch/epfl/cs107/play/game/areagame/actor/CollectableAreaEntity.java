@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Class that represents an entity in an area that can be collected by an actor
  */
-public abstract class CollectableAreaEntity extends AreaEntity implements Collectable {
+public abstract class CollectableAreaEntity extends AreaEntity {
 
     private final SoundAcoustics soundAcoustics;
 
@@ -30,7 +30,10 @@ public abstract class CollectableAreaEntity extends AreaEntity implements Collec
 
     /* ------------- Implement Collectable --------------- */
 
-    @Override
+    /**
+     * Called when it is collected.
+     * @Note: meant to be overriden
+     */
     public void onCollect() {
         getOwnerArea().unregisterActor(this);
         soundAcoustics.shouldBeStarted();

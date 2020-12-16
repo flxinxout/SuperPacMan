@@ -63,11 +63,11 @@ public abstract class SuperPacmanArea extends Area implements Logic {
             // Initialisation GUIs
             pauseGUI = new SuperPacmanMenu[2];
             for (int i = 0; i < pauseGUI.length; i++) {
-                pauseGUI[i] = new SuperPacmanMenu("superpacman/pause.menu" + i, SuperPacmanMenu.SuperPacmanMenuType.PAUSE);
+                pauseGUI[i] = new SuperPacmanMenu("superpacman/pause.menu" + i);
             }
 
-            gameOverGUI = new SuperPacmanMenu("superpacman/gameover.menu", SuperPacmanMenu.SuperPacmanMenuType.GAMEOVER);
-            winGUI = new SuperPacmanMenu("superpacman/win.menu", SuperPacmanMenu.SuperPacmanMenuType.WIN);
+            gameOverGUI = new SuperPacmanMenu("superpacman/gameover.menu");
+            winGUI = new SuperPacmanMenu("superpacman/win.menu");
             won = false;
 
             return true;
@@ -124,13 +124,23 @@ public abstract class SuperPacmanArea extends Area implements Logic {
         }
     }
 
-    /* --------------- Public Methods --------------- */
-
     @Override
     public boolean resume(Window window, FileSystem fileSystem) {
         desiredGUI = 0;
         return super.resume(window, fileSystem);
     }
+
+    @Override
+    public float getCameraScaleFactor() { return CAMERA_SCALE_FACTOR; }
+
+    /* --------------- Public Methods --------------- */
+
+    /**
+     * Method to cast an Area in a SuperPacmanArea
+     * @param area (Area): the area to cast
+     * @return (SuperPacmanArea)
+     */
+    public static SuperPacmanArea toSuperPacmanArea(Area area) { return (SuperPacmanArea) area; }
 
     /**
      * End the game by loosing
@@ -220,7 +230,4 @@ public abstract class SuperPacmanArea extends Area implements Logic {
      * @return (DiscreteCoordinates)
      */
     abstract public DiscreteCoordinates getSpawnLocation();
-
-    @Override
-    public float getCameraScaleFactor() { return CAMERA_SCALE_FACTOR; }
 }
