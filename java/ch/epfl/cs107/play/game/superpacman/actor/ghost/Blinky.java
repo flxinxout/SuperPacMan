@@ -52,10 +52,5 @@ public class Blinky extends Ghost {
     }
 
     @Override
-    protected DiscreteCoordinates getTargetPos() { return null; }
-
-    @Override
-    protected void onScareChange() {
-        super.onScareChange();
-    }
+    protected void onScareChange() { }
 }

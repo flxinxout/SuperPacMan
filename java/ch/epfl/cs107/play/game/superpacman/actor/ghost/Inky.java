@@ -6,16 +6,13 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
-import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-import java.util.Queue;
-
 /**
- * Inky is a ghost which moves in a specific radius around its home.
+ * Inky is a smart ghost which moves in a specific radius around its home.
  * It starts targeting the player when he's close
  */
-public class Inky extends Ghost {
+public class Inky extends SmartGhost {
 
     // Constants
     private final int MAX_DISTANCE_WHEN_SCARED = 5;
@@ -56,21 +53,6 @@ public class Inky extends Ghost {
         }
 
         return Animation.createAnimations (SuperPacman.getDefaultAnimationDuration(), sprites);
-    }
-
-    @Override
-    public Orientation getNextOrientation() {
-
-        // Gets the area where is the ghost and the path between the ghost and the target positiom
-        SuperPacmanArea area = SuperPacmanArea.toSuperPacmanArea(getOwnerArea());
-        Queue<Orientation> path = area.shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
-
-        // While the path is null or empty, generate another path
-        while (path == null || path.isEmpty()) {
-            path = area.shortestPath(getCurrentMainCellCoordinates(), randomCell());
-        }
-
-        return path.poll();
     }
 
     @Override

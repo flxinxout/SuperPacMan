@@ -32,7 +32,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
     // Target
     private SuperPacmanPlayer player;
-    private DiscreteCoordinates targetPos;
 
     // Animations
     private final Animation AFRAID_ANIMATION;
@@ -70,7 +69,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
         isAfraid = false;
         this.home = home;
-        targetPos = getTargetPos();
 
         /* --------------- EXTENSIONS --------------- */
 
@@ -101,12 +99,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
         super.update(deltaTime);
 
-        // If the ghost and his target position are very close, we update the target
-        if (targetPos != null && DiscreteCoordinates.distanceBetween(getCurrentMainCellCoordinates(), targetPos) < 0.1) {
-            targetPos = getTargetPos();
-        }
-
-
         /* --------------- EXTENSIONS --------------- */
 
         if (protect) {
@@ -135,7 +127,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
         protect();
         player = null;
-        targetPos = getTargetPos();
 
         DEATH_SOUND.shouldBeStarted();
         DEATH_SOUND.bip(getOwnerArea().getWindow());
@@ -228,6 +219,11 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     /* --------------- Protected Methods --------------- */
 
     /**
+     * Called when the ghosts become scared or stop being scared. NEED TO BE REDEFINED
+     */
+    protected abstract void onScareChange();
+
+    /**
      * Choose a random cell in a specific radius around another cell
      * @param centerPos (DiscreteCoordinates): the center cell
      * @param radius    (int): the radius allowed
@@ -261,11 +257,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
         return randomCell(center, radius);
     }
 
-    /** Called when the ghosts become scared or stop being scared */
-    protected void onScareChange() {
-        targetPos = getTargetPos();
-    }
-
     /* --------------- Public Methods --------------- */
 
     /** Scare ghosts */
@@ -293,12 +284,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
      * @return (Animation[]): the animations of the entity
      */
     protected abstract Animation[] getAnimations();
-
-    /**
-     * Getter for the target position. NEED TO BE OVERRIDDEN
-     * @return (DiscreteCoordinates)
-     */
-    protected abstract DiscreteCoordinates getTargetPos();
 
     /**
      * Getter for the speed. Can be redefined
@@ -346,15 +331,13 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
      */
     protected SuperPacmanPlayer getPlayer() { return player; }
 
-
     /**
      * Interaction handler for a Ghost
      */
-    private class GhostHandler implements SuperPacmanInteractionVisitor {
+    protected class GhostHandler implements SuperPacmanInteractionVisitor {
         @Override
         public void interactWith(SuperPacmanPlayer pacman) {
             player = pacman;
-            targetPos = getTargetPos();
         }
     }
 }

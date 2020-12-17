@@ -7,6 +7,7 @@ import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
 import ch.epfl.cs107.play.game.superpacman.actor.collectable.BossLife;
 import ch.epfl.cs107.play.game.superpacman.actor.ghost.Ghost;
+import ch.epfl.cs107.play.game.superpacman.actor.ghost.SmartGhost;
 import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.game.superpacman.handler.SuperPacmanInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -17,7 +18,7 @@ import java.util.Queue;
 /**
  * [EXTENSION] End boss of the SuperPacman game
  */
-public class Boss extends Ghost implements Interactor {
+public class Boss extends SmartGhost implements Interactor {
 
     // Constants
     private final int START_LIFE = 4;
@@ -66,22 +67,6 @@ public class Boss extends Ghost implements Interactor {
     }
 
     /* --------------- Extends Ghost -------------- */
-
-    @Override
-    protected Orientation getNextOrientation() {
-
-        // Gets the area where is the ghost and the path between the ghost and the SuperPacmanPlayer
-        SuperPacmanArea area = SuperPacmanArea.toSuperPacmanArea(getOwnerArea());
-        Queue<Orientation> path = area.shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
-
-        // While the path is null or empty (for example if the ghost has not a target now), generate an other path
-        while (path == null || path.isEmpty()) {
-            DiscreteCoordinates cell = randomCell();
-            path = area.shortestPath(getCurrentMainCellCoordinates(), cell);
-        }
-
-        return path.poll();
-    }
 
     @Override
     protected Animation[] getAnimations() {

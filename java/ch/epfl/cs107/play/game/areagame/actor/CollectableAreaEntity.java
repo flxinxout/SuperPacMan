@@ -15,6 +15,7 @@ import java.util.List;
 public abstract class CollectableAreaEntity extends AreaEntity {
 
     private final SoundAcoustics soundAcoustics;
+    private final boolean IS_SOUND_ON = true;
 
     /**
      * Default CollectableAreaEntity constructor
@@ -36,8 +37,10 @@ public abstract class CollectableAreaEntity extends AreaEntity {
      */
     public void onCollect() {
         getOwnerArea().unregisterActor(this);
-        soundAcoustics.shouldBeStarted();
-        soundAcoustics.bip(getOwnerArea().getWindow());
+        if (IS_SOUND_ON) {
+            soundAcoustics.shouldBeStarted();
+            soundAcoustics.bip(getOwnerArea().getWindow());
+        }
     }
 
     /* ------------- Implement Interactable --------------- */

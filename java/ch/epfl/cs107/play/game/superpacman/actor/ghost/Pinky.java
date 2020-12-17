@@ -6,17 +6,15 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.rpg.actor.RPGSprite;
 import ch.epfl.cs107.play.game.superpacman.SuperPacman;
-import ch.epfl.cs107.play.game.superpacman.area.SuperPacmanArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-import java.util.Queue;
 
 /**
- * Pinky is a ghost which moves randomly across the map until he targets the player.
+ * Pinky is a smart ghost which moves randomly across the map until he targets the player.
  * It starts targeting the player when he's close
  * When it's afraid, it stays at a minimum distance of the player
  */
-public class Pinky extends Ghost {
+public class Pinky extends SmartGhost {
 
     //Constants
     private final int DEFAULT_SPEED = 18;
@@ -55,22 +53,6 @@ public class Pinky extends Ghost {
         }
 
         return Animation.createAnimations (SuperPacman.getDefaultAnimationDuration(), sprites);
-    }
-
-    @Override
-    public Orientation getNextOrientation() {
-
-        // Gets the area where is the ghost and the path between the ghost and the target position
-        SuperPacmanArea area = SuperPacmanArea.toSuperPacmanArea(getOwnerArea());
-        Queue<Orientation> path = area.shortestPath(getCurrentMainCellCoordinates(), getTargetPos());
-
-        // While the path is null or empty, generate an other path
-        while (path == null || path.isEmpty()) {
-            DiscreteCoordinates cell = randomCell();
-            path = area.shortestPath(getCurrentMainCellCoordinates(), cell);
-        }
-
-        return path.poll();
     }
 
     @Override

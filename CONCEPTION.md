@@ -29,11 +29,18 @@ par *(class)*, *(abstract class)*, *(interface)*, et *(enum)*.
  
 ***
 
-## 1.2. Remarque
+## 1.2. Remarques
+####1.2.1. Interaction avec fantômes
 Un bug bien connu par votre équipe persiste:  
 Parfois, après avoir mangé un fantôme, si on retourne sur la case sur laquelle on l'a mangé, l'interaction se produit
 toujours alors que le fantôme a réapparu à sa case refuge. Nous avons cherché à régler ce problème via Piazza et
 Discord et on nous a informés que c'était un défaut de la maquette et nous ne devions pas nous acharner dessus.
+####1.2.2. Ralentissements liés aux sons
+Un autre bug connu par votre équipe que nous ne pouvons pas régler nous-mêmes est le ralentissement du jeu à cause
+de l'implémentation des sons. Ces ralentissements sont spécialement forts dans le niveau bonus.
+Afin de tester notre jeu vous pouvez initialiser la constante *IS_SOUND_ON* de *CollectableAreaEntity* à *false*, ainsi
+tous les collectibles arrêteront de faire du son et l'expérience de jeu sera plus fluide.
+
 ***
 ***
 
@@ -214,7 +221,8 @@ Ce paquetage permet de définir des méthodes protégées entre les fantômes in
 **Super-classe de tous les fantômes**  
 *Étendue par: Blinky, Inky, Pinky, [extension] Boss*
 * Abstraite car elle a pour but d'être instanciée uniquement par l'intermédiaire de ses sous-classes.
-* Contient une sous-classe **GhostHandler** gérant les interactions des fantômes.
+* Contient une sous-classe **GhostHandler** gérant les interactions des fantômes. Elle est définie comme protégée afin 
+d'en faire hériter SmartGhostHandler.
 * Remarque: on a créé getSpeed() et getFieldOfView() plutôt que des attributs et des setters car on est
 partis du principe que les fantômes pouvaient tous avoir des vitesses et champs de vision différents. 
 (En l'occurrence non mais ils auraient pu)
@@ -224,14 +232,26 @@ partis du principe que les fantômes pouvaient tous avoir des vitesses et champs
 *path: ch.epfl.cs107.play.game.superpacman.actor.ghost.**Ghost.java***  
 ##
 
-####2.1.3.2 *(class)* Blinky
+####2.1.3.2 *(abstract class)* SmartGhost
+**Super-classe de tous les fantômes intelligents**  
+*Étendue par: Inky, Pinky, *[extension]* Boss*
+* Représente un fantôme capable de suivre un chemin aussi court que possible vers une position cible.
+* Créée principalement afin d'éviter de la duplication de code (méthode *getNextOrientation()* principalement) et
+de mieux encapsuler l'idée de position cible.
+* Abstraite car elle a pour but d'être instanciée uniquement par l'intermédiaire de ses sous-classes.
+* Contient une sous-classe **SmartGhostHandler** gérant les interactions des fantômes intelligents. 
+###
+*path: ch.epfl.cs107.play.game.superpacman.actor.ghost.**SmartGhost.java***  
+##
+
+####2.1.3.3 *(class)* Blinky
 * Fantôme se déplaçant aléatoirement dans toute l'aire.
 * Ne poursuit pas le joueur.
 ###
 *path: ch.epfl.cs107.play.game.superpacman.actor.ghost.**Blinky.java***  
 ##
 
-####2.1.3.3 *(class)* Inky
+####2.1.3.4 *(class)* Inky
 * Fantôme se déplaçant autour d'un certain rayon (rectangulaire) autour de sa case refuge
 * Poursuit le joueur s'il rentre dans son champ de vision (rayon rectangulaire)
 * S'il est effrayé, sa vitesse augmente et il se réfugie proche de sa case refuge.
@@ -239,7 +259,7 @@ partis du principe que les fantômes pouvaient tous avoir des vitesses et champs
 *path: ch.epfl.cs107.play.game.superpacman.actor.ghost.**Inky.java***
 ##
 
-####2.1.3.4 *(class)* Pinky
+####2.1.3.5 *(class)* Pinky
 * Fantôme se déplaçant en suivant une trajectoire aléatoire dans l'aire entière
 * Poursuit le joueur s'il rentre dans son champ de vision (rayon rectangulaire)
 * S'il est effrayé, il fuit le joueur.
