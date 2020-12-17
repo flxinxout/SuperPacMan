@@ -15,12 +15,12 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Gates are used to block a way. Can be deactivated by a signal
+ * Gates are used to block a way. Can be opened by a signal
  */
 public class Gate extends AreaEntity {
 
     // Attributes
-    private final Logic signal; // Signal conditioning the gate
+    private Logic signal; // Signal conditioning the gate
     private final Sprite sprite;
 
     /**

@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.superpacman.area;
 
+import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.io.FileSystem;
@@ -15,7 +16,7 @@ import java.util.Queue;
  */
 public abstract class SuperPacmanArea extends Area implements Logic {
 
-    //Constants
+    // Constants
     // The scale factor of the window and the player in the area
     protected final static float CAMERA_SCALE_FACTOR = 20.f;
 
@@ -32,8 +33,10 @@ public abstract class SuperPacmanArea extends Area implements Logic {
     private SuperPacmanMenu[] pauseGUI;
     private SuperPacmanMenu gameOverGUI;
     private SuperPacmanMenu winGUI;
+    private boolean wasPaused;
     private boolean won;
     private int desiredGUI = 0;
+    private final SoundAcoustics menuSound = new SoundAcoustics("sounds/pacman/dialogNext.wav");
 
 
     /* --------------- Protected Methods --------------- */
@@ -83,17 +86,28 @@ public abstract class SuperPacmanArea extends Area implements Logic {
 
         //Pause mechanics
         if (isPaused()) {
+            if (!wasPaused) {
+                menuSound.shouldBeStarted();
+                menuSound.bip(getWindow());
+            }
+
             // Adapt the arrow in the pause GUI
             pauseGUI[desiredGUI].draw(getWindow());
 
             if (getKeyboard().get(Keyboard.UP).isLastPressed()) {
+                menuSound.shouldBeStarted();
+                menuSound.bip(getWindow());
                 desiredGUI = 0;
             } else if (getKeyboard().get(Keyboard.DOWN).isLastPressed()) {
+                menuSound.shouldBeStarted();
+                menuSound.bip(getWindow());
                 desiredGUI = 1;
             }
 
             // If ENTER is pressed
             if (getKeyboard().get(Keyboard.ENTER).isPressed()) {
+                menuSound.shouldBeStarted();
+                menuSound.bip(getWindow());
                 switch(desiredGUI) {
                     case 0:
                         resume(getWindow(), getFileSystem());
@@ -119,13 +133,20 @@ public abstract class SuperPacmanArea extends Area implements Logic {
 
             // If ENTER is pressed, then exit the game
             if (getKeyboard().get(Keyboard.ENTER).isPressed()) {
+                menuSound.shouldBeStarted();
+                menuSound.bip(getWindow());
+
                 System.exit(1);
             }
         }
+        wasPaused = isPaused();
     }
 
     @Override
     public boolean resume(Window window, FileSystem fileSystem) {
+        menuSound.shouldBeStarted();
+        menuSound.bip(window);
+
         desiredGUI = 0;
         return super.resume(window, fileSystem);
     }

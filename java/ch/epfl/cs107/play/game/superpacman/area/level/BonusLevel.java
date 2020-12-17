@@ -29,7 +29,7 @@ public class BonusLevel extends SuperPacmanArea {
 
         // Registration of actors in the level
 
-        Door door = new Door("superpacman/Level2", new DiscreteCoordinates(15, 29), Logic.TRUE, this,
+        Door door = new Door("superpacman/Level2Copy", new DiscreteCoordinates(28, 5), Logic.TRUE, this,
                 Orientation.DOWN, new DiscreteCoordinates(9, 0), new DiscreteCoordinates(10, 0));
         registerActor(door);
     }

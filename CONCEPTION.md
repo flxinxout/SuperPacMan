@@ -1,7 +1,7 @@
 Giovanni Ranieri et Dylan Vairoli
 #SuperPacman conception
 ###0a. Contenu
-1. Modifications du code donné
+1. Modifications du code de départ et remarques
 2. Classes et interfaces ajoutées (extensions incluses)
 3. Modification des consignes apportées par l'énoncé
 4. Liste de toutes les extensions
@@ -11,13 +11,29 @@ Giovanni Ranieri et Dylan Vairoli
 * Les classes, classes abstraites, interfaces et énumérations seront respectivement précédées 
 par *(class)*, *(abstract class)*, *(interface)*, et *(enum)*.
 
-##1. Modifications du code de départ
-##### *(abstract class)* Area
+##1.1. Modification du code de départ
+##### 1.1.1. *(abstract class)* Area
+* *[extension]* Ajout de fonctionnalités de pause et de fin de jeu:  
+    * Ajout de deux attributs *paused* et *ended*  
+    * Ajout de deux fonctions *isPaused()* et *hasEnded()* (Getters)  
+    --> Modification de *update()*, *suspend()* et *end()* en conséquence  
+###
 *path: java/ch.epfl.cs107.play/game/areagame/**Area.java***
-* Ajout de fonctionnalités de pause et de fin de jeu:  
-Ajout de deux attributs *paused* et *ended*  
-Ajout de deux fonctions *isPaused()* et *hasEnded()* (Getters)  
-Modification de *update()*, *suspend()* et *end()* en conséquence  
+##
+
+#####1.1.2. *(class)* Wall
+* *[extension]* Ajout d'un sprite à son constructeur: un mur seul (sans voisinage)  
+ --> Création d'un nouveau fichier PNG: *res.images.sprites.superpacman.**wall2***
+###
+*path: ch.epfl.cs107.play.game.superpacman.actor.setting.**Wall.java*** 
+ 
+***
+
+## 1.2. Remarque
+Un bug bien connu par votre équipe persiste:  
+Parfois, après avoir mangé un fantôme, si on retourne sur la case sur laquelle on l'a mangé, l'interaction se produit
+toujours alors que le fantôme a réapparu à sa case refuge. Nous avons cherché à régler ce problème via Piazza et
+Discord et on nous a informés que c'était un défaut de la maquette et nous ne devions pas nous acharner dessus.
 ***
 ***
 
@@ -30,7 +46,7 @@ Modification de *update()*, *suspend()* et *end()* en conséquence
 
 ***
 
-###2.0. *(package)* areagame.actor
+###2.0.1. *(package)* areagame.actor
 ##
 
 #### *(abstract class)* CollectableAreaEntity
@@ -39,6 +55,17 @@ Modification de *update()*, *suspend()* et *end()* en conséquence
 * Dans un paquetage général (non spécifique à SuperPacman) car elle est utile à tout type de jeu sur grille.
 ###
 *path: ch.epfl.cs107.play.game.areagame.actor.**CollectableAreaEntity.java*** 
+
+***
+
+###2.0.2. *(package)* rpg.actor
+##
+
+#### *[extension]* *(class)* DoorGraphics
+* Porte avec un sprite attaché 
+* Dans un paquetage général (non spécifique à SuperPacman) car elle est utile à tout type de jeu sur grille.
+###
+*path: ch.epfl.cs107.play.game.rpg.actor.**DoorGraphics.java*** 
 
 ***
 
@@ -58,6 +85,8 @@ Ce paquetage regroupant les acteurs de SuperPacman permet de mieux structurer le
 **Classe du joueur principal**
 * *[extension]* Protection animée à sa réapparition.
 * *[extension]* Son à sa mort.
+* *[extension]* Augmentation de sa vitesse ainsi qu'invincibilité (10s) lorsque tous les diamants d'une aire sont 
+récoltés
 * Contient une sous-classe **SuperPacmanPlayerHandler** gérant les interactions du joueur.
 ###
 *path: ch.epfl.cs107.play.game.superpacman.actor.**SuperPacmanPlayer.java***  
@@ -78,8 +107,8 @@ Ce paquetage permet de mieux structurer le projet. Il contient les classes consi
 ##
 
 ####2.1.1.1. *(abstract class)* CollectableReward
-**Super-classe des Collectable rapportant du score**
-* Étendue par: *Cherry* et *Diamond*
+**Super-classe des Collectable rapportant du score**  
+*Étendue par: Cherry et Diamond*
 * Abstraite car elle a pour but d'être instanciée uniquement par l'intermédiaire de ses sous-classes
 * Créée afin d'éviter la duplication de code. Bien que seuls 2 CollectableReward sont définis dans notre projet,
 il est facilement imaginable d'en avoir une dizaine dans un jeu plus complet
@@ -127,12 +156,12 @@ de correctement l'associer au boss correspondant.
 ***
 
 ###2.1.2. *[extension]* *(package)* ennemy
-Ce paquetage regroupant les ennemis autre que les fantômes permet de mieux structurer le projet.
+Ce paquetage regroupant les ennemis autres que les fantômes permet de mieux structurer le projet.
 ##
 
 ####2.1.2.1 *[extension]* *(abstract class)* Projectile
-**Super-classe de tous les projectiles** 
-* Étendue par: *Arrow* 
+**Super-classe de tous les projectiles**  
+*Étendue par: Arrow*
 * Représente une entité se déplaçant à vitesse constante selon une trajectoire rectiligne
 * Abstraite car elle a pour but d'être instanciée uniquement par l'intermédiaire de ses sous-classes.
 ###
@@ -183,9 +212,12 @@ Ce paquetage permet de définir des méthodes protégées entre les fantômes in
 
 ####2.1.3.1 *(abstract class)* Ghost
 **Super-classe de tous les fantômes**  
-* Étendue par: *Blinky*, *Inky*, *Pinky*, *[extension] Boss*
+*Étendue par: Blinky, Inky, Pinky, [extension] Boss*
 * Abstraite car elle a pour but d'être instanciée uniquement par l'intermédiaire de ses sous-classes.
 * Contient une sous-classe **GhostHandler** gérant les interactions des fantômes.
+* Remarque: on a créé getSpeed() et getFieldOfView() plutôt que des attributs et des setters car on est
+partis du principe que les fantômes pouvaient tous avoir des vitesses et champs de vision différents. 
+(En l'occurrence non mais ils auraient pu)
 * *[extension]* Protection animée à leur réapparition.
 * *[extension]* Son à leur mort.
 ###
@@ -220,19 +252,10 @@ Ce paquetage permet de définir des méthodes protégées entre les fantômes in
 Ce paquetage regroupant les décors du jeu permet de mieux structurer le projet.
 ##
 
-#####2.1.4.1 *(class)* Gate
+##### *(class)* Gate
 * Barrière bloquant le passage du joueur. Destinée à être ouverte avec un signal. (clé ou aire)
 ###
 *path: ch.epfl.cs107.play.game.superpacman.actor.setting.**Gate.java***  
-##
-
-#####2.1.4.2 *(class)* Wall
-* Classe pré-existante dans la maquette de base
-* *[extension]* Ajout d'un sprite à son constructeur: un mur seul (sans voisinage)  
- --> Création d'un nouveau fichier PNG: *res.images.sprites.superpacman.**wall2***
-###
-*path: ch.epfl.cs107.play.game.superpacman.actor.setting.**Wall.java*** 
- 
 ***
 
 ###2.2. *(package)* area
@@ -242,7 +265,7 @@ Ce paquetage regroupant les classes liées aux aires du jeu SuperPacman permet d
 #### *(class)* SuperPacmanArea
 * Classe gérant les aires du jeu SuperPacman.
 * Ajout d'une fonction statique utilitaire (toSuperPacmanArea(Area area)) afin de faciliter les nombreux casts
-* *[extension]* Fonctionnalités de pause et de fin de jeu (victoire et défaite) et leurs menus associés
+* *[extension]* Fonctionnalités de pause et de fin de jeu (victoire et défaite) et leurs menus et sons associés
 ###
 *path: ch.epfl.cs107.play.game.superpacman.area.**SuperPacmanArea.java***
 ##
@@ -305,12 +328,11 @@ Ce paquetage regroupant les différentes aires de SuperPacman permet de mieux st
 ##
 
 #####2.2.1.6. *[extension]* *(class)* Level0Copy, Level1Copy, Level2Copy
-* Copie des niveaux du jeu avec l'ajout de notre item *Heart*
+* Copie des niveaux du jeu avec l'ajout de notre item *Heart* et l'accès aux niveaux bonus et de boss
 ###
 *path 0: ch.epfl.cs107.play.game.superpacman.area.level.**Level0Copy.java***  
 *path 1: ch.epfl.cs107.play.game.superpacman.area.level.**Level1Copy.java***   
 *path 2: ch.epfl.cs107.play.game.superpacman.area.level.**Level2Copy.java***    
-##
 
 ***
 ###2.3. *(package)* handler
@@ -330,7 +352,8 @@ Ce paquetage comprenant le gestionnaire d'interaction de SuperPacman permet de m
  
 ### (Consigne: vérifier l'effraiement des fantômes dans le update de SuperPacman)
  * Notre projet: effrayer dans "invincible()" de SuperPacmanPlayer et arrêter d'effrayer dans 
- "refreshinvincibility()" de SuperPacmanPlayer.  
+ "refreshinvincibility()" de SuperPacmanPlayer. Un ajustement est nécessaire également lors de
+ l'interaction avec les portes.  
  Nous avons décidé de procéder ainsi afin d'éviter de répéter la vérification à chaque frame mais seulement quand l'état
  du fantôme est susceptible de changer.  
  Le schéma pour modifier l'état des fantômes est le suivant:  
@@ -363,8 +386,10 @@ Ce paquetage comprenant le gestionnaire d'interaction de SuperPacman permet de m
     * Mort du pacman
     * Mort des fantômes
     * Collecte des Collectable
+    * Menus de pause et de fin
     
 * Temps d'invincibilité à la réapparition du joueur (accompagné d'une animation)
 * Temps d'invincibilité à la réapparition des fantômes (accompagné d'une animation)
-* Augmentation de la vitesse du joueur quand tous les diamants d'une aire sont ramassés
+* Temps d'invincibilité lorsque tous les diamants d'une aire sont ramassés
+* Augmentation de la vitesse du joueur lorsque tous les diamants d'une aire sont ramassés
     

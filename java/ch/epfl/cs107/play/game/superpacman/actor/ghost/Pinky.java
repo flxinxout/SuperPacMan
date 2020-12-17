@@ -19,7 +19,7 @@ import java.util.Queue;
 public class Pinky extends Ghost {
 
     //Constants
-    private final int DEFAULT_SPEED = 20;
+    private final int DEFAULT_SPEED = 18;
     private final int AFRAID_SPEED = 15;
     // Minimum distance to its home when he's afraid
     private final int MIN_AFRAID_DISTANCE = 5;

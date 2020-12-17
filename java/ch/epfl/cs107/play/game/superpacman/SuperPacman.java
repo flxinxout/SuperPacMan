@@ -66,10 +66,10 @@ public class SuperPacman extends RPG  {
      * Initialise the game 
      */
     private void startGame() {
-        int areaIndex = 3;
+        int areaIndex = 4;
 
         createAreas();
-        SuperPacmanArea area = SuperPacmanArea.toSuperPacmanArea(setCurrentArea(areas[areaIndex], true));
+        SuperPacmanArea area = SuperPacmanArea.toSuperPacmanArea(setCurrentArea(areas[areaIndex], false));
         initPlayer(new SuperPacmanPlayer(area, area.getSpawnLocation()));
     }
 

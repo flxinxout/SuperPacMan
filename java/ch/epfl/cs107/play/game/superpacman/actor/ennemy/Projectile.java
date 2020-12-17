@@ -62,7 +62,7 @@ public abstract class Projectile extends MovableAreaEntity {
     /* --------------- Protected Methods --------------- */
 
     /**
-     * Getter for the speed
+     * Getter for the speed. NEED TO BE REDEFINED
      * @return (int)
      */
     protected abstract int getSpeed();

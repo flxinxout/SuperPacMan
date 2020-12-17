@@ -22,7 +22,7 @@ public class BossLife extends CollectableAreaEntity {
     //The boss attached to it
     private final Boss boss;
 
-    // Animation duration in frame number and the Animation of the collectable
+    // Animation
     private final Animation animation;
 
     /**

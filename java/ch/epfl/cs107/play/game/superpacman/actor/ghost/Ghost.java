@@ -27,7 +27,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     private final int DEFAULT_SPEED = 18;
 
     // Attributes
-    private final DiscreteCoordinates HOME;
+    private final DiscreteCoordinates home;
     private boolean isAfraid;
 
     // Target
@@ -57,7 +57,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
      *
      * @param area        (Area): owner area. Not null
      * @param orientation (Orientation): initial orientation of the entity. Not null
-     * @param home        (Coordinate): initial and HOME position of the ghost. Not null
+     * @param home        (Coordinate): initial and home position of the ghost. Not null
      */
     public Ghost(Area area, Orientation orientation, DiscreteCoordinates home) {
         super(area, orientation, home);
@@ -69,7 +69,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
         currentAnimation = getAnimations()[orientation.ordinal()];
 
         isAfraid = false;
-        this.HOME = home;
+        this.home = home;
         targetPos = getTargetPos();
 
         /* --------------- EXTENSIONS --------------- */
@@ -127,8 +127,8 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
 
         // We spawn the ghost at its spawn location
         getOwnerArea().leaveAreaCells(this, getEnteredCells());
-        setCurrentPosition(HOME.toVector());
-        getOwnerArea().enterAreaCells(this, Collections.singletonList(HOME));
+        setCurrentPosition(home.toVector());
+        getOwnerArea().enterAreaCells(this, Collections.singletonList(home));
         resetMotion();
 
         /* --------------- EXTENSIONS --------------- */
@@ -228,18 +228,6 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     /* --------------- Protected Methods --------------- */
 
     /**
-     * Getter for the next orientation. NEED TO BE REDEFINED
-     * @return (Orientation): the orientation of the entity
-     */
-    protected abstract Orientation getNextOrientation();
-
-    /**
-     * Getter for the animations. NEED TO BE REDEFINED
-     * @return (Animation[]): the animations of the entity
-     */
-    protected abstract Animation[] getAnimations();
-
-    /**
      * Choose a random cell in a specific radius around another cell
      * @param centerPos (DiscreteCoordinates): the center cell
      * @param radius    (int): the radius allowed
@@ -295,22 +283,34 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
     /* --------------- Getters --------------- */
 
     /**
+     * Getter for the next orientation. NEED TO BE OVERRIDDEN
+     * @return (Orientation): the orientation of the entity
+     */
+    protected abstract Orientation getNextOrientation();
+
+    /**
+     * Getter for the animations. NEED TO BE OVERRIDDEN
+     * @return (Animation[]): the animations of the entity
+     */
+    protected abstract Animation[] getAnimations();
+
+    /**
      * Getter for the target position. NEED TO BE OVERRIDDEN
      * @return (DiscreteCoordinates)
      */
     protected abstract DiscreteCoordinates getTargetPos();
 
     /**
-     * Getter for the speed. NEED TO BE OVERRIDDEN
-     * @return (DiscreteCoordinates)
+     * Getter for the speed. Can be redefined
+     * @return (int)
      */
     protected int getSpeed() {
         return DEFAULT_SPEED;
     }
 
     /**
-     * Getter for the field of view. Can be overridden
-     * @return (DiscreteCoordinates)
+     * Getter for the field of view. Can be redefined
+     * @return (int)
      */
     protected int getFieldOfView() {
         return DEFAULT_FIELD_OF_VIEW;
@@ -320,7 +320,7 @@ public abstract class Ghost extends MovableAreaEntity implements Killable, Inter
      * Getter for the home
      * @return (DiscreteCoordinates)
      */
-    protected DiscreteCoordinates getHOME() { return HOME; }
+    protected DiscreteCoordinates getHome() { return home; }
 
     /**
      * Getter for the ghosts' fear

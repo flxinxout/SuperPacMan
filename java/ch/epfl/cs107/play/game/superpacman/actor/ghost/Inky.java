@@ -20,7 +20,7 @@ public class Inky extends Ghost {
     // Constants
     private final int MAX_DISTANCE_WHEN_SCARED = 5;
     private final int MAX_DISTANCE_WHEN_NOT_SCARED = 10;
-    private final int DEFAULT_SPEED = 20;
+    private final int DEFAULT_SPEED = 18;
     private final int AFRAID_SPEED = 15;
 
     // Represents the distance to which it obeys depending on his condition
@@ -88,10 +88,10 @@ public class Inky extends Ghost {
     @Override
     protected DiscreteCoordinates getTargetPos() {
         if(isAfraid()) {
-            return randomCell(getHOME(), maxDistance);
+            return randomCell(getHome(), maxDistance);
         } else {
             if (getPlayer() == null) {
-                return randomCell(getHOME(), maxDistance);
+                return randomCell(getHome(), maxDistance);
             } else {
                 return getPlayer().getCurrentCells().get((0));
             }

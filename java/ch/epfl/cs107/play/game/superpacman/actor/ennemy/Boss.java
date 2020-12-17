@@ -100,8 +100,7 @@ public class Boss extends Ghost implements Interactor {
 
     @Override
     protected DiscreteCoordinates getTargetPos() {
-        if(getPlayer() == null ||
-                DiscreteCoordinates.distanceBetween(getPlayer().getCurrentCells().get(0), getCurrentMainCellCoordinates()) > FIELD_OF_VIEW) {
+        if(getPlayer() == null) {
             return randomCell();
         } else {
             return getPlayer().getCurrentCells().get((0));
@@ -114,9 +113,7 @@ public class Boss extends Ghost implements Interactor {
         if (START_LIFE - hp < SPEEDS.length) {
             return SPEEDS[START_LIFE - hp];
         }
-        else {
-            return 0;
-        }
+        return 0;
     }
 
     @Override

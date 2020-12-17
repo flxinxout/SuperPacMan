@@ -88,16 +88,6 @@ public class Level2 extends SuperPacmanArea {
 
         Gate gate14 = new Gate(this, Orientation.RIGHT, new DiscreteCoordinates(15,3), this);
         registerActor(gate14);
-
-        /* --------------- EXTENSIONS --------------- */
-
-        DoorGraphics bonusDoor = new DoorGraphics("superpacman/BonusLevel", new DiscreteCoordinates(9, 18),
-                Logic.TRUE, this, Orientation.DOWN, new DiscreteCoordinates(23,26));
-        registerActor(bonusDoor);
-
-        Door bossDoor = new Door("superpacman/BossLevel", new DiscreteCoordinates(1, 9), Logic.TRUE,
-                this, Orientation.DOWN, new DiscreteCoordinates(14, 3), new DiscreteCoordinates(15, 3));
-        registerActor(bossDoor);
     }
 
     @Override

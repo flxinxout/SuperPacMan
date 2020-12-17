@@ -32,6 +32,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
     // Constants
     private final int DEFAULT_SPEED = 6;
+    private final int COMPLETED_SPEED = 5;
     private final float INVINCIBLE_DURATION = 10;
     private final int MAXHP = 4;
     private final int START_HP = 1;
@@ -270,7 +271,7 @@ public class SuperPacmanPlayer extends Player implements Killable {
         SuperPacmanArea owner = SuperPacmanArea.toSuperPacmanArea(getOwnerArea());
         if (owner.isOn()) {
             invincible();
-            speed = 9;
+            speed = COMPLETED_SPEED;
         } else {
             speed = DEFAULT_SPEED;
         }
@@ -330,6 +331,10 @@ public class SuperPacmanPlayer extends Player implements Killable {
     @Override
     public void onDeath() {
 
+        //EXTENSION Play the death sound
+        deathSound.shouldBeStarted();
+        deathSound.bip(getOwnerArea().getWindow());
+
         hp--;
 
         // If the hp are 0 it's game over
@@ -345,12 +350,6 @@ public class SuperPacmanPlayer extends Player implements Killable {
             getOwnerArea().enterAreaCells(this, getCurrentCells());
             resetMotion();
         }
-
-        /* --------------- EXTENSIONS --------------- */
-
-        //Play the death sound
-        deathSound.shouldBeStarted();
-        deathSound.bip(getOwnerArea().getWindow());
     }
 
     /* --------------- Getters --------------- */
@@ -380,6 +379,12 @@ public class SuperPacmanPlayer extends Player implements Killable {
 
         @Override
         public void interactWith(Door door) {
+            // Remove invincibility (to avoid the ghost being afraid when entering an area
+            // (it happened when we went from the bonus level to the level2))
+            invincible = false;
+            SuperPacmanArea.toSuperPacmanArea(getOwnerArea()).unScareGhosts();
+            timerInvincible = INVINCIBLE_DURATION;
+
             setIsPassingADoor(door);
         }
 
