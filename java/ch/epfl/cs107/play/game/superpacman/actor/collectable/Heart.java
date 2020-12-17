@@ -27,7 +27,7 @@ public class Heart extends CollectableAreaEntity {
         super(area, orientation, position, new SoundAcoustics("sounds/pacman/transactionOK.wav", 0.35f, false,false,false, false));
 
         // Extract Sprites and set animations of the heart
-        Sprite[] sprites = Sprite.extractSprites("zelda/heart", 4, 1, 1, this, 16, 16);
+        Sprite[] sprites = Sprite.extractSprites("superpacman/heart", 4, 1, 1, this, 16, 16);
         for (Sprite sprite: sprites) {
             sprite.setDepth(950);
         }

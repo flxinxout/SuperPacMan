@@ -1,5 +1,10 @@
 Giovanni Ranieri et Dylan Vairoli
 # SuperPacMan
+### Comment lancer le jeu
+Lancez le fichier *Play.java*
+
+***
+
 ### Contrôles
 * LEFT : se déplacer à gauche
 * RIGHT : se déplacer à droite
@@ -7,6 +12,8 @@ Giovanni Ranieri et Dylan Vairoli
 * DOWN : se déplacer en bas
 * SPACE : mettre en pause le jeu
 * ENTER : sélectionner (dans les menus)
+
+***
 
 ### Marche à suivre
 Pour avoir le meilleur score possible, collectez tous les objets présents dans les aires 
@@ -23,8 +30,10 @@ l'objet *coeur* redonnant un point de vie.
 * Attention, ce niveau contient des ennemis:
     * Les Blinky (rouges) se déplacent aléatoirement et ne vous poursuivent pas
     * Les Inky (bleus) se déplacent autour de leur point d'apparition et commencent à vous poursuivre si vous approchez
+    S'ils sont effrayés (bonus collecté), ils se réfugient proche de leur point d'apparition et leur vitesse augmente.
     * Les Pinky (roses) se déplacent suivant une trajectoire aléatoire dans la totalité de l'aire 
-    et commencent à vous poursuivre si vous approchez
+    et commencent à vous poursuivre si vous approchez.
+    S'ils sont effrayés (bonus collecté), ils vous fuient et leur vitesse augmente.
 
 * Six bonus sont répartis symétriquement dans l'aire. Lorsque vous les prenez, essayez de tuer le maximum de fantômes
 afin de maximiser votre score
